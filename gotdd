@@ -6,7 +6,7 @@ fswatch=`which fswatch`
 inotifywait=`which inotifywait`
 
 srcdir="src"
-pkgname="net/upnp"
+pkgname="net/upnp net/upnp/ssdp"
 
 # For fswatch 
 
