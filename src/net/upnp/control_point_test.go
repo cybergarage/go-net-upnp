@@ -10,12 +10,17 @@ import (
 )
 
 const (
-	nullControlPointError = "ControlPoint is null"
+	nullControlPointError    = "ControlPoint is null"
+	invalidControlPointError = "ControlPoint is invalid"
 )
 
-func TesttNewClient(t *testing.T) {
+func TestNewControlPoint(t *testing.T) {
 	cp := NewControlPoint()
 	if cp == nil {
 		t.Error(errors.New(nullControlPointError))
+	}
+
+	if len(cp.RootDevices) != 0 {
+		t.Error(errors.New(invalidControlPointError))
 	}
 }
