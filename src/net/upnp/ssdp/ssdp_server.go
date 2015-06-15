@@ -4,35 +4,52 @@
 
 package ssdp
 
+type SSDPListener interface {
+    DeviceNotifyReceived(ssdpPkt *SSDPPacket)
+}
+
 // A SSDPServer represents a packet of SSDP.
 type SSDPServer struct {
-	IsRunnable chan bool
+	Socket *SSDPSocket
+	Listeners []SSDPListener
 }
 
 // NewSSDPServer returns a new SSDPServer.
 func NewSSDPServer() *SSDPServer {
 	ssdpPkt := &SSDPServer{}
-	ssdpPkt.IsRunnable = make(chan bool)
+	ssdpPkt.Socket = NewSSDPSocket()
+	ssdpPkt.Listeners = make([]SSDPListener, 0)
 	return ssdpPkt
 }
 
 // Start starts this server.
-func (self *SSDPServer) Start() (err error) {
-	go func() {
-		for {
-			select {
-			case <-self.IsRunnable:
-				return
-			default:
-				// Do other stuff
-			}
-		}
-	}()
+func (self *SSDPServer) Start() (error) {
+	err := self.Socket.Bind()
+	if err != nil {
+		return err
+	}
+	go handleSSDPConnection(self)
 	return nil
 }
 
 // Stop stops this server.
-func (self *SSDPServer) Stop() (err error) {
-	self.IsRunnable <- false
+func (self *SSDPServer) Stop() (error) {
+	err := self.Socket.Close()
+	if err != nil {
+		return err
+	}
 	return nil
+}
+
+func handleSSDPConnection(self *SSDPServer) {
+	for ;; {
+		ssdpPkt, err := self.Socket.Read()
+		if err != nil {
+			break
+		}
+		
+		for _, listener := range self.Listeners {
+        	listener.DeviceNotifyReceived(ssdpPkt)
+        }
+	}
 }
