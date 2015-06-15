@@ -5,25 +5,25 @@
 package ssdp
 
 type SSDPListener interface {
-    DeviceNotifyReceived(ssdpPkt *SSDPPacket)
+	DeviceNotifyReceived(ssdpPkt *SSDPPacket)
 }
 
 // A SSDPServer represents a packet of SSDP.
 type SSDPServer struct {
-	Socket *SSDPSocket
-	Listeners []SSDPListener
+	Socket   *SSDPSocket
+	Listener SSDPListener
 }
 
 // NewSSDPServer returns a new SSDPServer.
 func NewSSDPServer() *SSDPServer {
 	ssdpPkt := &SSDPServer{}
 	ssdpPkt.Socket = NewSSDPSocket()
-	ssdpPkt.Listeners = make([]SSDPListener, 0)
+	ssdpPkt.Listener = nil
 	return ssdpPkt
 }
 
 // Start starts this server.
-func (self *SSDPServer) Start() (error) {
+func (self *SSDPServer) Start() error {
 	err := self.Socket.Bind()
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func (self *SSDPServer) Start() (error) {
 }
 
 // Stop stops this server.
-func (self *SSDPServer) Stop() (error) {
+func (self *SSDPServer) Stop() error {
 	err := self.Socket.Close()
 	if err != nil {
 		return err
@@ -42,14 +42,14 @@ func (self *SSDPServer) Stop() (error) {
 }
 
 func handleSSDPConnection(self *SSDPServer) {
-	for ;; {
+	for {
 		ssdpPkt, err := self.Socket.Read()
 		if err != nil {
 			break
 		}
-		
-		for _, listener := range self.Listeners {
-        	listener.DeviceNotifyReceived(ssdpPkt)
-        }
+
+		if self.Listener != nil {
+			self.Listener.DeviceNotifyReceived(ssdpPkt)
+		}
 	}
 }
