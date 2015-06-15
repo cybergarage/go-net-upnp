@@ -25,7 +25,12 @@ func NewSSDPSocket() *SSDPSocket {
 }
 
 // Bind binds to SSDP multicast address.
-func (self *SSDPSocket) Bind() (err error) {
+func (self *SSDPSocket) Bind() (error) {
+	err := self.Close()
+	if err != nil {
+		return err
+	}
+	
 	ssdpAddr, err := net.ResolveUDPAddr("udp", SSDP_ADDR)
 	if err != nil {
 		return err
@@ -38,6 +43,18 @@ func (self *SSDPSocket) Bind() (err error) {
 
 	self.Conn.SetReadBuffer(SSDP_MAX_PACKET_SIZE)
 
+	return nil
+}
+
+// Bind binds to SSDP multicast address.
+func (self *SSDPSocket) Close() (error) {
+	if self.Conn == nil {
+		return nil
+	}
+	err := self.Conn.Close()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
