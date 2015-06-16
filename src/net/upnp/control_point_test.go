@@ -23,4 +23,14 @@ func TestNewControlPoint(t *testing.T) {
 	if len(cp.RootDevices) != 0 {
 		t.Error(errors.New(invalidControlPointError))
 	}
+
+	err := cp.Start()
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = cp.Stop()
+	if err != nil {
+		t.Error(err)
+	}
 }
