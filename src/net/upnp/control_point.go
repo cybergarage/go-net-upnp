@@ -11,7 +11,7 @@ import (
 // A ControlPoint represents a clinet.
 type ControlPoint struct {
 	RootDevices []Device
-	SSDPServer *ssdp.SSDPServer
+	SSDPServer  *ssdp.SSDPServer
 }
 
 // NewControlPoint returns a new Client.

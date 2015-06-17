@@ -8,6 +8,6 @@ import (
 	"testing"
 )
 
-func TestNewSSDPServer(t *testing.T) {
-	NewSSDPServer()
+func TestNewSSDPRequest(t *testing.T) {
+	NewSSDPRequest()
 }
