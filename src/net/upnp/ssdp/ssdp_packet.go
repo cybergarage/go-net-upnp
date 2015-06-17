@@ -14,13 +14,15 @@ const (
 
 // A SSDPPacket represents a packet of SSDP.
 type SSDPPacket struct {
-	Bytes []byte
-	From  *net.UDPAddr
+	Headers map[string]string
+	Bytes   []byte
+	From    *net.UDPAddr
 }
 
 // NewSSDPPacket returns a new SSDPPacket.
 func NewSSDPPacket() *SSDPPacket {
 	ssdpPkt := &SSDPPacket{}
+	ssdpPkt.Headers = make(map[string]string)
 	ssdpPkt.Bytes = make([]byte, 0)
 	return ssdpPkt
 }
