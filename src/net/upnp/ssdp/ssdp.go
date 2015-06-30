@@ -5,39 +5,41 @@
 package ssdp
 
 const (
-	SSDP_PORT              = 1900
-	SSDP_ADDRESS           = "239.255.255.250"
-	SSDP_MULTICAST_ADDRESS = "239.255.255.250:1900"
+	PORT              = 1900
+	ADDRESS           = "239.255.255.250"
+	MULTICAST_ADDRESS = "239.255.255.250:1900"
 
-	SSDP_MULTICAST_DEFAULT_TTL = 4
+	MULTICAST_DEFAULT_TTL = 4
 
-	SSDP_IPV6_IF_LOCAL_ADDRESS       = "FF01::C"
-	SSDP_IPV6_LINK_LOCAL_ADDRESS     = "FF02::C"
-	SSDP_IPV6_SUBNET_ADDRESS         = "FF03::C"
-	SSDP_IPV6_ADMINISTRATIVE_ADDRESS = "FF04::C"
-	SSDP_IPV6_SITE_LOCAL_ADDRESS     = "FF05::C"
-	SSDP_IPV6_GLOBAL_ADDRESS         = "FF0E::C"
+	IPV6_IF_LOCAL_ADDRESS       = "FF01::C"
+	IPV6_LINK_LOCAL_ADDRESS     = "FF02::C"
+	IPV6_SUBNET_ADDRESS         = "FF03::C"
+	IPV6_ADMINISTRATIVE_ADDRESS = "FF04::C"
+	IPV6_SITE_LOCAL_ADDRESS     = "FF05::C"
+	IPV6_GLOBAL_ADDRESS         = "FF0E::C"
 
-	SSDP_DEFAULT_MSEARCH_MX     = 3
-	SSDP_DEFAULT_ANNOUNCE_COUNT = 3
+	DEFAULT_MSEARCH_MX     = 3
+	DEFAULT_ANNOUNCE_COUNT = 3
 
-	SSDP_HEADER_LINE_MAXSIZE = 128
-	CRLF                     = "\r\n"
+	MAX_PACKET_SIZE     = 8192
+	HEADER_LINE_MAXSIZE = 128
+	CRLF                = "\r\n"
+	SP                  = " "
 
-	SSDP_ST              = "ST"
-	SSDP_MX              = "MX"
-	SSDP_MAN             = "MAN"
-	SSDP_NT              = "NT"
-	SSDP_NTS             = "NTS"
-	SSDP_NTS_ALIVE       = "ssdp:alive"
-	SSDP_NTS_BYEBYE      = "ssdp:byebye"
-	SSDP_NTS_PROPCHANGE  = "upnp:propchange"
-	SSDP_USN             = "USN"
-	SSDP_EXT             = "EXT"
-	SSDP_SID             = "SID"
-	SSDP_SEQ             = "SEQ"
-	SSDP_CALBACK         = "CALLBACK"
-	SSDP_TIMEOUT         = "TIMEOUT"
-	SSDP_SERVER          = "SERVER"
-	SSDP_BOOTID_UPNP_ORG = "BOOTID.UPNP.ORG"
+	ST              = "ST"
+	MX              = "MX"
+	MAN             = "MAN"
+	NT              = "NT"
+	NTS             = "NTS"
+	NTS_ALIVE       = "ssdp:alive"
+	NTS_BYEBYE      = "ssdp:byebye"
+	NTS_PROPCHANGE  = "upnp:propchange"
+	USN             = "USN"
+	EXT             = "EXT"
+	SID             = "SID"
+	SEQ             = "SEQ"
+	CALBACK         = "CALLBACK"
+	TIMEOUT         = "TIMEOUT"
+	SERVER          = "SERVER"
+	BOOTID_UPNP_ORG = "BOOTID.UPNP.ORG"
 )
