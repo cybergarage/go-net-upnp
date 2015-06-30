@@ -41,7 +41,7 @@ func (self *SSDPSocket) Bind() error {
 		return err
 	}
 
-	self.Conn.SetReadBuffer(SSDP_MAX_PACKET_SIZE)
+	self.Conn.SetReadBuffer(MAX_PACKET_SIZE)
 
 	return nil
 }
@@ -75,13 +75,14 @@ func (self *SSDPSocket) Write(b []byte) (int, error) {
 
 // Read reads a SSDP packet.
 func (self *SSDPSocket) Read() (*SSDPPacket, error) {
-	ssdpPkt := NewSSDPPacket()
+	ssdpPktBytes := make([]byte, 0)
 
-	_, from, err := self.Conn.ReadFromUDP(ssdpPkt.Bytes)
+	_, from, err := self.Conn.ReadFromUDP(ssdpPktBytes)
 	if err != nil {
 		return nil, err
 	}
 
+	ssdpPkt, err := NewSSDPPacketFromBytes(ssdpPktBytes)
 	ssdpPkt.From = from
 
 	return ssdpPkt, nil
