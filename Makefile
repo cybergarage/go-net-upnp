@@ -8,17 +8,25 @@
 #
 ###################################################################
 
-packages = net/upnp net/upnp/ssdp
+PREFIX?=$(shell pwd)
+GOPATH=$(shell pwd)
+
+packages = net/upnp net/upnp/log net/upnp/ssdp
 	
 all: build
 
 format:
-	gofmt -w src
+	gofmt -w src cmd
 
-build: format 
+package: format $(shell find . -type f -name '*.go')
 	go build -v ${packages}
 
-test: build
+${PREFIX}/bin/upnpdump: $(shell find ./cmd/upnpdump -type f -name '*.go')
+	go build -o $@ ./cmd/upnpdump
+
+build: ${PREFIX}/bin/upnpdump
+
+test: package
 	go test -v ${packages}
 
 install: build

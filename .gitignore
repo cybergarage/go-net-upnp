@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Binary
+bin/*
+
+# MacOSX
+.DS_Store
