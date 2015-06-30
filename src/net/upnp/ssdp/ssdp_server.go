@@ -4,6 +4,7 @@
 
 package ssdp
 
+// A SSDPListener represents a listener for SSDPServer.
 type SSDPListener interface {
 	DeviceNotifyReceived(ssdpPkt *SSDPPacket)
 }

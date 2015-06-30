@@ -25,10 +25,22 @@ upnpdump dumps SSDP messages in the local network.
 package main
 
 import (
-  "net/upnp"
 	"os"
+	"fmt"
 )
 
+func outputError(err error) {
+	os.Stderr.WriteString(fmt.Sprintf("%s\n", err.Error()))
+}
+
 func main() {
+	ctrlPoint := NewControlPoint()
+	err := ctrlPoint.Start()
+	if err != nil {
+		outputError(err)
+		os.Exit(1)
+	}
+	defer ctrlPoint.Stop()
+
 	os.Exit(0)
 }
