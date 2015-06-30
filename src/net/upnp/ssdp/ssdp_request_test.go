@@ -16,7 +16,7 @@ func TestNewSSDPRequest(t *testing.T) {
 	NewSSDPRequest()
 }
 
-func TestNewSSDPSearchRequest(t *testing.T) {
+func TestSSDPSearchRequest(t *testing.T) {
 
 	const SearchRequest = "M-SEARCH * HTTP/1.1\r\n" +
 		"HOST: 239.255.255.250:1900\r\n" +
