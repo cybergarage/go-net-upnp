@@ -1,25 +1,33 @@
 #/bin/sh
+###################################################################
+#
+# net/upnp
+#
+# Copyright (C) The go-net-upnp Authors 2015
+#
+# This is licensed under BSD-style license, see file COPYING.
+#
+###################################################################
 
 export GOPATH=`pwd`
 
 fswatch=`which fswatch`
 inotifywait=`which inotifywait`
 
-srcdir="src"
-pkgname="net/upnp net/upnp/ssdp"
+watchdir="src"
 
 # For fswatch 
 
 if [ ${#fswatch} -gt 0 ]; then
-  ${fswatch} -o ${srcdir} | xargs -n1 -I{} go test -v ${pkgname}
+  ${fswatch} -o ${watchdir} | xargs -n1 -I{} make test
   exit 0
 fi
 
 # For inotifywait
 
 if [ ${#inotifywait} -gt 0 ]; then
-  while ${inotifywait} -qr -e modify ${srcdir}; do
-    go test -v ${pkgname}
+  while ${inotifywait} -qr -e modify ${watchdir}; do
+	make test
   done
 fi
 

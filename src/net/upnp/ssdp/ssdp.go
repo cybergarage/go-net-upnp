@@ -22,6 +22,7 @@ const (
 	SSDP_DEFAULT_ANNOUNCE_COUNT = 3
 
 	SSDP_HEADER_LINE_MAXSIZE = 128
+	CRLF                     = "\r\n"
 
 	SSDP_ST              = "ST"
 	SSDP_MX              = "MX"
