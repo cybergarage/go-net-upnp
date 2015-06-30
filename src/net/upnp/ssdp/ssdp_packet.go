@@ -58,7 +58,7 @@ func (self *SSDPPacket) parse(pktBytes []byte) error {
 		if len(headerStrings) < 2 {
 			continue
 		}
-		key := headerStrings[0]
+		key := strings.ToUpper(headerStrings[0])
 		value := headerStrings[1]
 		log.Trace(fmt.Sprintf("[%d] %s : %s", n, key, value))
 		self.Headers[key] = value
@@ -83,4 +83,65 @@ func (self *SSDPPacket) ToString() string {
 	}
 
 	return pktBuf.String()
+}
+
+func (self *SSDPPacket) GetHeaderString(name string) (string, bool) {
+	value, ok := self.Headers[name]
+	return value, ok
+}
+
+func (self *SSDPPacket) GetHost() (string, bool) {
+	return self.GetHeaderString(HOST)
+}
+
+func (self *SSDPPacket) GetST() (string, bool) {
+	return self.GetHeaderString(ST)
+}
+
+func (self *SSDPPacket) GetMX() (string, bool) {
+	return self.GetHeaderString(MX)
+}
+
+func (self *SSDPPacket) GetMAN() (string, bool) {
+	return self.GetHeaderString(MAN)
+}
+
+func (self *SSDPPacket) GetNT() (string, bool) {
+	return self.GetHeaderString(NT)
+}
+
+func (self *SSDPPacket) GetNTS() (string, bool) {
+	return self.GetHeaderString(NTS)
+}
+
+func (self *SSDPPacket) GetUSN() (string, bool) {
+	return self.GetHeaderString(USN)
+}
+
+func (self *SSDPPacket) GetEXT() (string, bool) {
+	return self.GetHeaderString(EXT)
+}
+
+func (self *SSDPPacket) GetSID() (string, bool) {
+	return self.GetHeaderString(SID)
+}
+
+func (self *SSDPPacket) GetSEQ() (string, bool) {
+	return self.GetHeaderString(SEQ)
+}
+
+func (self *SSDPPacket) GetCallback() (string, bool) {
+	return self.GetHeaderString(CALLBACK)
+}
+
+func (self *SSDPPacket) GetTimeout() (string, bool) {
+	return self.GetHeaderString(TIMEOUT)
+}
+
+func (self *SSDPPacket) GetServer() (string, bool) {
+	return self.GetHeaderString(SERVER)
+}
+
+func (self *SSDPPacket) GetBOOTID_UPNP_ORG() (string, bool) {
+	return self.GetHeaderString(BOOTID_UPNP_ORG)
 }

@@ -25,8 +25,8 @@ upnpdump dumps SSDP messages in the local network.
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 )
 
 func outputError(err error) {
