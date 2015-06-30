@@ -5,17 +5,9 @@
 package ssdp
 
 import (
-	"errors"
 	"testing"
 )
 
-const (
-	nullSSDPPacketError = "SSDPPacket is null"
-)
-
 func TestNewSSDPPacket(t *testing.T) {
-	sspdPkt := NewSSDPPacket()
-	if sspdPkt == nil {
-		t.Error(errors.New(nullSSDPPacketError))
-	}
+	NewSSDPPacket()
 }
