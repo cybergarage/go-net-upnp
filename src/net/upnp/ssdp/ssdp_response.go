@@ -15,7 +15,7 @@ func NewSSDPResponse() *SSDPResponse {
 	return ssdpRes
 }
 
-// NewSSDPPacket returns a new SSDPPacket.
+// NewSSDPResponseFromBytes returns a new SSDPPacket from the specified bytes.
 func NewSSDPResponseFromBytes(bytes []byte) (*SSDPResponse, error) {
 	ssdpPkt, err := NewSSDPPacketFromBytes(bytes)
 	if err != nil {
@@ -24,4 +24,9 @@ func NewSSDPResponseFromBytes(bytes []byte) (*SSDPResponse, error) {
 	ssdpRes := NewSSDPResponse()
 	ssdpRes.SSDPPacket = ssdpPkt
 	return ssdpRes, nil
+}
+
+// NewSSDPRequestFromString returns a new SSDPPacket from the specified string.
+func NewSSDPResponseFromString(packet string) (*SSDPResponse, error) {
+	return NewSSDPResponseFromBytes([]byte(packet))
 }
