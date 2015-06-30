@@ -5,17 +5,9 @@
 package ssdp
 
 import (
-	"errors"
 	"testing"
 )
 
-const (
-	nullSSDPSocketError = "SSDPSocket is null"
-)
-
 func TestNewSSDPSocket(t *testing.T) {
-	sspdPkt := NewSSDPSocket()
-	if sspdPkt == nil {
-		t.Error(errors.New(nullSSDPSocketError))
-	}
+	NewSSDPSocket()
 }
