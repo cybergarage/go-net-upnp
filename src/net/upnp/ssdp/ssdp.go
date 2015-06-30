@@ -27,6 +27,9 @@ const (
 	SP                  = " "
 
 	HOST            = "HOST"
+	DATE            = "DATE"
+	LOCATION        = "LOCATION"
+	SERVER          = "SERVER"
 	ST              = "ST"
 	MX              = "MX"
 	MAN             = "MAN"
@@ -40,7 +43,7 @@ const (
 	SID             = "SID"
 	SEQ             = "SEQ"
 	CALLBACK        = "CALLBACK"
+	CACHE_CONTROL   = "CACHE-CONTROL"
 	TIMEOUT         = "TIMEOUT"
-	SERVER          = "SERVER"
 	BOOTID_UPNP_ORG = "BOOTID.UPNP.ORG"
 )

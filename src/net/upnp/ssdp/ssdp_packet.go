@@ -94,6 +94,18 @@ func (self *SSDPPacket) GetHost() (string, bool) {
 	return self.GetHeaderString(HOST)
 }
 
+func (self *SSDPPacket) GetDate() (string, bool) {
+	return self.GetHeaderString(DATE)
+}
+
+func (self *SSDPPacket) GetLocation() (string, bool) {
+	return self.GetHeaderString(LOCATION)
+}
+
+func (self *SSDPPacket) GetCacheControl() (string, bool) {
+	return self.GetHeaderString(CACHE_CONTROL)
+}
+
 func (self *SSDPPacket) GetST() (string, bool) {
 	return self.GetHeaderString(ST)
 }
