@@ -26,6 +26,7 @@ const (
 	CRLF                = "\r\n"
 	SP                  = " "
 
+	HOST            = "HOST"
 	ST              = "ST"
 	MX              = "MX"
 	MAN             = "MAN"
@@ -38,7 +39,7 @@ const (
 	EXT             = "EXT"
 	SID             = "SID"
 	SEQ             = "SEQ"
-	CALBACK         = "CALLBACK"
+	CALLBACK        = "CALLBACK"
 	TIMEOUT         = "TIMEOUT"
 	SERVER          = "SERVER"
 	BOOTID_UPNP_ORG = "BOOTID.UPNP.ORG"

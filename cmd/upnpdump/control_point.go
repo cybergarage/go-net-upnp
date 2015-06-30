@@ -5,11 +5,12 @@
 package main
 
 import (
+	"fmt"
 	"net/upnp"
 	"net/upnp/ssdp"
 	"os"
-	"fmt"
 )
+
 // A ControlPoint represents a ControlPoint.
 type ControlPoint struct {
 	*upnp.ControlPoint
