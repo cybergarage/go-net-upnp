@@ -8,13 +8,19 @@ import (
 	"net/upnp/ssdp"
 )
 
-// A ControlPoint represents a clinet.
+// A ControlPoint represents a listener for ControlPoint.
+type ControlPointListener interface {
+	ssdp.SSDPListener
+}
+
+// A ControlPoint represents a ControlPoint.
 type ControlPoint struct {
 	RootDevices []Device
 	SSDPServer  *ssdp.SSDPServer
+	Listener    ControlPointListener
 }
 
-// NewControlPoint returns a new Client.
+// NewControlPoint returns a new ControlPoint.
 func NewControlPoint() *ControlPoint {
 	cp := &ControlPoint{}
 	cp.RootDevices = make([]Device, 0)
@@ -42,4 +48,7 @@ func (self *ControlPoint) Stop() error {
 }
 
 func (self *ControlPoint) DeviceNotifyReceived(ssdpPkt *ssdp.SSDPPacket) {
+	if self.Listener != nil {
+		self.Listener.DeviceNotifyReceived(ssdpPkt)
+	}
 }
