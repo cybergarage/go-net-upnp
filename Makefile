@@ -21,7 +21,7 @@ format:
 package: format $(shell find . -type f -name '*.go')
 	go build -v ${packages}
 
-${PREFIX}/bin/upnpdump: $(shell find ./cmd/upnpdump -type f -name '*.go')
+${PREFIX}/bin/upnpdump: package $(shell find ./cmd/upnpdump -type f -name '*.go')
 	go build -o $@ ./cmd/upnpdump
 
 build: ${PREFIX}/bin/upnpdump
