@@ -29,18 +29,30 @@ import (
 	"os"
 )
 
-func outputError(err error) {
+func printError(err error) {
 	os.Stderr.WriteString(fmt.Sprintf("%s\n", err.Error()))
+}
+
+func handleInput(ctrlPoint *ControlPoint) {
+	for {
+		var key int
+		fmt.Scanf("%c", &key)
+		if !ctrlPoint.DoAction(key) {
+			return
+		}
+	}
 }
 
 func main() {
 	ctrlPoint := NewControlPoint()
 	err := ctrlPoint.Start()
 	if err != nil {
-		outputError(err)
+		printError(err)
 		os.Exit(1)
 	}
 	defer ctrlPoint.Stop()
+
+	handleInput(ctrlPoint)
 
 	os.Exit(0)
 }

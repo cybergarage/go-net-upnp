@@ -40,6 +40,7 @@ func NewSSDPPacketFromBytes(bytes []byte) (*SSDPPacket, error) {
 func (self *SSDPPacket) parse(pktBytes []byte) error {
 	// Read first line
 
+	fmt.Sprintf("ssdp pkt = '%s'", string(pktBytes))
 	pktFirstLineSep := []byte(CRLF)
 	pktFirstLineIdx := bytes.Index(pktBytes, pktFirstLineSep)
 	pktFirstLine := string(pktBytes[0:pktFirstLineIdx])
