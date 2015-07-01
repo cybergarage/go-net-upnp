@@ -104,7 +104,7 @@ func outputToFile(file string, level int, msg string) (int, error) {
 	return len(msgBytes), nil
 }
 
-func output(outputLevel int, msg string) int {
+func outputString(outputLevel int, msg string) int {
 	if sharedLogger == nil {
 		return 0
 	}
@@ -130,22 +130,32 @@ func output(outputLevel int, msg string) int {
 	return logMsgLen
 }
 
-func Trace(msg string) int {
+func output(outputLevel int, v interface{}) int {
+	switch msg := v.(type) {
+	case string:
+		return outputString(outputLevel, msg)
+	case error:
+		return outputString(outputLevel, msg.Error())
+	}
+	return 0
+}
+
+func Trace(msg interface{}) int {
 	return output(LoggerLevelTrace, msg)
 }
 
-func Info(msg string) int {
+func Info(msg interface{}) int {
 	return output(LoggerLevelInfo, msg)
 }
 
-func Warn(msg string) int {
+func Warn(msg interface{}) int {
 	return output(LoggerLevelWarn, msg)
 }
 
-func Error(msg string) int {
+func Error(msg interface{}) int {
 	return output(LoggerLevelError, msg)
 }
 
-func Fatal(msg string) int {
+func Fatal(msg interface{}) int {
 	return output(LoggerLevelFatal, msg)
 }
