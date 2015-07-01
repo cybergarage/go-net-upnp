@@ -14,16 +14,24 @@ import (
 // A ControlPoint represents a ControlPoint.
 type ControlPoint struct {
 	*upnp.ControlPoint
+	*ControlPointActionManager
 }
 
 // NewControlPoint returns a new Client.
 func NewControlPoint() *ControlPoint {
 	cp := &ControlPoint{}
+
 	cp.ControlPoint = upnp.NewControlPoint()
+	cp.ControlPointActionManager = NewControlPointActionManager()
 	cp.ControlPoint.Listener = cp
+
 	return cp
 }
 
 func (self *ControlPoint) DeviceNotifyReceived(ssdpPkt *ssdp.SSDPPacket) {
 	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpPkt.ToString()))
+}
+
+func (self *ControlPoint) DoAction(key int) bool {
+	return self.ControlPointActionManager.DoAction(self, key)
 }
