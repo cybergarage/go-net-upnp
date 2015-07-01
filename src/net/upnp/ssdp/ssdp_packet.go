@@ -6,6 +6,7 @@ package ssdp
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"net"
 	"net/upnp/log"
@@ -17,6 +18,7 @@ type SSDPPacket struct {
 	FirstLines []string
 	Headers    map[string]string
 	From       *net.UDPAddr
+	Bytes      []byte
 }
 
 // NewSSDPPacket returns a new SSDPPacket.
@@ -24,12 +26,14 @@ func NewSSDPPacket() *SSDPPacket {
 	ssdpPkt := &SSDPPacket{}
 	ssdpPkt.FirstLines = make([]string, 0)
 	ssdpPkt.Headers = make(map[string]string)
+	ssdpPkt.Bytes = make([]byte, 0)
 	return ssdpPkt
 }
 
 // NewSSDPPacket returns a new SSDPPacket.
 func NewSSDPPacketFromBytes(bytes []byte) (*SSDPPacket, error) {
 	ssdpPkt := NewSSDPPacket()
+	ssdpPkt.Bytes = bytes
 	err := ssdpPkt.parse(bytes)
 	if err != nil {
 		return nil, err
@@ -38,8 +42,13 @@ func NewSSDPPacketFromBytes(bytes []byte) (*SSDPPacket, error) {
 }
 
 func (self *SSDPPacket) parse(pktBytes []byte) error {
+	if len(pktBytes) <= 0 {
+		return errors.New("null error")
+	}
+
 	// Read first line
 
+	fmt.Sprintf("ssdp pkt = '%s'", string(pktBytes))
 	pktFirstLineSep := []byte(CRLF)
 	pktFirstLineIdx := bytes.Index(pktBytes, pktFirstLineSep)
 	pktFirstLine := string(pktBytes[0:pktFirstLineIdx])
