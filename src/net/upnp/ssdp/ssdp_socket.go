@@ -8,18 +8,19 @@ import (
 	"fmt"
 	"net"
 	"net/upnp/log"
-	"time"
 )
 
 // A SSDPSocket represents a Socket of SSDP.
 type SSDPSocket struct {
-	Socket []byte
-	Conn   *net.UDPConn
+	Socket  []byte
+	Conn    *net.UDPConn
+	readBuf []byte
 }
 
 // NewSSDPSocket returns a new SSDPSocket.
 func NewSSDPSocket() *SSDPSocket {
 	ssdpSock := &SSDPSocket{}
+	ssdpSock.readBuf = make([]byte, MAX_PACKET_SIZE)
 	return ssdpSock
 }
 
@@ -39,9 +40,6 @@ func (self *SSDPSocket) Bind() error {
 	if err != nil {
 		return err
 	}
-
-	self.Conn.SetDeadline(time.Now().Add(1e9))
-	self.Conn.SetReadBuffer(MAX_PACKET_SIZE)
 
 	return nil
 }
@@ -76,16 +74,14 @@ func (self *SSDPSocket) Write(b []byte) (int, error) {
 
 // Read reads a SSDP packet.
 func (self *SSDPSocket) Read() (*SSDPPacket, error) {
-	ssdpPktBytes := make([]byte, MAX_PACKET_SIZE)
-
-	n, from, err := self.Conn.ReadFromUDP(ssdpPktBytes)
+	n, from, err := self.Conn.ReadFrom(self.readBuf)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Trace(fmt.Sprintf("SSDPSocket::Read() = %d", n))
+	log.Trace(fmt.Sprintf("from %v got message %q\n", from, string(self.readBuf[:n])))
 
-	ssdpPkt, err := NewSSDPPacketFromBytes(ssdpPktBytes)
+	ssdpPkt, err := NewSSDPPacketFromBytes(self.readBuf[:n])
 	if err != nil {
 		return nil, err
 	}

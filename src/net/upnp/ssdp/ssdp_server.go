@@ -5,7 +5,6 @@
 package ssdp
 
 import (
-	"fmt"
 	"net/upnp/log"
 )
 
@@ -51,11 +50,9 @@ func handleSSDPConnection(self *SSDPServer) {
 	for {
 		ssdpPkt, err := self.Socket.Read()
 		if err != nil {
-			log.Warn(err)
-			continue
+			log.Error(err)
+			break
 		}
-
-		log.Trace(fmt.Sprintf("SSDP Packet Revicved [%d] : %s", len(ssdpPkt.Bytes), ssdpPkt.ToString()))
 
 		if len(ssdpPkt.Bytes) <= 0 {
 			continue
