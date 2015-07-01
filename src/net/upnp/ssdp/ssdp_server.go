@@ -4,6 +4,11 @@
 
 package ssdp
 
+import (
+	"fmt"
+	"net/upnp/log"
+)
+
 // A SSDPListener represents a listener for SSDPServer.
 type SSDPListener interface {
 	DeviceNotifyReceived(ssdpPkt *SSDPPacket)
@@ -46,7 +51,14 @@ func handleSSDPConnection(self *SSDPServer) {
 	for {
 		ssdpPkt, err := self.Socket.Read()
 		if err != nil {
-			break
+			log.Warn(err)
+			continue
+		}
+
+		log.Trace(fmt.Sprintf("SSDP Packet Revicved [%d] : %s", len(ssdpPkt.Bytes), ssdpPkt.ToString()))
+
+		if len(ssdpPkt.Bytes) <= 0 {
+			continue
 		}
 
 		if self.Listener != nil {
