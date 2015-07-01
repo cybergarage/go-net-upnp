@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"net/upnp/log"
 	"strings"
 )
 
@@ -17,7 +16,7 @@ import (
 type SSDPPacket struct {
 	FirstLines []string
 	Headers    map[string]string
-	From       *net.UDPAddr
+	From       net.Addr
 	Bytes      []byte
 }
 
@@ -43,7 +42,7 @@ func NewSSDPPacketFromBytes(bytes []byte) (*SSDPPacket, error) {
 
 func (self *SSDPPacket) parse(pktBytes []byte) error {
 	if len(pktBytes) <= 0 {
-		return errors.New("null error")
+		return errors.New(errorZeroPacket)
 	}
 
 	// Read first line
@@ -52,7 +51,6 @@ func (self *SSDPPacket) parse(pktBytes []byte) error {
 	pktFirstLineSep := []byte(CRLF)
 	pktFirstLineIdx := bytes.Index(pktBytes, pktFirstLineSep)
 	pktFirstLine := string(pktBytes[0:pktFirstLineIdx])
-	log.Trace(fmt.Sprintf("First Line: %s", pktFirstLine))
 	self.FirstLines = strings.Split(pktFirstLine, SP)
 
 	// Read Headers
@@ -62,21 +60,20 @@ func (self *SSDPPacket) parse(pktBytes []byte) error {
 	pktBodyIdx += len(pktBodySep)
 
 	pktHeaderStrings := string(pktBytes[(pktFirstLineIdx + len(CRLF)):(pktBodyIdx - 1)])
-	for n, headerLine := range strings.Split(pktHeaderStrings, CRLF) {
+	for _, headerLine := range strings.Split(pktHeaderStrings, CRLF) {
 		headerStrings := strings.Split(headerLine, ": ")
 		if len(headerStrings) < 2 {
 			continue
 		}
 		key := strings.ToUpper(headerStrings[0])
 		value := headerStrings[1]
-		log.Trace(fmt.Sprintf("[%d] %s : %s", n, key, value))
 		self.Headers[key] = value
 	}
 
 	return nil
 }
 
-func (self *SSDPPacket) ToString() string {
+func (self *SSDPPacket) String() string {
 	var pktBuf bytes.Buffer
 
 	// Write First line

@@ -29,7 +29,7 @@ func NewControlPoint() *ControlPoint {
 }
 
 func (self *ControlPoint) DeviceNotifyReceived(ssdpPkt *ssdp.SSDPPacket) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpPkt.ToString()))
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpPkt.String()))
 }
 
 func (self *ControlPoint) DoAction(key int) bool {
