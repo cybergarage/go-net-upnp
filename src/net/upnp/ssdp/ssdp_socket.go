@@ -69,6 +69,7 @@ func (self *SSDPSocket) Write(b []byte) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	defer conn.Close()
 
 	return conn.Write(b)
 }
