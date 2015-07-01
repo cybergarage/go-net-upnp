@@ -26,21 +26,33 @@ package main
 
 import (
 	"fmt"
+	"net/upnp/log"
 	"os"
 )
 
-func outputError(err error) {
-	os.Stderr.WriteString(fmt.Sprintf("%s\n", err.Error()))
+func handleInput(ctrlPoint *ControlPoint) {
+	for {
+		var key int
+		fmt.Scanf("%c", &key)
+		if !ctrlPoint.DoAction(key) {
+			return
+		}
+	}
 }
 
 func main() {
+	logger := log.NewStdoutLogger(log.LoggerLevelTrace)
+	log.SetSharedLogger(logger)
+
 	ctrlPoint := NewControlPoint()
 	err := ctrlPoint.Start()
 	if err != nil {
-		outputError(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 	defer ctrlPoint.Stop()
+
+	handleInput(ctrlPoint)
 
 	os.Exit(0)
 }

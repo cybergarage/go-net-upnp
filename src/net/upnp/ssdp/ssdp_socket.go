@@ -5,11 +5,10 @@
 package ssdp
 
 import (
+	"fmt"
 	"net"
-)
-
-const (
-	SSDP_ADDR = "239.255.255.250:1900"
+	"net/upnp/log"
+	"time"
 )
 
 // A SSDPSocket represents a Socket of SSDP.
@@ -20,8 +19,8 @@ type SSDPSocket struct {
 
 // NewSSDPSocket returns a new SSDPSocket.
 func NewSSDPSocket() *SSDPSocket {
-	dev := &SSDPSocket{}
-	return dev
+	ssdpSock := &SSDPSocket{}
+	return ssdpSock
 }
 
 // Bind binds to SSDP multicast address.
@@ -31,7 +30,7 @@ func (self *SSDPSocket) Bind() error {
 		return err
 	}
 
-	ssdpAddr, err := net.ResolveUDPAddr("udp", SSDP_ADDR)
+	ssdpAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
 	if err != nil {
 		return err
 	}
@@ -41,6 +40,7 @@ func (self *SSDPSocket) Bind() error {
 		return err
 	}
 
+	self.Conn.SetDeadline(time.Now().Add(1e9))
 	self.Conn.SetReadBuffer(MAX_PACKET_SIZE)
 
 	return nil
@@ -60,7 +60,7 @@ func (self *SSDPSocket) Close() error {
 
 // Write sends the specified bytes.
 func (self *SSDPSocket) Write(b []byte) (int, error) {
-	ssdpAddr, err := net.ResolveUDPAddr("udp", SSDP_ADDR)
+	ssdpAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
 	if err != nil {
 		return 0, err
 	}
@@ -69,20 +69,26 @@ func (self *SSDPSocket) Write(b []byte) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	defer conn.Close()
 
 	return conn.Write(b)
 }
 
 // Read reads a SSDP packet.
 func (self *SSDPSocket) Read() (*SSDPPacket, error) {
-	ssdpPktBytes := make([]byte, 0)
+	ssdpPktBytes := make([]byte, MAX_PACKET_SIZE)
 
-	_, from, err := self.Conn.ReadFromUDP(ssdpPktBytes)
+	n, from, err := self.Conn.ReadFromUDP(ssdpPktBytes)
 	if err != nil {
 		return nil, err
 	}
 
+	log.Trace(fmt.Sprintf("SSDPSocket::Read() = %d", n))
+
 	ssdpPkt, err := NewSSDPPacketFromBytes(ssdpPktBytes)
+	if err != nil {
+		return nil, err
+	}
 	ssdpPkt.From = from
 
 	return ssdpPkt, nil
