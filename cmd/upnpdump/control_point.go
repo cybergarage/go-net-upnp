@@ -28,8 +28,12 @@ func NewControlPoint() *ControlPoint {
 	return cp
 }
 
-func (self *ControlPoint) DeviceNotifyReceived(ssdpPkt *ssdp.SSDPPacket) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpPkt.String()))
+func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpReq.String()))
+}
+
+func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpReq.String()))
 }
 
 func (self *ControlPoint) DoAction(key int) bool {

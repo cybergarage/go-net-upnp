@@ -6,6 +6,7 @@ package http
 
 import (
 	"fmt"
+	"net"
 	gohttp "net/http"
 	"time"
 )
@@ -23,6 +24,7 @@ type RequestListener interface {
 // A Server represents a Server.
 type Server struct {
 	*gohttp.Server
+	Conn net.Listener
 }
 
 // NewServer returns a new Server.
@@ -51,7 +53,21 @@ func (self *Server) Start(port int) error {
 
 // Stop stops this server.
 func (self *Server) Stop() error {
+	if self.Conn != nil {
+		self.Conn.Close()
+		self.Conn = nil
+	}
 	return nil
+}
+
+// ListenAndServe overides net/http to close the connection
+func (self *Server) ListenAndServe() error {
+	ln, err := net.Listen("tcp", self.Addr)
+	if err != nil {
+		return err
+	}
+	self.Conn = ln
+	return self.Server.Serve(ln.(*net.TCPListener))
 }
 
 // ServeHTTP is a handler
