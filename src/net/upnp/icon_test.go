@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package ssdp
+package upnp
 
 import (
 	"testing"
 )
 
-func TestNewSSDPSocket(t *testing.T) {
-	NewSSDPSocket()
+func TestNewIcon(t *testing.T) {
+	NewIcon()
 }

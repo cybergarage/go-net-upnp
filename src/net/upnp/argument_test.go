@@ -8,6 +8,6 @@ import (
 	"testing"
 )
 
-func TestNewDevice(t *testing.T) {
-	NewDevice()
+func TestNewArgument(t *testing.T) {
+	NewArgument()
 }

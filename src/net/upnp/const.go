@@ -4,10 +4,10 @@
 
 package upnp
 
-import (
-	"testing"
-)
+const (
+	CONTROLPOINT_DEFAULT_PORT_BASE  = 5004
+	CONTROLPOINT_DEFAULT_PORT_RANGE = 1024
 
-func TestNewDevice(t *testing.T) {
-	NewDevice()
-}
+	DEVICE_DEFAULT_PORT_BASE  = 6004
+	DEVICE_DEFAULT_PORT_RANGE = 1024
+)
