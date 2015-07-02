@@ -10,22 +10,23 @@ import (
 	"net/upnp/log"
 )
 
-// A SSDPSocket represents a Socket of SSDP.
-type SSDPSocket struct {
+// A HTTPMUSocket represents a socket for HTTPMU.
+type HTTPMUSocket struct {
+	*HTTPUSocket
 	Socket  []byte
 	Conn    *net.UDPConn
 	readBuf []byte
 }
 
-// NewSSDPSocket returns a new SSDPSocket.
-func NewSSDPSocket() *SSDPSocket {
-	ssdpSock := &SSDPSocket{}
+// NewHTTPMUSocket returns a new HTTPMUSocket.
+func NewHTTPMUSocket() *HTTPMUSocket {
+	ssdpSock := &HTTPMUSocket{}
 	ssdpSock.readBuf = make([]byte, MAX_PACKET_SIZE)
 	return ssdpSock
 }
 
 // Bind binds to SSDP multicast address.
-func (self *SSDPSocket) Bind() error {
+func (self *HTTPMUSocket) Bind() error {
 	err := self.Close()
 	if err != nil {
 		return err
@@ -45,7 +46,7 @@ func (self *SSDPSocket) Bind() error {
 }
 
 // Bind binds to SSDP multicast address.
-func (self *SSDPSocket) Close() error {
+func (self *HTTPMUSocket) Close() error {
 	if self.Conn == nil {
 		return nil
 	}
@@ -57,7 +58,7 @@ func (self *SSDPSocket) Close() error {
 }
 
 // Write sends the specified bytes.
-func (self *SSDPSocket) Write(b []byte) (int, error) {
+func (self *HTTPMUSocket) Write(b []byte) (int, error) {
 	ssdpAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
 	if err != nil {
 		return 0, err
@@ -73,7 +74,7 @@ func (self *SSDPSocket) Write(b []byte) (int, error) {
 }
 
 // Read reads a SSDP packet.
-func (self *SSDPSocket) Read() (*SSDPPacket, error) {
+func (self *HTTPMUSocket) Read() (*SSDPPacket, error) {
 	n, from, err := self.Conn.ReadFrom(self.readBuf)
 	if err != nil {
 		return nil, err

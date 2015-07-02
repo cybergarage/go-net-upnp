@@ -30,3 +30,10 @@ func NewSSDPRequestFromBytes(bytes []byte) (*SSDPRequest, error) {
 func NewSSDPRequestFromString(packet string) (*SSDPRequest, error) {
 	return NewSSDPRequestFromBytes([]byte(packet))
 }
+
+// NewSSDPRequestFromPacket returns a new SSDPPacket from the specified packet.
+func NewSSDPRequestFromPacket(packet *SSDPPacket) (*SSDPRequest, error) {
+	ssdpReq := &SSDPRequest{}
+	ssdpReq.SSDPPacket = packet
+	return ssdpReq, nil
+}

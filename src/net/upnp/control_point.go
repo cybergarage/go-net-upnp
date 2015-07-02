@@ -5,50 +5,77 @@
 package upnp
 
 import (
+	"math/rand"
 	"net/upnp/ssdp"
 )
 
 // A ControlPoint represents a listener for ControlPoint.
 type ControlPointListener interface {
-	ssdp.SSDPListener
+	ssdp.SSDPMulticastListener
+	ssdp.SSDPUnicastListener
 }
 
 // A ControlPoint represents a ControlPoint.
 type ControlPoint struct {
-	RootDevices []Device
-	SSDPServer  *ssdp.SSDPServer
-	Listener    ControlPointListener
+	Port            int
+	RootDevices     []Device
+	ssdpMcastServer *ssdp.SSDPMulticastServer
+	ssdpUcastServer *ssdp.SSDPUnicastServer
+	Listener        ControlPointListener
 }
 
 // NewControlPoint returns a new ControlPoint.
 func NewControlPoint() *ControlPoint {
 	cp := &ControlPoint{}
 	cp.RootDevices = make([]Device, 0)
-	cp.SSDPServer = ssdp.NewSSDPServer()
+	cp.ssdpMcastServer = ssdp.NewSSDPMulticastServer()
+	cp.ssdpUcastServer = ssdp.NewSSDPUnicastServer()
 	return cp
 }
 
 // Start starts this control point.
-func (self *ControlPoint) Start() error {
-	self.SSDPServer.Listener = self
-	err := self.SSDPServer.Start()
+func (self *ControlPoint) StartWithPort(port int) error {
+	self.ssdpMcastServer.Listener = self
+	err := self.ssdpMcastServer.Start()
 	if err != nil {
+		self.Stop()
 		return err
 	}
+
+	err = self.ssdpUcastServer.Start(port)
+	if err != nil {
+		self.Stop()
+		return err
+	}
+
+	self.Port = port
+
 	return nil
+}
+
+// Start starts this control point.
+func (self *ControlPoint) Start() error {
+	port := rand.Intn(CONTROLPOINT_DEFAULT_PORT_RANGE) + CONTROLPOINT_DEFAULT_PORT_BASE
+	return self.StartWithPort(port)
 }
 
 // Stop stops this control point.
 func (self *ControlPoint) Stop() error {
-	err := self.SSDPServer.Stop()
+	err := self.ssdpMcastServer.Stop()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (self *ControlPoint) DeviceNotifyReceived(ssdpPkt *ssdp.SSDPPacket) {
+func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.SSDPRequest) {
 	if self.Listener != nil {
-		self.Listener.DeviceNotifyReceived(ssdpPkt)
+		self.Listener.DeviceNotifyReceived(ssdpReq)
+	}
+}
+
+func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.SSDPResponse) {
+	if self.Listener != nil {
+		self.Listener.DeviceResponseReceived(ssdpRes)
 	}
 }
