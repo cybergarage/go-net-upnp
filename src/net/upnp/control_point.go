@@ -11,16 +11,16 @@ import (
 
 // A ControlPoint represents a listener for ControlPoint.
 type ControlPointListener interface {
-	ssdp.SSDPMulticastListener
-	ssdp.SSDPUnicastListener
+	ssdp.MulticastListener
+	ssdp.UnicastListener
 }
 
 // A ControlPoint represents a ControlPoint.
 type ControlPoint struct {
 	Port            int
 	RootDevices     []Device
-	ssdpMcastServer *ssdp.SSDPMulticastServer
-	ssdpUcastServer *ssdp.SSDPUnicastServer
+	ssdpMcastServer *ssdp.MulticastServer
+	ssdpUcastServer *ssdp.UnicastServer
 	Listener        ControlPointListener
 }
 
@@ -28,8 +28,8 @@ type ControlPoint struct {
 func NewControlPoint() *ControlPoint {
 	cp := &ControlPoint{}
 	cp.RootDevices = make([]Device, 0)
-	cp.ssdpMcastServer = ssdp.NewSSDPMulticastServer()
-	cp.ssdpUcastServer = ssdp.NewSSDPUnicastServer()
+	cp.ssdpMcastServer = ssdp.NewMulticastServer()
+	cp.ssdpUcastServer = ssdp.NewUnicastServer()
 	return cp
 }
 
@@ -68,13 +68,19 @@ func (self *ControlPoint) Stop() error {
 	return nil
 }
 
-func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.SSDPRequest) {
+func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	if self.Listener != nil {
 		self.Listener.DeviceNotifyReceived(ssdpReq)
 	}
 }
 
-func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.SSDPResponse) {
+func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
+	if self.Listener != nil {
+		self.Listener.DeviceSearchReceived(ssdpReq)
+	}
+}
+
+func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
 	if self.Listener != nil {
 		self.Listener.DeviceResponseReceived(ssdpRes)
 	}

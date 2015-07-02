@@ -8,27 +8,27 @@ import (
 	"net/upnp/log"
 )
 
-// A SSDPListener represents a listener for SSDPUnicastServer.
-type SSDPUnicastListener interface {
-	DeviceResponseReceived(ssdpRes *SSDPResponse)
+// A UnicastListener represents a listener for UnicastServer.
+type UnicastListener interface {
+	DeviceResponseReceived(ssdpRes *Response)
 }
 
-// A SSDPUnicastServer represents a packet of SSDP.
-type SSDPUnicastServer struct {
+// A UnicastServer represents a packet of SSDP.
+type UnicastServer struct {
 	Socket   *HTTPUSocket
-	Listener SSDPUnicastListener
+	Listener UnicastListener
 }
 
-// NewSSDPUnicastServer returns a new SSDPUnicastServer.
-func NewSSDPUnicastServer() *SSDPUnicastServer {
-	ssdpPkt := &SSDPUnicastServer{}
+// NewUnicastServer returns a new UnicastServer.
+func NewUnicastServer() *UnicastServer {
+	ssdpPkt := &UnicastServer{}
 	ssdpPkt.Socket = NewHTTPUSocket()
 	ssdpPkt.Listener = nil
 	return ssdpPkt
 }
 
 // Start starts this server.
-func (self *SSDPUnicastServer) Start(port int) error {
+func (self *UnicastServer) Start(port int) error {
 	err := self.Socket.Bind(port)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (self *SSDPUnicastServer) Start(port int) error {
 }
 
 // Stop stops this server.
-func (self *SSDPUnicastServer) Stop() error {
+func (self *UnicastServer) Stop() error {
 	err := self.Socket.Close()
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func (self *SSDPUnicastServer) Stop() error {
 	return nil
 }
 
-func handleSSDPUnicastConnection(self *SSDPUnicastServer) {
+func handleSSDPUnicastConnection(self *UnicastServer) {
 	for {
 		ssdpPkt, err := self.Socket.Read()
 		if err != nil {
@@ -59,7 +59,7 @@ func handleSSDPUnicastConnection(self *SSDPUnicastServer) {
 		}
 
 		if self.Listener != nil {
-			ssdpRes, _ := NewSSDPResponseFromPacket(ssdpPkt)
+			ssdpRes, _ := NewResponseFromPacket(ssdpPkt)
 			self.Listener.DeviceResponseReceived(ssdpRes)
 		}
 	}

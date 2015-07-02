@@ -2,12 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package ssdp
+package http
 
 import (
 	"testing"
 )
 
-func TestNewSSDPResponse(t *testing.T) {
-	NewSSDPResponse()
+func TestNewResponseWriter(t *testing.T) {
 }

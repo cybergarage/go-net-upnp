@@ -26,8 +26,13 @@ const (
 	CRLF                = "\r\n"
 	SP                  = " "
 
+	HTTP_VERSION = "1.1"
+	NOTIFY       = "NOTIFY"
+	M_SEARCH     = "M-SEARCH"
+
 	HOST            = "HOST"
 	DATE            = "DATE"
+	USER_AGENT      = "USER-AGENT"
 	LOCATION        = "LOCATION"
 	SERVER          = "SERVER"
 	ST              = "ST"
@@ -35,8 +40,6 @@ const (
 	MAN             = "MAN"
 	NT              = "NT"
 	NTS             = "NTS"
-	NTS_ALIVE       = "ssdp:alive"
-	NTS_BYEBYE      = "ssdp:byebye"
 	NTS_PROPCHANGE  = "upnp:propchange"
 	USN             = "USN"
 	EXT             = "EXT"
@@ -46,4 +49,11 @@ const (
 	CACHE_CONTROL   = "CACHE-CONTROL"
 	TIMEOUT         = "TIMEOUT"
 	BOOTID_UPNP_ORG = "BOOTID.UPNP.ORG"
+
+	ROOT_DEVICE  = "upnp:rootdevice"
+	ALL          = "ssdp:all"
+	MAN_DISCOVER = "ssdp:discover"
+	NTS_ALIVE    = "ssdp:alive"
+	NTS_BYEBYE   = "ssdp:byebye"
+	MAX_AGE      = "max-age"
 )
