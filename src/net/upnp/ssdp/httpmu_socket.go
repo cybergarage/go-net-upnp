@@ -5,9 +5,7 @@
 package ssdp
 
 import (
-	"fmt"
 	"net"
-	"net/upnp/log"
 )
 
 // A HTTPMUSocket represents a socket for HTTPMU.
@@ -74,15 +72,13 @@ func (self *HTTPMUSocket) Write(b []byte) (int, error) {
 }
 
 // Read reads a SSDP packet.
-func (self *HTTPMUSocket) Read() (*SSDPPacket, error) {
+func (self *HTTPMUSocket) Read() (*Packet, error) {
 	n, from, err := self.Conn.ReadFrom(self.readBuf)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Trace(fmt.Sprintf("from %v got message %q\n", from, string(self.readBuf[:n])))
-
-	ssdpPkt, err := NewSSDPPacketFromBytes(self.readBuf[:n])
+	ssdpPkt, err := NewPacketFromBytes(self.readBuf[:n])
 	if err != nil {
 		return nil, err
 	}

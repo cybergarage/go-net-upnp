@@ -12,26 +12,26 @@ import (
 	"strings"
 )
 
-// A SSDPPacket represents a ssdpPkt of SSDP.
-type SSDPPacket struct {
+// A Packet represents a ssdpPkt of SSDP.
+type Packet struct {
 	FirstLines []string
 	Headers    map[string]string
 	From       net.Addr
 	Bytes      []byte
 }
 
-// NewSSDPPacket returns a new SSDPPacket.
-func NewSSDPPacket() *SSDPPacket {
-	ssdpPkt := &SSDPPacket{}
+// NewPacket returns a new Packet.
+func NewPacket() *Packet {
+	ssdpPkt := &Packet{}
 	ssdpPkt.FirstLines = make([]string, 0)
 	ssdpPkt.Headers = make(map[string]string)
 	ssdpPkt.Bytes = make([]byte, 0)
 	return ssdpPkt
 }
 
-// NewSSDPPacket returns a new SSDPPacket.
-func NewSSDPPacketFromBytes(bytes []byte) (*SSDPPacket, error) {
-	ssdpPkt := NewSSDPPacket()
+// NewPacket returns a new Packet.
+func NewPacketFromBytes(bytes []byte) (*Packet, error) {
+	ssdpPkt := NewPacket()
 	ssdpPkt.Bytes = bytes
 	err := ssdpPkt.parse(bytes)
 	if err != nil {
@@ -40,7 +40,7 @@ func NewSSDPPacketFromBytes(bytes []byte) (*SSDPPacket, error) {
 	return ssdpPkt, nil
 }
 
-func (self *SSDPPacket) parse(pktBytes []byte) error {
+func (self *Packet) parse(pktBytes []byte) error {
 	if len(pktBytes) <= 0 {
 		return errors.New(errorZeroPacket)
 	}
@@ -73,7 +73,7 @@ func (self *SSDPPacket) parse(pktBytes []byte) error {
 	return nil
 }
 
-func (self *SSDPPacket) String() string {
+func (self *Packet) String() string {
 	var pktBuf bytes.Buffer
 
 	// Write First line
@@ -91,75 +91,90 @@ func (self *SSDPPacket) String() string {
 	return pktBuf.String()
 }
 
-func (self *SSDPPacket) GetHeaderString(name string) (string, bool) {
+func (self *Packet) isMethod(name string) bool {
+	if len(self.FirstLines) < 1 {
+		return false
+	}
+	return (self.FirstLines[0] == name)
+}
+
+func (self *Packet) IsNotifyRequest() bool {
+	return self.isMethod(NOTIFY)
+}
+
+func (self *Packet) IsSearchRequest() bool {
+	return self.isMethod(M_SEARCH)
+}
+
+func (self *Packet) GetHeaderString(name string) (string, bool) {
 	value, ok := self.Headers[name]
 	return value, ok
 }
 
-func (self *SSDPPacket) GetHost() (string, bool) {
+func (self *Packet) GetHost() (string, bool) {
 	return self.GetHeaderString(HOST)
 }
 
-func (self *SSDPPacket) GetDate() (string, bool) {
+func (self *Packet) GetDate() (string, bool) {
 	return self.GetHeaderString(DATE)
 }
 
-func (self *SSDPPacket) GetLocation() (string, bool) {
+func (self *Packet) GetLocation() (string, bool) {
 	return self.GetHeaderString(LOCATION)
 }
 
-func (self *SSDPPacket) GetCacheControl() (string, bool) {
+func (self *Packet) GetCacheControl() (string, bool) {
 	return self.GetHeaderString(CACHE_CONTROL)
 }
 
-func (self *SSDPPacket) GetST() (string, bool) {
+func (self *Packet) GetST() (string, bool) {
 	return self.GetHeaderString(ST)
 }
 
-func (self *SSDPPacket) GetMX() (string, bool) {
+func (self *Packet) GetMX() (string, bool) {
 	return self.GetHeaderString(MX)
 }
 
-func (self *SSDPPacket) GetMAN() (string, bool) {
+func (self *Packet) GetMAN() (string, bool) {
 	return self.GetHeaderString(MAN)
 }
 
-func (self *SSDPPacket) GetNT() (string, bool) {
+func (self *Packet) GetNT() (string, bool) {
 	return self.GetHeaderString(NT)
 }
 
-func (self *SSDPPacket) GetNTS() (string, bool) {
+func (self *Packet) GetNTS() (string, bool) {
 	return self.GetHeaderString(NTS)
 }
 
-func (self *SSDPPacket) GetUSN() (string, bool) {
+func (self *Packet) GetUSN() (string, bool) {
 	return self.GetHeaderString(USN)
 }
 
-func (self *SSDPPacket) GetEXT() (string, bool) {
+func (self *Packet) GetEXT() (string, bool) {
 	return self.GetHeaderString(EXT)
 }
 
-func (self *SSDPPacket) GetSID() (string, bool) {
+func (self *Packet) GetSID() (string, bool) {
 	return self.GetHeaderString(SID)
 }
 
-func (self *SSDPPacket) GetSEQ() (string, bool) {
+func (self *Packet) GetSEQ() (string, bool) {
 	return self.GetHeaderString(SEQ)
 }
 
-func (self *SSDPPacket) GetCallback() (string, bool) {
+func (self *Packet) GetCallback() (string, bool) {
 	return self.GetHeaderString(CALLBACK)
 }
 
-func (self *SSDPPacket) GetTimeout() (string, bool) {
+func (self *Packet) GetTimeout() (string, bool) {
 	return self.GetHeaderString(TIMEOUT)
 }
 
-func (self *SSDPPacket) GetServer() (string, bool) {
+func (self *Packet) GetServer() (string, bool) {
 	return self.GetHeaderString(SERVER)
 }
 
-func (self *SSDPPacket) GetBOOTID_UPNP_ORG() (string, bool) {
+func (self *Packet) GetBOOTID_UPNP_ORG() (string, bool) {
 	return self.GetHeaderString(BOOTID_UPNP_ORG)
 }

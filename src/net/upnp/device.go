@@ -30,13 +30,13 @@ type Device struct {
 	DeviceList       []Device  `xml:"deviceList"`
 
 	Port            int
-	ssdpMcastServer *ssdp.SSDPMulticastServer
+	ssdpMcastServer *ssdp.MulticastServer
 }
 
 // NewDevice returns a new Device.
 func NewDevice() *Device {
 	dev := &Device{}
-	dev.ssdpMcastServer = ssdp.NewSSDPMulticastServer()
+	dev.ssdpMcastServer = ssdp.NewMulticastServer()
 	return dev
 }
 
@@ -69,5 +69,8 @@ func (self *Device) Stop() error {
 	return nil
 }
 
-func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.SSDPRequest) {
+func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
+}
+
+func (self *Device) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 }

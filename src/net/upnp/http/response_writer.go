@@ -2,12 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package ssdp
+package http
 
 import (
-	"testing"
+	gohttp "net/http"
 )
 
-func TestNewSSDPPacket(t *testing.T) {
-	NewSSDPPacket()
+// A ResponseWriter represents a ResponseWriter.
+type ResponseWriter interface {
+	gohttp.ResponseWriter
 }

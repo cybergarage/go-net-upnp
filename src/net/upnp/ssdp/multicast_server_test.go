@@ -8,6 +8,6 @@ import (
 	"testing"
 )
 
-func TestNewSSDPResponse(t *testing.T) {
-	NewSSDPResponse()
+func TestNewMulticastServer(t *testing.T) {
+	NewMulticastServer()
 }
