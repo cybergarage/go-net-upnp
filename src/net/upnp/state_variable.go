@@ -8,16 +8,22 @@ import (
 	"encoding/xml"
 )
 
-// A StateVariable represents a icon.
+// A StateVariable represents a UPnP state variable.
 type StateVariable struct {
 	XMLName           xml.Name          `xml:"stateVariable"`
 	Name              string            `xml:"name"`
 	DataType          string            `xml:"dataType"`
 	DefaultValue      string            `xml:"defaultValue"`
-	AllowedValueList  []AllowedValue    `xml:"allowedValueList"`
+	AllowedValueList  AllowedValueList  `xml:"allowedValueList"`
 	AllowedValueRange AllowedValueRange `xml:"allowedValueRange"`
 	SendEvents        string            `xml:"sendEvents,attr"`
 	Multicast         string            `xml:"multicast,attr"`
+}
+
+// A StateVariable represents a UPnP state variable.
+type ServiceStateTable struct {
+	XMLName        xml.Name        `xml:"serviceStateTable"`
+	StateVariables []StateVariable `xml:"stateVariable"`
 }
 
 // NewStateVariable returns a new StateVariable.

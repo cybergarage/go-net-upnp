@@ -8,24 +8,43 @@ import (
 	"encoding/xml"
 )
 
-// A Service represents a icon.
+// A Service represents a UPnP service.
 type Service struct {
-	XMLName           xml.Name        `xml:"service"`
-	ServiceType       string          `xml:"serviceType"`
-	SCPDURL           string          `xml:"SCPDURL"`
-	ControlURL        string          `xml:"controlURL"`
-	EventSubURL       string          `xml:"eventSubURL"`
-	ServiceStateTable []StateVariable `xml:"serviceStateTable"`
+	XMLName     xml.Name `xml:"service"`
+	ServiceType string   `xml:"serviceType"`
+	ServiceId   string   `xml:"serviceId"`
+	SCPDURL     string   `xml:"SCPDURL"`
+	ControlURL  string   `xml:"controlURL"`
+	EventSubURL string   `xml:"eventSubURL"`
+
+	Description *ServiceDescription
 }
 
-// A Service represents a icon.
+// A ServiceDescription represents a UPnP service description.
+type ServiceDescription struct {
+	XMLName           xml.Name          `xml:"scpd"`
+	ServiceStateTable ServiceStateTable `xml:"serviceStateTable"`
+	ActionList        ActionList        `xml:"actionList"`
+}
+
+// A ServiceList represents a UPnP serviceList.
 type ServiceList struct {
-	XMLName  xml.Name  `xml:"iconList"`
-	Services []Service `xml:"icon"`
+	XMLName  xml.Name  `xml:"serviceList"`
+	Services []Service `xml:"service"`
 }
 
 // NewService returns a new Service.
 func NewService() *Service {
 	service := &Service{}
+	service.Description = &ServiceDescription{}
 	return service
+}
+
+// LoadDescriptinString loads a device description string.
+func (self *Service) LoadDescriptionString(desc string) error {
+	err := xml.Unmarshal([]byte(desc), self.Description)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -18,24 +18,9 @@ type DeviceListener interface {
 	http.RequestListener
 }
 
-// A Device represents a clinet.
+// A Device represents a UPnP device.
 type Device struct {
-	XMLName          xml.Name  `xml:"device"`
-	DeviceType       string    `xml:"deviceType"`
-	FriendlyName     string    `xml:"friendlyName"`
-	Manufacturer     string    `xml:"manufacturer"`
-	ManufacturerURL  string    `xml:"manufacturerURL"`
-	ModelDescription string    `xml:"modelDescription"`
-	ModelName        string    `xml:"modelName"`
-	ModelNumber      string    `xml:"modelNumber"`
-	ModelURL         string    `xml:"modelURL"`
-	SerialNumber     string    `xml:"serialNumber"`
-	UDN              string    `xml:"UDN"`
-	UPC              string    `xml:"UPC"`
-	PresentationURL  string    `xml:"presentationURL"`
-	IconList         []Icon    `xml:"iconList"`
-	ServiceList      []Service `xml:"serviceList"`
-	DeviceList       []Device  `xml:"deviceList"`
+	Description *DeviceDescription
 
 	Port     int
 	Listener DeviceListener
@@ -44,9 +29,36 @@ type Device struct {
 	httpServer      *http.Server
 }
 
+// A DeviceDescription represents a UPnP device description.
+type DeviceDescription struct {
+	XMLName          xml.Name    `xml:"device"`
+	DeviceType       string      `xml:"deviceType"`
+	FriendlyName     string      `xml:"friendlyName"`
+	Manufacturer     string      `xml:"manufacturer"`
+	ManufacturerURL  string      `xml:"manufacturerURL"`
+	ModelDescription string      `xml:"modelDescription"`
+	ModelName        string      `xml:"modelName"`
+	ModelNumber      string      `xml:"modelNumber"`
+	ModelURL         string      `xml:"modelURL"`
+	SerialNumber     string      `xml:"serialNumber"`
+	UDN              string      `xml:"UDN"`
+	UPC              string      `xml:"UPC"`
+	PresentationURL  string      `xml:"presentationURL"`
+	IconList         IconList    `xml:"iconList"`
+	ServiceList      ServiceList `xml:"serviceList"`
+	DeviceList       DeviceList  `xml:"deviceList"`
+}
+
+// A DeviceList represents a ServiceList.
+type DeviceList struct {
+	XMLName xml.Name `xml:"deviceList"`
+	Devices []Device `xml:"device"`
+}
+
 // NewDevice returns a new Device.
 func NewDevice() *Device {
 	dev := &Device{}
+	dev.Description = &DeviceDescription{}
 	dev.ssdpMcastServer = ssdp.NewMulticastServer()
 	dev.httpServer = http.NewServer()
 	return dev
@@ -70,6 +82,15 @@ func (self *Device) StartWithPort(port int) error {
 
 	self.Port = port
 
+	return nil
+}
+
+// LoadDescriptinString loads a device description string.
+func (self *Device) LoadDescriptionString(desc string) error {
+	err := xml.Unmarshal([]byte(desc), self.Description)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
