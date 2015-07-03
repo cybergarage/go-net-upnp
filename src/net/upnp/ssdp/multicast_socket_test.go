@@ -8,9 +8,6 @@ import (
 	"testing"
 )
 
-type PacketSetHeaderFunc func(*Packet) func(string, string) error
-type PacketGetHeaderFunc func(*Packet) func(string) (string, bool)
-
-func TestNewPacket(t *testing.T) {
-	NewPacket()
+func TestNewMulticastSocket(t *testing.T) {
+	NewMulticastSocket()
 }

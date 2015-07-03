@@ -8,7 +8,7 @@ import (
 	"net/upnp/log"
 )
 
-// A SSDPListener represents a listener for MulticastServer.
+// A MulticastListener represents a listener for MulticastServer.
 type MulticastListener interface {
 	DeviceNotifyReceived(ssdpReq *Request)
 	DeviceSearchReceived(ssdpReq *Request)
@@ -22,10 +22,10 @@ type MulticastServer struct {
 
 // NewMulticastServer returns a new MulticastServer.
 func NewMulticastServer() *MulticastServer {
-	ssdpPkt := &MulticastServer{}
-	ssdpPkt.Socket = NewHTTPMUSocket()
-	ssdpPkt.Listener = nil
-	return ssdpPkt
+	server := &MulticastServer{}
+	server.Socket = NewHTTPMUSocket()
+	server.Listener = nil
+	return server
 }
 
 // Start starts this server.
@@ -53,10 +53,6 @@ func handleMulticastConnection(self *MulticastServer) {
 		if err != nil {
 			log.Error(err)
 			break
-		}
-
-		if len(ssdpPkt.Bytes) <= 0 {
-			continue
 		}
 
 		if self.Listener != nil {

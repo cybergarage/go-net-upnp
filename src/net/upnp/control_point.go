@@ -68,6 +68,28 @@ func (self *ControlPoint) Stop() error {
 	return nil
 }
 
+// Search sends a M-SEARCH request of the specified ST.
+func (self *ControlPoint) Search(st string) error {
+	ssdpReq, err := ssdp.NewSearchRequest(st)
+	if err != nil {
+		return err
+	}
+
+	ssdpSock, err := ssdp.NewMulticastSocket()
+	if err != nil {
+		return err
+	}
+
+	_, err = ssdpSock.Write(ssdpReq)
+
+	return err
+}
+
+// SearchRootDevice sends a M-SEARCH request for root devices.
+func (self *ControlPoint) SearchRootDevice() error {
+	return self.Search(ssdp.ROOT_DEVICE)
+}
+
 func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	if self.Listener != nil {
 		self.Listener.DeviceNotifyReceived(ssdpReq)

@@ -14,12 +14,22 @@ type ControlPointActionManager struct {
 // NewControlPoint returns a new Client.
 func NewControlPointActionManager() *ControlPointActionManager {
 	actionMgr := &ControlPointActionManager{}
-	actionMgr.Commands = make(map[int]*ControlPointAction)
-
-	actionMgr.Commands[Q_KEY] = NewControlPointAction(Q_KEY, Q_DESC, QuitAction)
-	actionMgr.Commands[H_KEY] = NewControlPointAction(H_KEY, H_DESC, HelpAction)
-
+	actionMgr.initDefaultActions()
 	return actionMgr
+}
+
+func (self *ControlPointActionManager) initDefaultActions() error {
+	self.Commands = make(map[int]*ControlPointAction)
+	self.AddAction(Q_KEY, Q_DESC, QuitAction)
+	self.AddAction(H_KEY, H_DESC, HelpAction)
+	self.AddAction(S_KEY, S_DESC, SearchAction)
+	return nil
+}
+
+func (self *ControlPointActionManager) AddAction(key int, desc string, actionFunc ContolPointActionFunc) error {
+	action := NewControlPointAction(Q_KEY, Q_DESC, QuitAction)
+	self.Commands[key] = action
+	return nil
 }
 
 func (self *ControlPointActionManager) DoAction(ctrlPoint *ControlPoint, key int) bool {

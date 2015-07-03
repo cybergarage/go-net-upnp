@@ -9,6 +9,27 @@ import (
 	"os"
 )
 
+////////////////////////////////////////
+// s : Search
+////////////////////////////////////////
+
+const (
+	S_KEY  = 's'
+	S_DESC = "search root devices"
+)
+
+func SearchAction(cp *ControlPoint) bool {
+	err := cp.SearchRootDevice()
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+////////////////////////////////////////
+// h : Help
+////////////////////////////////////////
+
 const (
 	H_KEY  = 'h'
 	H_DESC = "print this message"
@@ -17,6 +38,10 @@ const (
 func QuitAction(cp *ControlPoint) bool {
 	return false
 }
+
+////////////////////////////////////////
+// q : Quit
+////////////////////////////////////////
 
 const (
 	Q_KEY  = 'q'
