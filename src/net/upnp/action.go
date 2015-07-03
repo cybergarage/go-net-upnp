@@ -8,11 +8,17 @@ import (
 	"encoding/xml"
 )
 
-// A Action represents a icon.
+// A Action represents a UPnP action.
 type Action struct {
-	XMLName      xml.Name   `xml:"action"`
-	Name         string     `xml:"name"`
-	ArgumentList []Argument `xml:"argumentList"`
+	XMLName      xml.Name     `xml:"action"`
+	Name         string       `xml:"name"`
+	ArgumentList ArgumentList `xml:"argumentList"`
+}
+
+// A ActionList represents a UPnP action list.
+type ActionList struct {
+	XMLName xml.Name `xml:"actionList"`
+	Actions []Action `xml:"action"`
 }
 
 // NewAction returns a new Action.

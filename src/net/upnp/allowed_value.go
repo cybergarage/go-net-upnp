@@ -8,10 +8,16 @@ import (
 	"encoding/xml"
 )
 
-// A AllowedValue represents a icon.
+// A AllowedValue represents a UPnP allowed value.
 type AllowedValue struct {
 	XMLName xml.Name `xml:"allowedValue"`
 	Value   string   `xml:",innerxml"`
+}
+
+// A AllowedValueList represents a UPnP allowed value list.
+type AllowedValueList struct {
+	XMLName       xml.Name       `xml:"allowedValueList"`
+	AllowedValues []AllowedValue `xml:"allowedValue"`
 }
 
 // NewAllowedValue returns a new AllowedValue.

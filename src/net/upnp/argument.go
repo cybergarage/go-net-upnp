@@ -8,12 +8,18 @@ import (
 	"encoding/xml"
 )
 
-// A Argument represents a icon.
+// A Argument represents a UPnP argument.
 type Argument struct {
-	XMLName              xml.Name        `xml:"argument"`
-	Name                 string          `xml:"name"`
-	Direction            string          `xml:"direction"`
-	RelatedStateVariable []StateVariable `xml:"relatedStateVariable"`
+	XMLName              xml.Name `xml:"argument"`
+	Name                 string   `xml:"name"`
+	Direction            string   `xml:"direction"`
+	RelatedStateVariable string   `xml:"relatedStateVariable"`
+}
+
+// A ArgumentList represents a UPnP argument list.
+type ArgumentList struct {
+	XMLName   xml.Name   `xml:"argumentList"`
+	Arguments []Argument `xml:"argument"`
 }
 
 // NewArgument returns a new Argument.

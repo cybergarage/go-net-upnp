@@ -5,6 +5,7 @@
 package upnp
 
 import (
+	"encoding/xml"
 	"fmt"
 	gohttp "net/http"
 	"testing"
@@ -34,5 +35,55 @@ func TestNewDevice(t *testing.T) {
 	err = dev.Stop()
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+const TestMediaServerDeviceDesc = xml.Header +
+	"<device>" +
+	"    <serviceList>" +
+	"        <service>" +
+	"		<Optional/>" +
+	"            <serviceType>urn:schemas-upnp-org:service:AVTransport:1</serviceType>" +
+	"			<serviceId>AVTransport</serviceId>" +
+	"        </service>" +
+	"        <service>" +
+	"            <serviceType>urn:schemas-upnp-org:service:ContentDirectory:1</serviceType>" +
+	"			<serviceId>ContentDirectory</serviceId>" +
+	"        </service>" +
+	"        <service>" +
+	"            <serviceType>urn:schemas-upnp-org:service:ConnectionManager:1</serviceType>" +
+	"			<serviceId>ConnectionManager</serviceId>" +
+	"        </service>" +
+	"    </serviceList>" +
+	"</device>"
+
+func TestDeviceLoadDescription(t *testing.T) {
+	dev := NewDevice()
+
+	err := dev.LoadDescriptionString(TestMediaServerDeviceDesc)
+	if err != nil {
+		t.Error(err)
+	}
+
+	for n, service := range dev.Description.ServiceList.Services {
+		var expectedServiceType string
+		var expectedServiceId string
+		switch n {
+		case 0:
+			expectedServiceType = "urn:schemas-upnp-org:service:AVTransport:1"
+			expectedServiceId = "AVTransport"
+		case 1:
+			expectedServiceType = "urn:schemas-upnp-org:service:ContentDirectory:1"
+			expectedServiceId = "ContentDirectory"
+		case 2:
+			expectedServiceType = "urn:schemas-upnp-org:service:ConnectionManager:1"
+			expectedServiceId = "ConnectionManager"
+		}
+		if service.ServiceType != expectedServiceType {
+			t.Errorf("serviceType = %s, expected %s", service.ServiceType, expectedServiceType)
+		}
+		if service.ServiceId != expectedServiceId {
+			t.Errorf("serviceId = %s, expected %s", service.ServiceId, expectedServiceId)
+		}
 	}
 }

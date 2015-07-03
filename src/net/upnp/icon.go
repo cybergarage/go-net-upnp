@@ -8,7 +8,7 @@ import (
 	"encoding/xml"
 )
 
-// A Icon represents a icon.
+// A Icon represents a UPnP icon.
 type Icon struct {
 	XMLName  xml.Name `xml:"icon"`
 	Mimetype string   `xml:"mimetype"`
@@ -16,6 +16,12 @@ type Icon struct {
 	Height   string   `xml:"height"`
 	Depth    string   `xml:"depth"`
 	Url      string   `xml:"url"`
+}
+
+// A IconList represents a UPnP iconList.
+type IconList struct {
+	XMLName xml.Name `xml:"iconList"`
+	Icons   []Icon   `xml:"icon"`
 }
 
 // NewIcon returns a new Icon.
