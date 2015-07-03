@@ -25,16 +25,19 @@ upnpdump dumps SSDP messages in the local network.
 package main
 
 import (
-	"fmt"
+	"bufio"
 	"net/upnp/log"
 	"os"
 )
 
 func handleInput(ctrlPoint *ControlPoint) {
 	for {
-		var key int
-		fmt.Scanf("%c", &key)
-		if !ctrlPoint.DoAction(key) {
+		reader := bufio.NewReader(os.Stdin)
+		key, err := reader.ReadByte()
+		if err != nil {
+			continue
+		}
+		if !ctrlPoint.DoAction(int(key)) {
 			return
 		}
 	}

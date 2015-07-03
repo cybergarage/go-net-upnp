@@ -5,5 +5,7 @@
 package ssdp
 
 const (
-	errorZeroPacket = "packet lenght is zero"
+	errorZeroPacket              = "packet lenght is zero"
+	errorPacketFirstLineNotFound = "first line is not found\n%s"
+	errorPacketHeadersNotFound   = "headers is not found (%d:%d)\n%s"
 )
