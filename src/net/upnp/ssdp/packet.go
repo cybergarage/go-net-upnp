@@ -45,9 +45,11 @@ func (self *Packet) parse(pktBytes []byte) error {
 
 	// Read first line
 
-	fmt.Sprintf("ssdp pkt = '%s'", string(pktBytes))
 	pktFirstLineSep := []byte(CRLF)
 	pktFirstLineIdx := bytes.Index(pktBytes, pktFirstLineSep)
+	if pktFirstLineIdx == -1 {
+		return errors.New(fmt.Sprintf(errorPacketFirstLineNotFound, string(pktBytes)))
+	}
 	pktFirstLine := string(pktBytes[0:pktFirstLineIdx])
 	self.FirstLines = strings.Split(pktFirstLine, SP)
 
@@ -55,9 +57,20 @@ func (self *Packet) parse(pktBytes []byte) error {
 
 	pktBodySep := []byte(CRLF + CRLF)
 	pktBodyIdx := bytes.Index(pktBytes, pktBodySep)
-	pktBodyIdx += len(pktBodySep)
+	if pktBodyIdx == -1 {
+		pktBodyIdx = len(pktBytes) - 1
+	} else {
+		pktBodyIdx += len(pktBodySep)
+	}
 
-	pktHeaderStrings := string(pktBytes[(pktFirstLineIdx + len(CRLF)):(pktBodyIdx - 1)])
+	pktBeginIdx := pktFirstLineIdx + len(CRLF)
+	pktEndIdx := pktBodyIdx - 1
+
+	if (pktBeginIdx < 0) || (pktEndIdx < 0) || (pktEndIdx < pktBeginIdx) || (len(pktBytes)-1) < pktBeginIdx || (len(pktBytes)-1) < pktEndIdx {
+		return errors.New(fmt.Sprintf(errorPacketHeadersNotFound, pktBeginIdx, pktEndIdx, string(pktBytes)))
+	}
+
+	pktHeaderStrings := string(pktBytes[pktBeginIdx:pktEndIdx])
 	for _, headerLine := range strings.Split(pktHeaderStrings, CRLF) {
 		headerStrings := strings.Split(headerLine, ": ")
 		if len(headerStrings) < 2 {
@@ -90,7 +103,7 @@ func (self *Packet) SetMethod(method string) error {
 	self.FirstLines = make([]string, 3)
 	self.FirstLines[0] = method
 	self.FirstLines[1] = HTTP_PATH
-	self.FirstLines[3] = fmt.Sprintf("HTTP/%s", HTTP_VERSION)
+	self.FirstLines[2] = fmt.Sprintf("HTTP/%s", HTTP_VERSION)
 	return nil
 }
 
@@ -270,6 +283,8 @@ func (self *Packet) String() string {
 	for name, value := range self.Headers {
 		pktBuf.WriteString(fmt.Sprintf("%s: %s%s", name, value, CRLF))
 	}
+
+	pktBuf.WriteString(CRLF)
 
 	return pktBuf.String()
 }

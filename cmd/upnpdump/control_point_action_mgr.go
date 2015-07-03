@@ -27,7 +27,7 @@ func (self *ControlPointActionManager) initDefaultActions() error {
 }
 
 func (self *ControlPointActionManager) AddAction(key int, desc string, actionFunc ContolPointActionFunc) error {
-	action := NewControlPointAction(Q_KEY, Q_DESC, QuitAction)
+	action := NewControlPointAction(key, desc, actionFunc)
 	self.Commands[key] = action
 	return nil
 }
