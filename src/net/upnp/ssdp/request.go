@@ -8,14 +8,14 @@ type Request struct {
 	*Packet
 }
 
-// NewPacket returns a new Packet.
+// NewPacket returns a new Request.
 func NewRequest() *Request {
 	ssdpReq := &Request{}
 	ssdpReq.Packet = NewPacket()
 	return ssdpReq
 }
 
-// NewRequestFromBytes returns a new Packet from the specified bytes.
+// NewRequestFromBytes returns a new Request from the specified bytes.
 func NewRequestFromBytes(bytes []byte) (*Request, error) {
 	ssdpPkt, err := NewPacketFromBytes(bytes)
 	if err != nil {
@@ -26,14 +26,25 @@ func NewRequestFromBytes(bytes []byte) (*Request, error) {
 	return ssdpReq, nil
 }
 
-// NewRequestFromString returns a new Packet from the specified string.
+// NewRequestFromString returns a new Request from the specified string.
 func NewRequestFromString(packet string) (*Request, error) {
 	return NewRequestFromBytes([]byte(packet))
 }
 
-// NewRequestFromPacket returns a new Packet from the specified packet.
+// NewRequestFromPacket returns a new Request from the specified packet.
 func NewRequestFromPacket(packet *Packet) (*Request, error) {
 	ssdpReq := &Request{}
 	ssdpReq.Packet = packet
+	return ssdpReq, nil
+}
+
+// NewSearchRequest a new Request from the specified bytes.
+func NewSearchRequest(st string) (*Request, error) {
+	ssdpReq := NewRequest()
+	ssdpReq.SetMethod(M_SEARCH)
+	ssdpReq.SetHost(MULTICAST_ADDRESS)
+	ssdpReq.SetST(st)
+	ssdpReq.SetMX(DEFAULT_MSEARCH_MX)
+	ssdpReq.SetMAN(MAN_DISCOVER)
 	return ssdpReq, nil
 }

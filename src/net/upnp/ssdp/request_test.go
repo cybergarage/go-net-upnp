@@ -42,10 +42,10 @@ func TestSSDPSearchRequest(t *testing.T) {
 		t.Errorf(testErrorMsgBadHeader, MAN, value, expectValue)
 	}
 
-	value, _ = ssdpReq.GetMX()
-	expectValue = "3"
+	ivalue, _ := ssdpReq.GetMX()
+	iexpectValue := 3
 	if value != expectValue {
-		t.Errorf(testErrorMsgBadHeader, MX, value, expectValue)
+		t.Errorf(testErrorMsgBadHeader, MX, ivalue, iexpectValue)
 	}
 
 	value, _ = ssdpReq.GetST()

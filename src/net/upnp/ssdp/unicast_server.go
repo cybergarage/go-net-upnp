@@ -21,10 +21,10 @@ type UnicastServer struct {
 
 // NewUnicastServer returns a new UnicastServer.
 func NewUnicastServer() *UnicastServer {
-	ssdpPkt := &UnicastServer{}
-	ssdpPkt.Socket = NewHTTPUSocket()
-	ssdpPkt.Listener = nil
-	return ssdpPkt
+	server := &UnicastServer{}
+	server.Socket = NewHTTPUSocket()
+	server.Listener = nil
+	return server
 }
 
 // Start starts this server.
@@ -52,10 +52,6 @@ func handleSSDPUnicastConnection(self *UnicastServer) {
 		if err != nil {
 			log.Error(err)
 			break
-		}
-
-		if len(ssdpPkt.Bytes) <= 0 {
-			continue
 		}
 
 		if self.Listener != nil {

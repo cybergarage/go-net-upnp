@@ -27,6 +27,7 @@ const (
 	SP                  = " "
 
 	HTTP_VERSION = "1.1"
+	HTTP_PATH    = "*"
 	NOTIFY       = "NOTIFY"
 	M_SEARCH     = "M-SEARCH"
 
