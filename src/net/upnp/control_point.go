@@ -9,7 +9,7 @@ import (
 	"net/upnp/ssdp"
 )
 
-// A ControlPoint represents a listener for ControlPoint.
+// A ControlPointListener represents a listener for ControlPoint.
 type ControlPointListener interface {
 	ssdp.MulticastListener
 	ssdp.UnicastListener

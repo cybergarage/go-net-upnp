@@ -18,13 +18,14 @@ const (
 
 // A SSDPListener represents a listener for Server.
 type RequestListener interface {
-	HTTPRequestReceived(httpReq gohttp.Request)
+	HTTPRequestReceived(*Request, ResponseWriter)
 }
 
 // A Server represents a Server.
 type Server struct {
 	*gohttp.Server
-	Conn net.Listener
+	Conn     net.Listener
+	Listener RequestListener
 }
 
 // NewServer returns a new Server.
@@ -43,10 +44,13 @@ func (self *Server) Start(port int) error {
 		MaxHeaderBytes: MAX_HEADER_BYTES,
 	}
 
-	err := self.Server.ListenAndServe()
+	var err error
+	self.Conn, err = net.Listen("tcp", self.Addr)
 	if err != nil {
 		return err
 	}
+
+	go self.Server.Serve(self.Conn.(*net.TCPListener))
 
 	return nil
 }
@@ -60,16 +64,12 @@ func (self *Server) Stop() error {
 	return nil
 }
 
-// ListenAndServe overides net/http to close the connection
-func (self *Server) ListenAndServe() error {
-	ln, err := net.Listen("tcp", self.Addr)
-	if err != nil {
-		return err
-	}
-	self.Conn = ln
-	return self.Server.Serve(ln.(*net.TCPListener))
-}
-
 // ServeHTTP is a handler
-func (self *Server) ServeHTTP(gohttp.ResponseWriter, *gohttp.Request) {
+func (self *Server) ServeHTTP(res gohttp.ResponseWriter, req *gohttp.Request) {
+	if self.Listener == nil {
+		res.WriteHeader(gohttp.StatusInternalServerError)
+		return
+	}
+
+	self.Listener.HTTPRequestReceived(NewRequest(req), res)
 }
