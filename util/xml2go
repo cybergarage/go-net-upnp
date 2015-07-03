@@ -1,0 +1,35 @@
+#!/usr/bin/ruby
+#------------------------------------------------------------
+# Copyright 2015 Satoshi Konno. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+#------------------------------------------------------------
+
+if ARGV.size < 1
+  STDERR.puts "Usage $0 <filename>\n"
+  exit(1)
+end
+
+puts "// Copyright 2015 Satoshi Konno. All rights reserved."
+puts "// Use of this source code is governed by a BSD-style"
+puts "// license that can be found in the LICENSE file."
+puts "\n"
+
+filename = ARGV[0]
+
+puts "const #{filename} = \"\" +"
+
+lines = []
+File.open filename do |file|
+  file.each_line do |line|
+    lines << line.chomp!.gsub(/\"/, "\\\"")
+  end
+end
+
+lines.each_with_index do |line, i|
+  print "\"#{line}\""
+  if i < (lines.length - 1)
+    print " +"
+  end
+  puts
+end
