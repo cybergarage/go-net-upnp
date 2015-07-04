@@ -29,6 +29,11 @@ func TestNewControlPoint(t *testing.T) {
 		t.Error(err)
 	}
 
+	err = cp.SearchRootDevice()
+	if err != nil {
+		t.Error(err)
+	}
+
 	err = cp.Stop()
 	if err != nil {
 		t.Error(err)
