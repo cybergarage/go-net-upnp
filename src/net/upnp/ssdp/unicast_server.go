@@ -15,21 +15,21 @@ type UnicastListener interface {
 
 // A UnicastServer represents a packet of SSDP.
 type UnicastServer struct {
-	Socket   *HTTPUSocket
+	Socket   *UnicastSocket
 	Listener UnicastListener
 }
 
 // NewUnicastServer returns a new UnicastServer.
 func NewUnicastServer() *UnicastServer {
 	server := &UnicastServer{}
-	server.Socket = NewHTTPUSocket()
+	server.Socket = NewUnicastSocket()
 	server.Listener = nil
 	return server
 }
 
 // Start starts this server.
-func (self *UnicastServer) Start(port int) error {
-	err := self.Socket.Bind(port)
+func (self *UnicastServer) Start(addr string, port int) error {
+	err := self.Socket.BindAddr(addr, port)
 	if err != nil {
 		return err
 	}
@@ -44,6 +44,18 @@ func (self *UnicastServer) Stop() error {
 		return err
 	}
 	return nil
+}
+
+// Search sends a M-SEARCH request of the specified ST.
+func (self *UnicastServer) Search(st string) error {
+	ssdpReq, err := NewSearchRequest(st)
+	if err != nil {
+		return err
+	}
+
+	_, err = self.Socket.Write(ssdpReq)
+
+	return err
 }
 
 func handleSSDPUnicastConnection(self *UnicastServer) {

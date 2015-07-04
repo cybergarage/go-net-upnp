@@ -41,9 +41,29 @@ func (self *HTTPUSocket) Bind(port int) error {
 	return nil
 }
 
+// Bind binds to SSDP multicast address.
+func (self *HTTPUSocket) BindAddr(addr string, port int) error {
+	err := self.Close()
+	if err != nil {
+		return err
+	}
+
+	localAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
+	if err != nil {
+		return err
+	}
+
+	self.Conn, err = net.ListenUDP("udp", localAddr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Write sends the specified bytes.
-func (self *HTTPUSocket) Write(b []byte) (int, error) {
-	ssdpAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
+func (self *HTTPUSocket) Write(addr string, port int, b []byte) (int, error) {
+	ssdpAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
 	if err != nil {
 		return 0, err
 	}

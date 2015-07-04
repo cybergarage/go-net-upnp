@@ -12,8 +12,13 @@ type UnicastSocket struct {
 }
 
 // NewUnicastSocket returns a new UnicastSocket.
-func NewUnicastSocket() (*UnicastSocket, error) {
+func NewUnicastSocket() *UnicastSocket {
 	ssdpSock := &UnicastSocket{}
 	ssdpSock.HTTPUSocket = NewHTTPUSocket()
-	return ssdpSock, nil
+	return ssdpSock
+}
+
+// Write sends the specified bytes.
+func (self *UnicastSocket) Write(req *Request) (int, error) {
+	return self.HTTPUSocket.Write(ADDRESS, PORT, req.Bytes())
 }

@@ -149,8 +149,8 @@ func (self *Packet) GetDate() (string, bool) {
 	return self.GetHeaderString(DATE)
 }
 
-func (self *Packet) SetLocation(value string) error {
-	return self.SetHeaderString(LOCATION, value)
+func (self *Packet) SetLocation(addr string, port int) error {
+	return self.SetHeaderString(LOCATION, fmt.Sprintf("%s:%d", addr, port))
 }
 
 func (self *Packet) GetLocation() (string, bool) {

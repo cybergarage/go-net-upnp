@@ -8,7 +8,6 @@ import (
 	"testing"
 )
 
-func TestNewMulticastServerList(t *testing.T) {
-	servers := NewMulticastServerList()
-	servers.Start()
+func TestNewUnicastServerList(t *testing.T) {
+	NewUnicastServerList()
 }

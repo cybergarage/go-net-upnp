@@ -17,11 +17,11 @@ type ControlPointListener interface {
 
 // A ControlPoint represents a ControlPoint.
 type ControlPoint struct {
-	Port            int
-	RootDevices     []Device
-	ssdpMcastServer *ssdp.MulticastServer
-	ssdpUcastServer *ssdp.UnicastServer
-	Listener        ControlPointListener
+	Port                int
+	RootDevices         []Device
+	ssdpMcastServer     *ssdp.MulticastServer
+	ssdpUcastServerList *ssdp.UnicastServerList
+	Listener            ControlPointListener
 }
 
 // NewControlPoint returns a new ControlPoint.
@@ -29,7 +29,7 @@ func NewControlPoint() *ControlPoint {
 	cp := &ControlPoint{}
 	cp.RootDevices = make([]Device, 0)
 	cp.ssdpMcastServer = ssdp.NewMulticastServer()
-	cp.ssdpUcastServer = ssdp.NewUnicastServer()
+	cp.ssdpUcastServerList = ssdp.NewUnicastServerList()
 	return cp
 }
 
@@ -42,7 +42,7 @@ func (self *ControlPoint) StartWithPort(port int) error {
 		return err
 	}
 
-	err = self.ssdpUcastServer.Start(port)
+	err = self.ssdpUcastServerList.Start(port)
 	if err != nil {
 		self.Stop()
 		return err
@@ -70,19 +70,7 @@ func (self *ControlPoint) Stop() error {
 
 // Search sends a M-SEARCH request of the specified ST.
 func (self *ControlPoint) Search(st string) error {
-	ssdpReq, err := ssdp.NewSearchRequest(st)
-	if err != nil {
-		return err
-	}
-
-	ssdpSock, err := ssdp.NewMulticastSocket()
-	if err != nil {
-		return err
-	}
-
-	_, err = ssdpSock.Write(ssdpReq)
-
-	return err
+	return self.ssdpUcastServerList.Search(st)
 }
 
 // SearchRootDevice sends a M-SEARCH request for root devices.
