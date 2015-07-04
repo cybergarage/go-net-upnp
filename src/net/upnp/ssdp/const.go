@@ -53,7 +53,7 @@ const (
 
 	ROOT_DEVICE  = "upnp:rootdevice"
 	ALL          = "ssdp:all"
-	MAN_DISCOVER = "ssdp:discover"
+	MAN_DISCOVER = "\"ssdp:discover\""
 	NTS_ALIVE    = "ssdp:alive"
 	NTS_BYEBYE   = "ssdp:byebye"
 	MAX_AGE      = "max-age"

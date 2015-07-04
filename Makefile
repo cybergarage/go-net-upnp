@@ -11,7 +11,7 @@
 PREFIX?=$(shell pwd)
 GOPATH=$(shell pwd)
 
-packages = net/upnp net/upnp/log net/upnp/ssdp
+packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util
 	
 all: build
 
