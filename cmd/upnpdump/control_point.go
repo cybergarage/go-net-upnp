@@ -36,6 +36,10 @@ func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpReq.String()))
 }
 
+func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpRes.String()))
+}
+
 func (self *ControlPoint) DoAction(key int) bool {
 	return self.ControlPointActionManager.DoAction(self, key)
 }
