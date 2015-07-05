@@ -6,9 +6,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"net/upnp"
 	"net/upnp/ssdp"
-	"os"
+	"net/upnp/util"
 )
 
 // A ControlPoint represents a ControlPoint.
@@ -28,17 +30,34 @@ func NewControlPoint() *ControlPoint {
 	return cp
 }
 
-func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpReq.String()))
+func printMessage(msg string) {
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", msg))
 }
 
-func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
-	os.Stdout.WriteString(fmt.Sprintf("FROM : %s\n", ssdpReq.From.String()))
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpReq.String()))
+func GetFromToMessageFromSSDPRequest(req *ssdp.Request) string {
+	fromAddr := req.From.String()
+	toAddr := ""
+	ifAddr, err := util.GetInterfaceAddress(&req.Interface)
+	if err == nil {
+		toAddr = ifAddr
+	}
+
+	return fmt.Sprintf("(%s -> %s)", fromAddr, toAddr)
 }
 
-func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpRes.String()))
+func (self *ControlPoint) DeviceNotifyReceived(req *ssdp.Request) {
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
+}
+
+func (self *ControlPoint) DeviceSearchReceived(req *ssdp.Request) {
+	st, _ := req.GetST()
+	msg := fmt.Sprintf("search : %s %s", st, GetFromToMessageFromSSDPRequest(req))
+	printMessage(msg)
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
+}
+
+func (self *ControlPoint) DeviceResponseReceived(res *ssdp.Response) {
+	os.Stdout.WriteString(fmt.Sprintf("%s\n", res.String()))
 }
 
 func (self *ControlPoint) DoAction(key int) bool {
