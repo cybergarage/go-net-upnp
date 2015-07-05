@@ -22,37 +22,14 @@ type DeviceListener interface {
 type Device struct {
 	Description *DeviceDescription
 
+	SpecVersion SpecVersion
+	URLBase     string
+
 	Port     int
 	Listener DeviceListener
 
 	ssdpMcastServerList *ssdp.MulticastServerList
 	httpServer          *http.Server
-}
-
-// A DeviceDescription represents a UPnP device description.
-type DeviceDescription struct {
-	XMLName          xml.Name    `xml:"device"`
-	DeviceType       string      `xml:"deviceType"`
-	FriendlyName     string      `xml:"friendlyName"`
-	Manufacturer     string      `xml:"manufacturer"`
-	ManufacturerURL  string      `xml:"manufacturerURL"`
-	ModelDescription string      `xml:"modelDescription"`
-	ModelName        string      `xml:"modelName"`
-	ModelNumber      string      `xml:"modelNumber"`
-	ModelURL         string      `xml:"modelURL"`
-	SerialNumber     string      `xml:"serialNumber"`
-	UDN              string      `xml:"UDN"`
-	UPC              string      `xml:"UPC"`
-	PresentationURL  string      `xml:"presentationURL"`
-	IconList         IconList    `xml:"iconList"`
-	ServiceList      ServiceList `xml:"serviceList"`
-	DeviceList       DeviceList  `xml:"deviceList"`
-}
-
-// A DeviceList represents a ServiceList.
-type DeviceList struct {
-	XMLName xml.Name `xml:"deviceList"`
-	Devices []Device `xml:"device"`
 }
 
 // NewDevice returns a new Device.

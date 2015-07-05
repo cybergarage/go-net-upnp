@@ -14,7 +14,12 @@ type Request struct {
 }
 
 // NewRequest returns a new Request.
-func NewRequest(req *gohttp.Request) *Request {
+func NewRequestFromRequest(req *gohttp.Request) *Request {
 	httpReq := &Request{Request: req}
 	return httpReq
+}
+
+// NewRequest returns a new Request.
+func NewRequest(req *gohttp.Request) *Request {
+	return NewRequestFromRequest(&gohttp.Request{})
 }

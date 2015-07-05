@@ -5,6 +5,8 @@
 package ssdp
 
 import (
+	"time"
+
 	"net/upnp/http"
 )
 
@@ -20,6 +22,7 @@ func NewResponse() *Response {
 	ssdpRes.SetStatusCode(http.StatusOK)
 	ssdpRes.SetServer(http.GetServerName())
 	ssdpRes.SetEXT("")
+	ssdpRes.SetDate(time.Now().Format(time.RFC1123))
 
 	return ssdpRes
 }

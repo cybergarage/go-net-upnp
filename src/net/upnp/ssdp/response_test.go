@@ -5,6 +5,7 @@
 package ssdp
 
 import (
+	"net/upnp/http"
 	"testing"
 )
 
@@ -31,6 +32,15 @@ func TestSearchResponse(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
+	// Check StatusCode
+
+	code := res.GetStatusCode()
+	if code != http.StatusOK {
+		t.Errorf(testErrorMsgBadStatusCode, code, 200)
+	}
+
+	// Check Headers
 
 	var headerValue, expectValue string
 	//var headerInt, expectInt int

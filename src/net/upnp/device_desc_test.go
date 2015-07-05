@@ -14,7 +14,7 @@ const (
 )
 
 func TestParseDeviceDescription(t *testing.T) {
-	devRoot := DeviceRoot{}
+	devRoot := DeviceDescriptionRoot{}
 	err := xml.Unmarshal([]byte(testDeviceDesecription), &devRoot)
 	if err != nil {
 		t.Error(err)
