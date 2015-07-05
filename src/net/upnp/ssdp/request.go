@@ -52,9 +52,9 @@ func NewSearchRequest(st string) (*Request, error) {
 }
 
 func (self *Request) IsDiscover() bool {
-	return self.IstHeaderString(MAN, DISCOVER)
+	return self.IsHeaderString(MAN, DISCOVER)
 }
 
 func (self *Request) IsRootDevice() bool {
-	return self.IstHeaderString(ST, ROOT_DEVICE)
+	return self.IsHeaderString(ST, ROOT_DEVICE)
 }

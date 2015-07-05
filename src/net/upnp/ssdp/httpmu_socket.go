@@ -5,6 +5,7 @@
 package ssdp
 
 import (
+	"errors"
 	"net"
 )
 
@@ -44,6 +45,10 @@ func (self *HTTPMUSocket) Bind(ifi *net.Interface) error {
 
 // Write sends the specified bytes.
 func (self *HTTPMUSocket) Write(b []byte) (int, error) {
+	if self.Conn == nil {
+		return 0, errors.New(errorSocketIsClosed)
+	}
+
 	ssdpAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
 	if err != nil {
 		return 0, err
