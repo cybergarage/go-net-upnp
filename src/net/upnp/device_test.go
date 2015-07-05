@@ -65,7 +65,7 @@ func TestDeviceLoadDescription(t *testing.T) {
 		t.Error(err)
 	}
 
-	for n, service := range dev.Description.ServiceList.Services {
+	for n, service := range dev.ServiceList.Services {
 		var expectedServiceType string
 		var expectedServiceId string
 		switch n {

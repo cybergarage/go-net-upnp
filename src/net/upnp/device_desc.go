@@ -65,9 +65,10 @@ func NewDeviceDescriptionRootFromDevice(dev *Device) (*DeviceDescriptionRoot, er
 
 func NewDeviceDescriptionRootFromString(descStr string) (*DeviceDescriptionRoot, error) {
 	root := NewDeviceDescriptionRoot()
-	err := xml.Unmarshal([]byte(descStr), &root)
+	err := xml.Unmarshal([]byte(descStr), root)
 	if err != nil {
 		return nil, err
 	}
+
 	return root, err
 }
