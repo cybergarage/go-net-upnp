@@ -4,6 +4,10 @@
 
 package ssdp
 
+import (
+	"net/upnp/http"
+)
+
 type Response struct {
 	*Packet
 }
@@ -12,6 +16,11 @@ type Response struct {
 func NewResponse() *Response {
 	ssdpRes := &Response{}
 	ssdpRes.Packet = NewPacket()
+
+	ssdpRes.SetStatusCode(http.StatusOK)
+	ssdpRes.SetServer(http.GetServerName())
+	ssdpRes.SetEXT("")
+
 	return ssdpRes
 }
 

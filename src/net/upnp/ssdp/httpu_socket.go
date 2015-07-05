@@ -7,6 +7,7 @@ package ssdp
 import (
 	"fmt"
 	"net"
+	"net/upnp/util"
 )
 
 // A HTTPUSocket represents a socket of HTTPU.
@@ -22,28 +23,13 @@ func NewHTTPUSocket() *HTTPUSocket {
 }
 
 // Bind binds to SSDP multicast address.
-func (self *HTTPUSocket) Bind(port int) error {
+func (self *HTTPUSocket) Bind(ifi *net.Interface, port int) error {
 	err := self.Close()
 	if err != nil {
 		return err
 	}
 
-	localAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		return err
-	}
-
-	self.Conn, err = net.ListenUDP("udp", localAddr)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Bind binds to SSDP multicast address.
-func (self *HTTPUSocket) BindAddr(addr string, port int) error {
-	err := self.Close()
+	addr, err := util.GetInterfaceAddress(ifi)
 	if err != nil {
 		return err
 	}

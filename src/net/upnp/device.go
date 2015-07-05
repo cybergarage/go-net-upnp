@@ -25,8 +25,8 @@ type Device struct {
 	Port     int
 	Listener DeviceListener
 
-	ssdpMcastServer *ssdp.MulticastServer
-	httpServer      *http.Server
+	ssdpMcastServerList *ssdp.MulticastServerList
+	httpServer          *http.Server
 }
 
 // A DeviceDescription represents a UPnP device description.
@@ -59,15 +59,15 @@ type DeviceList struct {
 func NewDevice() *Device {
 	dev := &Device{}
 	dev.Description = &DeviceDescription{}
-	dev.ssdpMcastServer = ssdp.NewMulticastServer()
+	dev.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	dev.httpServer = http.NewServer()
 	return dev
 }
 
 // Start starts this control point.
 func (self *Device) StartWithPort(port int) error {
-	self.ssdpMcastServer.Listener = self
-	err := self.ssdpMcastServer.Start()
+	self.ssdpMcastServerList.Listener = self
+	err := self.ssdpMcastServerList.Start()
 	if err != nil {
 		self.Stop()
 		return err
@@ -102,7 +102,7 @@ func (self *Device) Start() error {
 
 // Stop stops this control point.
 func (self *Device) Stop() error {
-	err := self.ssdpMcastServer.Stop()
+	err := self.ssdpMcastServerList.Stop()
 	if err != nil {
 		return err
 	}

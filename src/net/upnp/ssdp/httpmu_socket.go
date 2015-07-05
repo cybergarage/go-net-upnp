@@ -21,7 +21,7 @@ func NewHTTPMUSocket() *HTTPMUSocket {
 }
 
 // Bind binds to SSDP multicast address.
-func (self *HTTPMUSocket) Bind() error {
+func (self *HTTPMUSocket) Bind(ifi *net.Interface) error {
 	err := self.Close()
 	if err != nil {
 		return err
@@ -32,7 +32,7 @@ func (self *HTTPMUSocket) Bind() error {
 		return err
 	}
 
-	self.Conn, err = net.ListenMulticastUDP("udp", nil, mcastAddr)
+	self.Conn, err = net.ListenMulticastUDP("udp", ifi, mcastAddr)
 	if err != nil {
 		return err
 	}

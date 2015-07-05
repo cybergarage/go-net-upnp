@@ -270,7 +270,7 @@ func (self *Packet) GetTimeout() (string, bool) {
 	return self.GetHeaderString(TIMEOUT)
 }
 
-func (self *Packet) SetSERVER(value string) error {
+func (self *Packet) SetServer(value string) error {
 	return self.SetHeaderString(SERVER, value)
 }
 
