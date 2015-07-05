@@ -10,16 +10,13 @@ import (
 
 // A HTTPMUSocket represents a socket for HTTPMU.
 type HTTPMUSocket struct {
-	*HTTPUSocket
-	Socket  []byte
-	Conn    *net.UDPConn
-	readBuf []byte
+	*UDPSocket
 }
 
 // NewHTTPMUSocket returns a new HTTPMUSocket.
 func NewHTTPMUSocket() *HTTPMUSocket {
 	ssdpSock := &HTTPMUSocket{}
-	ssdpSock.readBuf = make([]byte, MAX_PACKET_SIZE)
+	ssdpSock.UDPSocket = NewUDPSocket()
 	return ssdpSock
 }
 
@@ -30,28 +27,16 @@ func (self *HTTPMUSocket) Bind() error {
 		return err
 	}
 
-	ssdpAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
+	mcastAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
 	if err != nil {
 		return err
 	}
 
-	self.Conn, err = net.ListenMulticastUDP("udp", nil, ssdpAddr)
+	self.Conn, err = net.ListenMulticastUDP("udp", nil, mcastAddr)
 	if err != nil {
 		return err
 	}
 
-	return nil
-}
-
-// Bind binds to SSDP multicast address.
-func (self *HTTPMUSocket) Close() error {
-	if self.Conn == nil {
-		return nil
-	}
-	err := self.Conn.Close()
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -69,20 +54,4 @@ func (self *HTTPMUSocket) Write(b []byte) (int, error) {
 	defer conn.Close()
 
 	return conn.Write(b)
-}
-
-// Read reads a SSDP packet.
-func (self *HTTPMUSocket) Read() (*Packet, error) {
-	n, from, err := self.Conn.ReadFrom(self.readBuf)
-	if err != nil {
-		return nil, err
-	}
-
-	ssdpPkt, err := NewPacketFromBytes(self.readBuf[:n])
-	if err != nil {
-		return nil, err
-	}
-	ssdpPkt.From = from
-
-	return ssdpPkt, nil
 }
