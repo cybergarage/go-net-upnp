@@ -74,14 +74,16 @@ func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 
 // NewDeviceFromDescription returns a device from the specified string
 func NewDeviceFromDescription(devDesc string) (*Device, error) {
-	rootDev := DeviceDescriptionRoot{}
-	err := xml.Unmarshal([]byte(devDesc), &rootDev)
+	root := DeviceDescriptionRoot{}
+	err := xml.Unmarshal([]byte(devDesc), &root)
 	if err != nil {
 		return nil, err
 	}
 
-	rootDev.Device.SpecVersion = rootDev.SpecVersion
-	rootDev.Device.URLBase = rootDev.URLBase
+	rootDev := &root.Device
+	rootDev.SpecVersion = rootDev.SpecVersion
+	rootDev.URLBase = rootDev.URLBase
+	rootDev.DeviceDescription = rootDev.Description
 
-	return &rootDev.Device, nil
+	return rootDev, nil
 }

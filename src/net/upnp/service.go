@@ -10,6 +10,8 @@ import (
 
 // A Service represents a UPnP service.
 type Service struct {
+	*ServiceDescription
+
 	XMLName     xml.Name `xml:"service"`
 	ServiceType string   `xml:"serviceType"`
 	ServiceId   string   `xml:"serviceId"`
@@ -36,6 +38,7 @@ type ServiceList struct {
 // NewService returns a new Service.
 func NewService() *Service {
 	service := &Service{}
+	service.ServiceDescription = &ServiceDescription{}
 	service.Description = &ServiceDescription{}
 	return service
 }
@@ -46,5 +49,8 @@ func (self *Service) LoadDescriptionString(desc string) error {
 	if err != nil {
 		return err
 	}
+
+	self.ServiceDescription = self.Description
+
 	return nil
 }
