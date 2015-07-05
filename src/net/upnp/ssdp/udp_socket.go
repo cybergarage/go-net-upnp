@@ -12,7 +12,7 @@ import (
 type UDPSocket struct {
 	Conn      *net.UDPConn
 	readBuf   []byte
-	LocalAddr *net.UDPAddr
+	Interface *net.Interface
 }
 
 // NewUDPSocket returns a new UDPSocket.
@@ -31,6 +31,10 @@ func (self *UDPSocket) Close() error {
 	if err != nil {
 		return err
 	}
+
+	self.Conn = nil
+	self.Interface = nil
+
 	return nil
 }
 
@@ -45,6 +49,8 @@ func (self *UDPSocket) Read() (*Packet, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	ssdpPkt.Interface = *self.Interface
 	ssdpPkt.From = from
 
 	return ssdpPkt, nil

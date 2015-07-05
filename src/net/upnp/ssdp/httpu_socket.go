@@ -44,7 +44,7 @@ func (self *HTTPUSocket) Bind(ifi *net.Interface, port int) error {
 		return err
 	}
 
-	self.LocalAddr = bindAddr
+	self.Interface = ifi
 
 	return nil
 }
