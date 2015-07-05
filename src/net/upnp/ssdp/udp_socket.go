@@ -17,7 +17,7 @@ const (
 type UDPSocket struct {
 	Conn      *net.UDPConn
 	readBuf   []byte
-	Interface *net.Interface
+	Interface net.Interface
 }
 
 // NewUDPSocket returns a new UDPSocket.
@@ -38,7 +38,7 @@ func (self *UDPSocket) Close() error {
 	}
 
 	self.Conn = nil
-	self.Interface = nil
+	self.Interface = net.Interface{}
 
 	return nil
 }
@@ -60,9 +60,7 @@ func (self *UDPSocket) Read() (*Packet, error) {
 	}
 
 	ssdpPkt.From = from
-	if self.Interface != nil {
-		ssdpPkt.Interface = *self.Interface
-	}
+	ssdpPkt.Interface = self.Interface
 
 	return ssdpPkt, nil
 }

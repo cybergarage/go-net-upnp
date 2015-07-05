@@ -12,9 +12,18 @@ import (
 
 const (
 	errorAvailableAddressNotFound = "Available address not found"
+	errorAvailableInterfaceFound  = "Available interface not found"
 )
 
-func GetInterfaceAddress(ifi *net.Interface) (string, error) {
+func IsIPv6Address(addr string) bool {
+	if 0 < strings.Index(addr, ":") {
+		return true
+	}
+
+	return false
+}
+
+func GetInterfaceAddress(ifi net.Interface) (string, error) {
 	addrs, err := ifi.Addrs()
 	if err != nil {
 		return "", err
@@ -27,7 +36,7 @@ func GetInterfaceAddress(ifi *net.Interface) (string, error) {
 		}
 
 		// Disabled IPv6 interface
-		if 0 < strings.Index(saddr[0], ":") {
+		if IsIPv6Address(saddr[0]) {
 			continue
 		}
 
@@ -37,8 +46,8 @@ func GetInterfaceAddress(ifi *net.Interface) (string, error) {
 	return "", errors.New(errorAvailableAddressNotFound)
 }
 
-func GetAvailableInterfaces() ([]*net.Interface, error) {
-	useIfs := make([]*net.Interface, 0)
+func GetAvailableInterfaces() ([]net.Interface, error) {
+	useIfs := make([]net.Interface, 0)
 
 	localIfs, err := net.Interfaces()
 	if err != nil {
@@ -56,13 +65,16 @@ func GetAvailableInterfaces() ([]*net.Interface, error) {
 			continue
 		}
 
-		_, addrErr := GetInterfaceAddress(&localIf)
+		_, addrErr := GetInterfaceAddress(localIf)
 		if addrErr != nil {
 			continue
 		}
 
-		useIfs = append(useIfs, &localIf)
+		useIfs = append(useIfs, localIf)
+	}
 
+	if len(useIfs) <= 0 {
+		return useIfs, errors.New(errorAvailableInterfaceFound)
 	}
 
 	return useIfs, err

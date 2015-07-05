@@ -29,7 +29,7 @@ func NewUnicastServer() *UnicastServer {
 }
 
 // Start starts this server.
-func (self *UnicastServer) Start(ifi *net.Interface, port int) error {
+func (self *UnicastServer) Start(ifi net.Interface, port int) error {
 	err := self.Socket.Bind(ifi, port)
 	if err != nil {
 		return err
