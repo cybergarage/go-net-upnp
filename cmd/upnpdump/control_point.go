@@ -33,6 +33,7 @@ func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 }
 
 func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
+	os.Stdout.WriteString(fmt.Sprintf("FROM : %s\n", ssdpReq.From.String()))
 	os.Stdout.WriteString(fmt.Sprintf("%s\n", ssdpReq.String()))
 }
 

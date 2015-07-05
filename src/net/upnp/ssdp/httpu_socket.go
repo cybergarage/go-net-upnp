@@ -11,13 +11,13 @@ import (
 
 // A HTTPUSocket represents a socket of HTTPU.
 type HTTPUSocket struct {
-	*HTTPMUSocket
+	*UDPSocket
 }
 
 // NewHTTPUSocket returns a new HTTPUSocket.
 func NewHTTPUSocket() *HTTPUSocket {
 	ssdpSock := &HTTPUSocket{}
-	ssdpSock.HTTPMUSocket = NewHTTPMUSocket()
+	ssdpSock.UDPSocket = NewUDPSocket()
 	return ssdpSock
 }
 
@@ -48,31 +48,27 @@ func (self *HTTPUSocket) BindAddr(addr string, port int) error {
 		return err
 	}
 
-	localAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
+	bindAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
 	if err != nil {
 		return err
 	}
 
-	self.Conn, err = net.ListenUDP("udp", localAddr)
+	self.Conn, err = net.ListenUDP("udp", bindAddr)
 	if err != nil {
 		return err
 	}
+
+	self.LocalAddr = bindAddr
 
 	return nil
 }
 
 // Write sends the specified bytes.
 func (self *HTTPUSocket) Write(addr string, port int, b []byte) (int, error) {
-	ssdpAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
+	toAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
 	if err != nil {
 		return 0, err
 	}
 
-	conn, err := net.DialUDP("udp", nil, ssdpAddr)
-	if err != nil {
-		return 0, err
-	}
-	defer conn.Close()
-
-	return conn.Write(b)
+	return self.Conn.WriteToUDP(b, toAddr)
 }
