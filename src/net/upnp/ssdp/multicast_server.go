@@ -5,6 +5,7 @@
 package ssdp
 
 import (
+	"net"
 	"net/upnp/log"
 )
 
@@ -29,8 +30,8 @@ func NewMulticastServer() *MulticastServer {
 }
 
 // Start starts this server.
-func (self *MulticastServer) Start() error {
-	err := self.Socket.Bind()
+func (self *MulticastServer) Start(ifi *net.Interface) error {
+	err := self.Socket.Bind(ifi)
 	if err != nil {
 		return err
 	}

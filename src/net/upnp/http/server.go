@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net"
 	gohttp "net/http"
+	"net/upnp/util"
 	"time"
 )
 
@@ -15,6 +16,10 @@ const (
 	TIMEOUT          = 60
 	MAX_HEADER_BYTES = 1 << 20
 )
+
+func GetServerName() string {
+	return util.GetUserAgent()
+}
 
 // A SSDPListener represents a listener for Server.
 type RequestListener interface {

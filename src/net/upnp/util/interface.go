@@ -10,7 +10,16 @@ import (
 	"strings"
 )
 
-func getInterfaceStringAddrs(addrs []net.Addr) (string, error) {
+const (
+	errorAvailableAddressNotFound = "Available address not found"
+)
+
+func GetInterfaceAddress(ifi *net.Interface) (string, error) {
+	addrs, err := ifi.Addrs()
+	if err != nil {
+		return "", err
+	}
+
 	for _, addr := range addrs {
 		saddr := strings.Split(addr.String(), "/")
 		if len(saddr) < 2 {
@@ -25,11 +34,11 @@ func getInterfaceStringAddrs(addrs []net.Addr) (string, error) {
 		return saddr[0], nil
 	}
 
-	return "", errors.New("Available address not found")
+	return "", errors.New(errorAvailableAddressNotFound)
 }
 
-func GetAvailableInterfaces() ([]net.Interface, error) {
-	useIfs := make([]net.Interface, 0)
+func GetAvailableInterfaces() ([]*net.Interface, error) {
+	useIfs := make([]*net.Interface, 0)
 
 	localIfs, err := net.Interfaces()
 	if err != nil {
@@ -46,45 +55,15 @@ func GetAvailableInterfaces() ([]net.Interface, error) {
 		if (localIf.Flags & net.FlagMulticast) == 0 {
 			continue
 		}
-		addrs, err := localIf.Addrs()
+
+		_, err = GetInterfaceAddress(&localIf)
 		if err != nil {
 			continue
 		}
 
-		_, err = getInterfaceStringAddrs(addrs)
-		if err != nil {
-			continue
-		}
-
-		useIfs = append(useIfs, localIf)
+		useIfs = append(useIfs, &localIf)
 
 	}
 
 	return useIfs, err
-}
-
-func GetAvailableInterfaceAddresses() ([]string, error) {
-	useIfStrAddrs := make([]string, 0)
-
-	useIfs, err := GetAvailableInterfaces()
-	if err != nil {
-		return useIfStrAddrs, err
-	}
-
-	for _, useIf := range useIfs {
-		useIfAddrs, err := useIf.Addrs()
-		if err != nil {
-			continue
-		}
-
-		useIfStrAddr, err := getInterfaceStringAddrs(useIfAddrs)
-		if err != nil {
-			continue
-		}
-
-		useIfStrAddrs = append(useIfStrAddrs, useIfStrAddr)
-
-	}
-
-	return useIfStrAddrs, err
 }

@@ -29,18 +29,18 @@ func (self *UnicastServerList) Start(port int) error {
 		return err
 	}
 
-	addrs, err := util.GetAvailableInterfaceAddresses()
+	ifis, err := util.GetAvailableInterfaces()
 	if err != nil {
 		return err
 	}
 
 	var lastErr error = nil
 
-	self.Servers = make([]*UnicastServer, len(addrs))
-	for n, addr := range addrs {
+	self.Servers = make([]*UnicastServer, len(ifis))
+	for n, ifi := range ifis {
 		server := NewUnicastServer()
 		server.Listener = self.Listener
-		err := server.Start(addr, port)
+		err := server.Start(ifi, port)
 		if err != nil {
 			lastErr = err
 		}

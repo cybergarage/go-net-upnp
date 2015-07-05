@@ -5,6 +5,7 @@
 package ssdp
 
 import (
+	"net"
 	"net/upnp/log"
 )
 
@@ -28,8 +29,8 @@ func NewUnicastServer() *UnicastServer {
 }
 
 // Start starts this server.
-func (self *UnicastServer) Start(addr string, port int) error {
-	err := self.Socket.BindAddr(addr, port)
+func (self *UnicastServer) Start(ifi *net.Interface, port int) error {
+	err := self.Socket.Bind(ifi, port)
 	if err != nil {
 		return err
 	}

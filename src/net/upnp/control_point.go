@@ -19,7 +19,7 @@ type ControlPointListener interface {
 type ControlPoint struct {
 	Port                int
 	RootDevices         []Device
-	ssdpMcastServer     *ssdp.MulticastServer
+	ssdpMcastServerList *ssdp.MulticastServerList
 	ssdpUcastServerList *ssdp.UnicastServerList
 	Listener            ControlPointListener
 }
@@ -28,15 +28,15 @@ type ControlPoint struct {
 func NewControlPoint() *ControlPoint {
 	cp := &ControlPoint{}
 	cp.RootDevices = make([]Device, 0)
-	cp.ssdpMcastServer = ssdp.NewMulticastServer()
+	cp.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	cp.ssdpUcastServerList = ssdp.NewUnicastServerList()
 	return cp
 }
 
 // Start starts this control point.
 func (self *ControlPoint) StartWithPort(port int) error {
-	self.ssdpMcastServer.Listener = self
-	err := self.ssdpMcastServer.Start()
+	self.ssdpMcastServerList.Listener = self
+	err := self.ssdpMcastServerList.Start()
 	if err != nil {
 		self.Stop()
 		return err
@@ -61,7 +61,7 @@ func (self *ControlPoint) Start() error {
 
 // Stop stops this control point.
 func (self *ControlPoint) Stop() error {
-	err := self.ssdpMcastServer.Stop()
+	err := self.ssdpMcastServerList.Stop()
 	if err != nil {
 		return err
 	}
