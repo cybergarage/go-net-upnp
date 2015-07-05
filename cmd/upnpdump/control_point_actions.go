@@ -73,7 +73,7 @@ func PrintAction(cp *ControlPoint) bool {
 
 	printActionMessage(fmt.Sprintf("==== Devices (%d) ====", len(foundDevs)))
 	for n, dev := range foundDevs {
-		printActionMessage(fmt.Sprintf("[%d] '%s', '%s'", n, dev.Description.FriendlyName, dev.Description.DeviceType))
+		printActionMessage(fmt.Sprintf("[%d] '%s', '%s'", n, dev.FriendlyName, dev.DeviceType))
 	}
 
 	return true

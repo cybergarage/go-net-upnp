@@ -20,14 +20,14 @@ type DeviceListener interface {
 
 // A Device represents a UPnP device.
 type Device struct {
-	Description *DeviceDescription
-
+	*DeviceDescription
 	SpecVersion SpecVersion
 	URLBase     string
 
 	Port     int
 	Listener DeviceListener
 
+	Description         *DeviceDescription
 	ssdpMcastServerList *ssdp.MulticastServerList
 	httpServer          *http.Server
 }
@@ -35,9 +35,12 @@ type Device struct {
 // NewDevice returns a new Device.
 func NewDevice() *Device {
 	dev := &Device{}
+
+	dev.DeviceDescription = &DeviceDescription{}
 	dev.Description = &DeviceDescription{}
 	dev.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	dev.httpServer = http.NewServer()
+
 	return dev
 }
 
@@ -68,6 +71,9 @@ func (self *Device) LoadDescriptionString(desc string) error {
 	if err != nil {
 		return err
 	}
+
+	self.DeviceDescription = self.DeviceDescription
+
 	return nil
 }
 
