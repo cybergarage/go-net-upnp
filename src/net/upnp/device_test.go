@@ -38,7 +38,7 @@ func TestNewDevice(t *testing.T) {
 	}
 }
 
-const TestMediaServerDeviceDesc = xml.Header +
+const testMediaServerDeviceDesc = xml.Header +
 	"<device>" +
 	"    <serviceList>" +
 	"        <service>" +
@@ -60,7 +60,7 @@ const TestMediaServerDeviceDesc = xml.Header +
 func TestDeviceLoadDescription(t *testing.T) {
 	dev := NewDevice()
 
-	err := dev.LoadDescriptionString(TestMediaServerDeviceDesc)
+	err := dev.LoadDescriptionString(testMediaServerDeviceDesc)
 	if err != nil {
 		t.Error(err)
 	}

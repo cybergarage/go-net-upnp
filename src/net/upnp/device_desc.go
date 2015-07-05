@@ -6,10 +6,11 @@ package upnp
 
 import (
 	"encoding/xml"
-	"io/ioutil"
+	"errors"
+)
 
-	"net/upnp/http"
-	"net/upnp/ssdp"
+const (
+	errorDeviceDescriptionNullDevice = "device is null"
 )
 
 // A DeviceDescriptionRoot represents a root UPnP device description.
@@ -46,44 +47,27 @@ type DeviceList struct {
 	Devices []Device `xml:"device"`
 }
 
-// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet
-func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
-
-	descURL, err := ssdpReq.GetLocation()
-	if err != nil {
-		return nil, err
-	}
-
-	return NewDeviceFromDescriptionURL(descURL)
+func NewDeviceDescriptionRoot() *DeviceDescriptionRoot {
+	root := &DeviceDescriptionRoot{}
+	specVer := NewSpecVersion()
+	root.SpecVersion = (*specVer)
+	return root
 }
 
-// NewDeviceFromDescriptionURL returns a device from the specified URL
-func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
-	res, err := http.Get(descURL)
-	if res.StatusCode != http.StatusOK {
-		return nil, err
+func NewDeviceDescriptionRootFromDevice(dev *Device) (*DeviceDescriptionRoot, error) {
+	if dev == nil {
+		return nil, errors.New(errorDeviceDescriptionNullDevice)
 	}
-
-	devDescBytes, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return NewDeviceFromDescription(string(devDescBytes))
+	root := NewDeviceDescriptionRoot()
+	root.Device = (*dev)
+	return root, nil
 }
 
-// NewDeviceFromDescription returns a device from the specified string
-func NewDeviceFromDescription(devDesc string) (*Device, error) {
-	root := DeviceDescriptionRoot{}
-	err := xml.Unmarshal([]byte(devDesc), &root)
+func NewDeviceDescriptionRootFromString(descStr string) (*DeviceDescriptionRoot, error) {
+	root := NewDeviceDescriptionRoot()
+	err := xml.Unmarshal([]byte(descStr), &root)
 	if err != nil {
 		return nil, err
 	}
-
-	rootDev := &root.Device
-	rootDev.SpecVersion = rootDev.SpecVersion
-	rootDev.URLBase = rootDev.URLBase
-	rootDev.DeviceDescription = rootDev.Description
-
-	return rootDev, nil
+	return root, err
 }

@@ -17,6 +17,6 @@ type SpecVersion struct {
 
 // NewSpecVersion returns a new SpecVersion.
 func NewSpecVersion() *SpecVersion {
-	icon := &SpecVersion{}
-	return icon
+	spec := &SpecVersion{Major: SUPPORT_VERSION_MAJOR, Minor: SUPPORT_VERSION_MINOR}
+	return spec
 }
