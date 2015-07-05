@@ -15,3 +15,7 @@ const (
 	StatusPreconditionFailed  = gohttp.StatusPreconditionFailed
 	StatusInternalServerError = gohttp.StatusInternalServerError
 )
+
+func StatusCodeToString(code int) string {
+	return gohttp.StatusText(code)
+}

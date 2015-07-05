@@ -51,10 +51,10 @@ const (
 	TIMEOUT         = "TIMEOUT"
 	BOOTID_UPNP_ORG = "BOOTID.UPNP.ORG"
 
-	ROOT_DEVICE  = "upnp:rootdevice"
-	ALL          = "ssdp:all"
-	MAN_DISCOVER = "\"ssdp:discover\""
-	NTS_ALIVE    = "ssdp:alive"
-	NTS_BYEBYE   = "ssdp:byebye"
-	MAX_AGE      = "max-age"
+	ROOT_DEVICE = "upnp:rootdevice"
+	ALL         = "ssdp:all"
+	DISCOVER    = "\"ssdp:discover\""
+	NTS_ALIVE   = "ssdp:alive"
+	NTS_BYEBYE  = "ssdp:byebye"
+	MAX_AGE     = "max-age"
 )
