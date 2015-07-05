@@ -45,6 +45,14 @@ func NewSearchRequest(st string) (*Request, error) {
 	ssdpReq.SetHost(MULTICAST_ADDRESS)
 	ssdpReq.SetST(st)
 	ssdpReq.SetMX(DEFAULT_MSEARCH_MX)
-	ssdpReq.SetMAN(MAN_DISCOVER)
+	ssdpReq.SetMAN(DISCOVER)
 	return ssdpReq, nil
+}
+
+func (self *Request) IsDiscover() bool {
+	return self.IstHeaderString(MAN, DISCOVER)
+}
+
+func (self *Request) IsRootDevice() bool {
+	return self.IstHeaderString(ST, ROOT_DEVICE)
 }

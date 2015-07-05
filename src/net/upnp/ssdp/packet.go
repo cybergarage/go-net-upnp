@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"net/upnp/http"
 	"strconv"
 	"strings"
 )
@@ -107,6 +108,14 @@ func (self *Packet) SetMethod(method string) error {
 	return nil
 }
 
+func (self *Packet) SetStatusCode(code int) error {
+	self.FirstLines = make([]string, 3)
+	self.FirstLines[0] = fmt.Sprintf("HTTP/%s", HTTP_VERSION)
+	self.FirstLines[1] = fmt.Sprintf("%d", code)
+	self.FirstLines[2] = http.StatusCodeToString(code)
+	return nil
+}
+
 func (self *Packet) SetHeaderString(name string, value string) error {
 	self.Headers[name] = value
 	return nil
@@ -115,6 +124,14 @@ func (self *Packet) SetHeaderString(name string, value string) error {
 func (self *Packet) GetHeaderString(name string) (string, bool) {
 	value, ok := self.Headers[name]
 	return value, ok
+}
+
+func (self *Packet) IstHeaderString(name string, value string) bool {
+	headerValue, ok := self.GetHeaderString(name)
+	if !ok {
+		return false
+	}
+	return (headerValue == value)
 }
 
 func (self *Packet) SetHeaderInt(name string, value int) error {

@@ -114,6 +114,8 @@ func (self *Device) Stop() error {
 }
 
 func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
+	self.handleNotifyRequest(ssdpReq)
+
 	if self.Listener != nil {
 		self.Listener.DeviceNotifyReceived(ssdpReq)
 	}
@@ -123,6 +125,7 @@ func (self *Device) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 	if self.Listener != nil {
 		self.Listener.DeviceSearchReceived(ssdpReq)
 	}
+
 }
 
 func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
@@ -132,4 +135,11 @@ func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.Resp
 	}
 
 	httpRes.WriteHeader(http.StatusInternalServerError)
+}
+
+func (self *Device) handleNotifyRequest(ssdpReq *ssdp.Request) {
+	if !ssdpReq.IsDiscover() {
+		return
+	}
+
 }
