@@ -6,10 +6,12 @@ package upnp
 
 import (
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 
 	"net/upnp/http"
+	"net/upnp/log"
 	"net/upnp/ssdp"
 )
 
@@ -28,7 +30,7 @@ type Device struct {
 	Port     int            `xml:"-"`
 	Listener DeviceListener `xml:"-"`
 
-	Description         *DeviceDescription        `xml:"-"`
+	//Description         *DeviceDescription        `xml:"-"`
 	ssdpMcastServerList *ssdp.MulticastServerList `xml:"-"`
 	httpServer          *http.Server              `xml:"-"`
 }
@@ -38,7 +40,7 @@ func NewDevice() *Device {
 	dev := &Device{}
 
 	dev.DeviceDescription = &DeviceDescription{}
-	dev.Description = &DeviceDescription{}
+	//dev.Description = &DeviceDescription{}
 	dev.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	dev.httpServer = http.NewServer()
 
@@ -69,7 +71,12 @@ func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
 
 // NewDeviceFromDescriptionURL returns a device from the specified URL
 func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
+	log.Trace(fmt.Sprintf("NewDeviceFromDescriptionURL : %s", descURL))
+
 	res, err := http.Get(descURL)
+	if err != nil {
+		return nil, err
+	}
 	if res.StatusCode != http.StatusOK {
 		return nil, err
 	}
@@ -84,6 +91,8 @@ func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 
 // NewDeviceFromDescription returns a device from the specified string
 func NewDeviceFromDescription(devDesc string) (*Device, error) {
+	log.Trace(fmt.Sprintf("NewDeviceFromDescription :\n%s", devDesc))
+
 	root, err := NewDeviceDescriptionRootFromString(devDesc)
 	if err != nil {
 		return nil, err
@@ -92,7 +101,7 @@ func NewDeviceFromDescription(devDesc string) (*Device, error) {
 	rootDev := &root.Device
 	rootDev.SpecVersion = rootDev.SpecVersion
 	rootDev.URLBase = rootDev.URLBase
-	rootDev.DeviceDescription = rootDev.Description
+	//rootDev.Description = rootDev.DeviceDescription
 
 	return rootDev, nil
 }
@@ -120,7 +129,7 @@ func (self *Device) StartWithPort(port int) error {
 
 // LoadDescriptinString loads a device description string.
 func (self *Device) LoadDescriptionString(desc string) error {
-	err := xml.Unmarshal([]byte(desc), self.Description)
+	err := xml.Unmarshal([]byte(desc), self)
 	if err != nil {
 		return err
 	}

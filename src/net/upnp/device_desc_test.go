@@ -13,6 +13,7 @@ import (
 const testDeviceDesecription = xml.Header +
 	"<root>" +
 	"<device>" +
+	"    <friendlyName>MediaServer</friendlyName>" +
 	"    <serviceList>" +
 	"        <service>" +
 	"		<Optional/>" +
@@ -53,5 +54,8 @@ func TestGenerateDeviceDescription(t *testing.T) {
 		t.Error(err)
 	}
 
-	fmt.Printf("%s", devDesc)
+	name := dev.FriendlyName
+	if name != "MediaServer" {
+		fmt.Printf("%s", devDesc)
+	}
 }
