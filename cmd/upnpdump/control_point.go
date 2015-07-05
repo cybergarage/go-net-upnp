@@ -34,7 +34,7 @@ func printMessage(msg string) {
 	os.Stdout.WriteString(fmt.Sprintf("%s\n", msg))
 }
 
-func GetFromToMessageFromSSDPRequest(req *ssdp.Request) string {
+func GetFromToMessageFromSSDPPacket(req *ssdp.Packet) string {
 	fromAddr := req.From.String()
 	toAddr := ""
 	ifAddr, err := util.GetInterfaceAddress(req.Interface)
@@ -46,18 +46,21 @@ func GetFromToMessageFromSSDPRequest(req *ssdp.Request) string {
 }
 
 func (self *ControlPoint) DeviceNotifyReceived(req *ssdp.Request) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
+	usn, _ := req.GetUSN()
+	printMessage(fmt.Sprintf("notiry req : %s %s", usn, GetFromToMessageFromSSDPPacket(req.Packet)))
+	//os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
 }
 
 func (self *ControlPoint) DeviceSearchReceived(req *ssdp.Request) {
 	st, _ := req.GetST()
-	msg := fmt.Sprintf("search : %s %s", st, GetFromToMessageFromSSDPRequest(req))
-	printMessage(msg)
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
+	printMessage(fmt.Sprintf("search req : %s %s", st, GetFromToMessageFromSSDPPacket(req.Packet)))
+	//os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
 }
 
 func (self *ControlPoint) DeviceResponseReceived(res *ssdp.Response) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", res.String()))
+	url, _ := res.GetLocation()
+	printMessage(fmt.Sprintf("search res : %s %s", url, GetFromToMessageFromSSDPPacket(res.Packet)))
+	//os.Stdout.WriteString(fmt.Sprintf("%s\n", res.String()))
 }
 
 func (self *ControlPoint) DoAction(key int) bool {

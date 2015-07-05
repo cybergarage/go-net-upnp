@@ -56,6 +56,17 @@ func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
 	return NewDeviceFromDescriptionURL(descURL)
 }
 
+// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet
+func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
+
+	descURL, err := ssdpRes.GetLocation()
+	if err != nil {
+		return nil, err
+	}
+
+	return NewDeviceFromDescriptionURL(descURL)
+}
+
 // NewDeviceFromDescriptionURL returns a device from the specified URL
 func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 	res, err := http.Get(descURL)

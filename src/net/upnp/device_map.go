@@ -10,14 +10,18 @@ import ()
 type DeviceUdnMap map[string]*Device
 
 // DeviceUdnMap returns a new device map.
-func NewDeviceUdnMap() *DeviceUdnMap {
+func NewDeviceUdnMap() DeviceUdnMap {
 	devMap := make(DeviceUdnMap)
-	return &devMap
+	return devMap
 }
 
 // AddDevice adds a specified device.
 func (self *DeviceUdnMap) AddDevice(dev *Device) bool {
-	udn := dev.Description.UDN
+	if dev == nil {
+		return false
+	}
+
+	udn := dev.UDN
 	if len(udn) <= 0 {
 		return false
 	}
@@ -45,4 +49,12 @@ func (self *DeviceUdnMap) FindDeviceByUDN(udn string) (*Device, bool) {
 func (self *DeviceUdnMap) HasDeviceByUDN(udn string) bool {
 	_, ok := self.FindDeviceByUDN(udn)
 	return ok
+}
+
+// HasDevice adds a specified device.
+func (self *DeviceUdnMap) HasDevice(dev *Device) bool {
+	if dev == nil {
+		return false
+	}
+	return self.HasDeviceByUDN(dev.UDN)
 }
