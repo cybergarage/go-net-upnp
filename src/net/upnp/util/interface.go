@@ -56,8 +56,8 @@ func GetAvailableInterfaces() ([]*net.Interface, error) {
 			continue
 		}
 
-		_, err = GetInterfaceAddress(&localIf)
-		if err != nil {
+		_, addrErr := GetInterfaceAddress(&localIf)
+		if addrErr != nil {
 			continue
 		}
 
