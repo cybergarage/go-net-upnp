@@ -6,6 +6,7 @@ package upnp
 
 import (
 	"encoding/xml"
+	"io/ioutil"
 	"math/rand"
 
 	"net/upnp/http"
@@ -21,15 +22,15 @@ type DeviceListener interface {
 // A Device represents a UPnP device.
 type Device struct {
 	*DeviceDescription
-	SpecVersion SpecVersion
-	URLBase     string
+	SpecVersion SpecVersion `xml:"-"`
+	URLBase     string      `xml:"-"`
 
-	Port     int
-	Listener DeviceListener
+	Port     int            `xml:"-"`
+	Listener DeviceListener `xml:"-"`
 
-	Description         *DeviceDescription
-	ssdpMcastServerList *ssdp.MulticastServerList
-	httpServer          *http.Server
+	Description         *DeviceDescription        `xml:"-"`
+	ssdpMcastServerList *ssdp.MulticastServerList `xml:"-"`
+	httpServer          *http.Server              `xml:"-"`
 }
 
 // NewDevice returns a new Device.
@@ -42,6 +43,47 @@ func NewDevice() *Device {
 	dev.httpServer = http.NewServer()
 
 	return dev
+}
+
+// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet
+func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
+
+	descURL, err := ssdpReq.GetLocation()
+	if err != nil {
+		return nil, err
+	}
+
+	return NewDeviceFromDescriptionURL(descURL)
+}
+
+// NewDeviceFromDescriptionURL returns a device from the specified URL
+func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
+	res, err := http.Get(descURL)
+	if res.StatusCode != http.StatusOK {
+		return nil, err
+	}
+
+	devDescBytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewDeviceFromDescription(string(devDescBytes))
+}
+
+// NewDeviceFromDescription returns a device from the specified string
+func NewDeviceFromDescription(devDesc string) (*Device, error) {
+	root, err := NewDeviceDescriptionRootFromString(devDesc)
+	if err != nil {
+		return nil, err
+	}
+
+	rootDev := &root.Device
+	rootDev.SpecVersion = rootDev.SpecVersion
+	rootDev.URLBase = rootDev.URLBase
+	rootDev.DeviceDescription = rootDev.Description
+
+	return rootDev, nil
 }
 
 // Start starts this control point.
@@ -75,6 +117,21 @@ func (self *Device) LoadDescriptionString(desc string) error {
 	self.DeviceDescription = self.DeviceDescription
 
 	return nil
+}
+
+// DescriptionString returns a descrition string.
+func (self *Device) DescriptionString() (string, error) {
+	root, err := NewDeviceDescriptionRootFromDevice(self)
+	if err != nil {
+		return "", err
+	}
+
+	descBytes, err := xml.MarshalIndent(root, "", "  ")
+	if err != nil {
+		return "", err
+	}
+
+	return string(descBytes), nil
 }
 
 // Start starts this control point.
@@ -124,5 +181,4 @@ func (self *Device) handleNotifyRequest(ssdpReq *ssdp.Request) {
 	if !ssdpReq.IsDiscover() {
 		return
 	}
-
 }
