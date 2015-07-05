@@ -19,6 +19,7 @@ type Packet struct {
 	FirstLines []string
 	Headers    map[string]string
 	From       net.Addr
+	Interface  net.Interface
 }
 
 // NewPacket returns a new Packet.

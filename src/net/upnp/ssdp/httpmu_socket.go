@@ -37,6 +37,8 @@ func (self *HTTPMUSocket) Bind(ifi *net.Interface) error {
 		return err
 	}
 
+	self.Interface = ifi
+
 	return nil
 }
 
