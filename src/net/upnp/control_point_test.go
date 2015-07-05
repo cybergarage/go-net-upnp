@@ -20,7 +20,7 @@ func TestNewControlPoint(t *testing.T) {
 		t.Error(errors.New(nullControlPointError))
 	}
 
-	if len(cp.RootDevices) != 0 {
+	if len(cp.GetRootDevices()) != 0 {
 		t.Error(errors.New(invalidControlPointError))
 	}
 

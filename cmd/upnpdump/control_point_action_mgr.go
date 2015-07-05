@@ -23,6 +23,7 @@ func (self *ControlPointActionManager) initDefaultActions() error {
 	self.AddAction(Q_KEY, Q_DESC, QuitAction)
 	self.AddAction(H_KEY, H_DESC, HelpAction)
 	self.AddAction(S_KEY, S_DESC, SearchAction)
+	self.AddAction(P_KEY, P_DESC, PrintAction)
 	return nil
 }
 

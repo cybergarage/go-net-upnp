@@ -5,6 +5,7 @@
 package ssdp
 
 const (
-	testErrorMsgBadHeader = "Header[%s] = %s : expected %s"
-	testErrorMsgBadMethod = "Method = %s : expected %s"
+	testErrorMsgBadHeader     = "Header[%s] = %s : expected %s"
+	testErrorMsgBadMethod     = "Method = %s : expected %s"
+	testErrorMsgBadStatusCode = "StatusCode = %d : expected %d"
 )

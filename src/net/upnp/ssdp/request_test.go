@@ -48,9 +48,13 @@ func TestSSDPUnformalSearchRequest(t *testing.T) {
 
 func checkSSDPSearchRequest(t *testing.T, req *Request) {
 
+	// Check Method
+
 	if !req.IsSearchRequest() {
 		t.Errorf(testErrorMsgBadMethod, req.FirstLines[0], M_SEARCH)
 	}
+
+	// Check Headers
 
 	var headerValue, expectValue string
 	var headerInt, expectInt int
