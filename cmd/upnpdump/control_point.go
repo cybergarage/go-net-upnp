@@ -37,7 +37,7 @@ func printMessage(msg string) {
 func GetFromToMessageFromSSDPRequest(req *ssdp.Request) string {
 	fromAddr := req.From.String()
 	toAddr := ""
-	ifAddr, err := util.GetInterfaceAddress(&req.Interface)
+	ifAddr, err := util.GetInterfaceAddress(req.Interface)
 	if err == nil {
 		toAddr = ifAddr
 	}

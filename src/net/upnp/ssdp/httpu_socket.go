@@ -25,7 +25,7 @@ func NewHTTPUSocket() *HTTPUSocket {
 }
 
 // Bind binds to SSDP multicast address.
-func (self *HTTPUSocket) Bind(ifi *net.Interface, port int) error {
+func (self *HTTPUSocket) Bind(ifi net.Interface, port int) error {
 	err := self.Close()
 	if err != nil {
 		return err

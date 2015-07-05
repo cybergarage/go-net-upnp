@@ -30,7 +30,7 @@ func NewMulticastServer() *MulticastServer {
 }
 
 // Start starts this server.
-func (self *MulticastServer) Start(ifi *net.Interface) error {
+func (self *MulticastServer) Start(ifi net.Interface) error {
 	err := self.Socket.Bind(ifi)
 	if err != nil {
 		return err
