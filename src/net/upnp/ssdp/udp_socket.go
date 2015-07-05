@@ -5,7 +5,12 @@
 package ssdp
 
 import (
+	"errors"
 	"net"
+)
+
+const (
+	errorSocketIsClosed = "Socket is closed"
 )
 
 // A UDPSocket represents a socket for UDP.
@@ -40,6 +45,10 @@ func (self *UDPSocket) Close() error {
 
 // Read reads from the current opend socket.
 func (self *UDPSocket) Read() (*Packet, error) {
+	if self.Conn == nil {
+		return nil, errors.New(errorSocketIsClosed)
+	}
+
 	n, from, err := self.Conn.ReadFrom(self.readBuf)
 	if err != nil {
 		return nil, err
@@ -50,8 +59,10 @@ func (self *UDPSocket) Read() (*Packet, error) {
 		return nil, err
 	}
 
-	ssdpPkt.Interface = *self.Interface
 	ssdpPkt.From = from
+	if self.Interface != nil {
+		ssdpPkt.Interface = *self.Interface
+	}
 
 	return ssdpPkt, nil
 }

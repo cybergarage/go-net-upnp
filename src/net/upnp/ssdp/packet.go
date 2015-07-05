@@ -14,6 +14,10 @@ import (
 	"strings"
 )
 
+const (
+	errorPacketHeaderNotFound = "header (%s) is not found"
+)
+
 // A Packet represents a ssdpPkt of SSDP.
 type Packet struct {
 	FirstLines []string
@@ -117,19 +121,34 @@ func (self *Packet) SetStatusCode(code int) error {
 	return nil
 }
 
+func (self *Packet) GetStatusCode() int {
+	if len(self.FirstLines) < 2 {
+		return 0
+	}
+	code, err := strconv.Atoi(self.FirstLines[1])
+	if err != nil {
+		return 0
+	}
+	return code
+}
+
 func (self *Packet) SetHeaderString(name string, value string) error {
 	self.Headers[name] = value
 	return nil
 }
 
-func (self *Packet) GetHeaderString(name string) (string, bool) {
+func (self *Packet) GetHeaderString(name string) (string, error) {
 	value, ok := self.Headers[name]
-	return value, ok
+	if !ok {
+		return "", errors.New(fmt.Sprintf(errorPacketHeaderNotFound, name))
+	}
+
+	return value, nil
 }
 
-func (self *Packet) IstHeaderString(name string, value string) bool {
-	headerValue, ok := self.GetHeaderString(name)
-	if !ok {
+func (self *Packet) IsHeaderString(name string, value string) bool {
+	headerValue, err := self.GetHeaderString(name)
+	if err != nil {
 		return false
 	}
 	return (headerValue == value)
@@ -139,23 +158,23 @@ func (self *Packet) SetHeaderInt(name string, value int) error {
 	return self.SetHeaderString(name, strconv.Itoa(value))
 }
 
-func (self *Packet) GetHeaderInt(name string) (int, bool) {
-	svalue, ok := self.GetHeaderString(name)
-	if !ok {
-		return 0, false
+func (self *Packet) GetHeaderInt(name string) (int, error) {
+	svalue, err := self.GetHeaderString(name)
+	if err != nil {
+		return 0, err
 	}
 	ivalue, err := strconv.Atoi(svalue)
 	if err != nil {
-		return 0, false
+		return 0, err
 	}
-	return ivalue, true
+	return ivalue, nil
 }
 
 func (self *Packet) SetHost(value string) error {
 	return self.SetHeaderString(HOST, value)
 }
 
-func (self *Packet) GetHost() (string, bool) {
+func (self *Packet) GetHost() (string, error) {
 	return self.GetHeaderString(HOST)
 }
 
@@ -163,7 +182,7 @@ func (self *Packet) SetDate(value string) error {
 	return self.SetHeaderString(DATE, value)
 }
 
-func (self *Packet) GetDate() (string, bool) {
+func (self *Packet) GetDate() (string, error) {
 	return self.GetHeaderString(DATE)
 }
 
@@ -171,7 +190,7 @@ func (self *Packet) SetLocation(addr string, port int) error {
 	return self.SetHeaderString(LOCATION, fmt.Sprintf("%s:%d", addr, port))
 }
 
-func (self *Packet) GetLocation() (string, bool) {
+func (self *Packet) GetLocation() (string, error) {
 	return self.GetHeaderString(LOCATION)
 }
 
@@ -179,7 +198,7 @@ func (self *Packet) SetCacheControl(value string) error {
 	return self.SetHeaderString(CACHE_CONTROL, value)
 }
 
-func (self *Packet) GetCacheControl() (string, bool) {
+func (self *Packet) GetCacheControl() (string, error) {
 	return self.GetHeaderString(CACHE_CONTROL)
 }
 
@@ -187,7 +206,7 @@ func (self *Packet) SetST(value string) error {
 	return self.SetHeaderString(ST, value)
 }
 
-func (self *Packet) GetST() (string, bool) {
+func (self *Packet) GetST() (string, error) {
 	return self.GetHeaderString(ST)
 }
 
@@ -195,7 +214,7 @@ func (self *Packet) SetMX(value int) error {
 	return self.SetHeaderInt(MX, value)
 }
 
-func (self *Packet) GetMX() (int, bool) {
+func (self *Packet) GetMX() (int, error) {
 	return self.GetHeaderInt(MX)
 }
 
@@ -203,7 +222,7 @@ func (self *Packet) SetMAN(value string) error {
 	return self.SetHeaderString(MAN, value)
 }
 
-func (self *Packet) GetMAN() (string, bool) {
+func (self *Packet) GetMAN() (string, error) {
 	return self.GetHeaderString(MAN)
 }
 
@@ -211,7 +230,7 @@ func (self *Packet) SetNT(value string) error {
 	return self.SetHeaderString(NT, value)
 }
 
-func (self *Packet) GetNT() (string, bool) {
+func (self *Packet) GetNT() (string, error) {
 	return self.GetHeaderString(NT)
 }
 
@@ -219,7 +238,7 @@ func (self *Packet) SetNTS(value string) error {
 	return self.SetHeaderString(NTS, value)
 }
 
-func (self *Packet) GetNTS() (string, bool) {
+func (self *Packet) GetNTS() (string, error) {
 	return self.GetHeaderString(NTS)
 }
 
@@ -227,7 +246,7 @@ func (self *Packet) SetUSN(value string) error {
 	return self.SetHeaderString(USN, value)
 }
 
-func (self *Packet) GetUSN() (string, bool) {
+func (self *Packet) GetUSN() (string, error) {
 	return self.GetHeaderString(USN)
 }
 
@@ -235,7 +254,7 @@ func (self *Packet) SetEXT(value string) error {
 	return self.SetHeaderString(EXT, value)
 }
 
-func (self *Packet) GetEXT() (string, bool) {
+func (self *Packet) GetEXT() (string, error) {
 	return self.GetHeaderString(EXT)
 }
 
@@ -243,7 +262,7 @@ func (self *Packet) SetSID(value string) error {
 	return self.SetHeaderString(SID, value)
 }
 
-func (self *Packet) GetSID() (string, bool) {
+func (self *Packet) GetSID() (string, error) {
 	return self.GetHeaderString(SID)
 }
 
@@ -251,7 +270,7 @@ func (self *Packet) SetSEQ(value string) error {
 	return self.SetHeaderString(SEQ, value)
 }
 
-func (self *Packet) GetSEQ() (string, bool) {
+func (self *Packet) GetSEQ() (string, error) {
 	return self.GetHeaderString(SEQ)
 }
 
@@ -259,7 +278,7 @@ func (self *Packet) SetCallback(value string) error {
 	return self.SetHeaderString(CALLBACK, value)
 }
 
-func (self *Packet) GetCallback() (string, bool) {
+func (self *Packet) GetCallback() (string, error) {
 	return self.GetHeaderString(CALLBACK)
 }
 
@@ -267,7 +286,7 @@ func (self *Packet) SetTimeout(value string) error {
 	return self.SetHeaderString(TIMEOUT, value)
 }
 
-func (self *Packet) GetTimeout() (string, bool) {
+func (self *Packet) GetTimeout() (string, error) {
 	return self.GetHeaderString(TIMEOUT)
 }
 
@@ -275,7 +294,7 @@ func (self *Packet) SetServer(value string) error {
 	return self.SetHeaderString(SERVER, value)
 }
 
-func (self *Packet) GetServer() (string, bool) {
+func (self *Packet) GetServer() (string, error) {
 	return self.GetHeaderString(SERVER)
 }
 
@@ -283,7 +302,7 @@ func (self *Packet) SetBOOTID_UPNP_ORG(value string) error {
 	return self.SetHeaderString(BOOTID_UPNP_ORG, value)
 }
 
-func (self *Packet) GetBOOTID_UPNP_ORG() (string, bool) {
+func (self *Packet) GetBOOTID_UPNP_ORG() (string, error) {
 	return self.GetHeaderString(BOOTID_UPNP_ORG)
 }
 

@@ -5,8 +5,10 @@
 package ssdp
 
 import (
+	"errors"
 	"fmt"
 	"net"
+
 	"net/upnp/util"
 )
 
@@ -51,6 +53,10 @@ func (self *HTTPUSocket) Bind(ifi *net.Interface, port int) error {
 
 // Write sends the specified bytes.
 func (self *HTTPUSocket) Write(addr string, port int, b []byte) (int, error) {
+	if self.Conn == nil {
+		return 0, errors.New(errorSocketIsClosed)
+	}
+
 	toAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
 	if err != nil {
 		return 0, err
