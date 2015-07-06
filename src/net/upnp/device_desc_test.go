@@ -6,9 +6,18 @@ package upnp
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"testing"
 )
+
+const (
+	errorDeviceDesecriptionInvalidField = "%s = '%s' : expected %s"
+)
+
+func newDeviceDesecriptionInvalidFieldError(name, value, expected) {
+	return errors.New(fmt.Printf(errorDeviceDesecriptionInvalidField, name, value, expected))
+}
 
 const testDeviceDesecription = xml.Header +
 	"<root>" +
@@ -56,6 +65,6 @@ func TestGenerateDeviceDescription(t *testing.T) {
 
 	name := dev.FriendlyName
 	if name != "MediaServer" {
-		fmt.Printf("%s", devDesc)
+		t.Error(newDeviceDesecriptionInvalidFieldError)
 	}
 }
