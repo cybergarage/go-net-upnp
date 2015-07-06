@@ -15,13 +15,14 @@ const (
 	errorDeviceDesecriptionInvalidField = "%s = '%s' : expected %s"
 )
 
-func newDeviceDesecriptionInvalidFieldError(name, value, expected) {
-	return errors.New(fmt.Printf(errorDeviceDesecriptionInvalidField, name, value, expected))
+func newDeviceDesecriptionInvalidFieldError(name, value, expected string) error {
+	return errors.New(fmt.Sprintf(errorDeviceDesecriptionInvalidField, name, value, expected))
 }
 
 const testDeviceDesecription = xml.Header +
 	"<root>" +
 	"<device>" +
+	"	 <deviceType>MediaServer:1</deviceType>" +
 	"    <friendlyName>MediaServer</friendlyName>" +
 	"    <serviceList>" +
 	"        <service>" +
@@ -53,18 +54,75 @@ func TestParseDeviceDescriptionRoot(t *testing.T) {
 }
 
 func TestGenerateDeviceDescription(t *testing.T) {
+	var tagNames, tagValues, expectValues []string
+
+	// Check loading description
+
+	tagNames = []string{
+		"friendlyName",
+		"deviceType",
+		"serviceType[0]",
+	}
+
+	expectValues = []string{
+		"MediaServer",
+		"MediaServer:1",
+		"urn:schemas-upnp-org:service:AVTransport:1",
+		"urn:schemas-upnp-org:service:ContentDirectory:1",
+		"urn:schemas-upnp-org:service:ConnectionManager:1",
+		"AVTransport",
+		"ContentDirectory",
+		"ConnectionManager",
+	}
+
 	dev, err := NewDeviceFromDescription(testDeviceDesecription)
 	if err != nil {
 		t.Error(err)
 	}
 
-	devDesc, err := dev.DescriptionString()
+	tagValues = []string{
+		dev.FriendlyName,
+		dev.DeviceType,
+		dev.ServiceList.Services[0].ServiceType,
+		dev.ServiceList.Services[1].ServiceType,
+		dev.ServiceList.Services[2].ServiceType,
+		dev.ServiceList.Services[0].ServiceId,
+		dev.ServiceList.Services[1].ServiceId,
+		dev.ServiceList.Services[2].ServiceId,
+	}
+
+	for n, expectValue := range expectValues {
+		if expectValue != tagValues[n] {
+			t.Error(newDeviceDesecriptionInvalidFieldError(tagNames[n], tagValues[n], expectValue))
+		}
+	}
+
+	// Check output description
+
+	outputDevDesc, err := dev.DescriptionString()
 	if err != nil {
 		t.Error(err)
 	}
 
-	name := dev.FriendlyName
-	if name != "MediaServer" {
-		t.Error(newDeviceDesecriptionInvalidFieldError)
+	outputDev, err := NewDeviceFromDescription(outputDevDesc)
+	if err != nil {
+		t.Error(err)
+	}
+
+	tagValues = []string{
+		outputDev.FriendlyName,
+		outputDev.DeviceType,
+		outputDev.ServiceList.Services[0].ServiceType,
+		outputDev.ServiceList.Services[1].ServiceType,
+		outputDev.ServiceList.Services[2].ServiceType,
+		outputDev.ServiceList.Services[0].ServiceId,
+		outputDev.ServiceList.Services[1].ServiceId,
+		outputDev.ServiceList.Services[2].ServiceId,
+	}
+
+	for n, expectValue := range expectValues {
+		if expectValue != tagValues[n] {
+			t.Error(newDeviceDesecriptionInvalidFieldError(tagNames[n], tagValues[n], expectValue))
+		}
 	}
 }
