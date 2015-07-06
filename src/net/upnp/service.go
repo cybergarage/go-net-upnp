@@ -45,6 +45,8 @@ func NewServiceFromDescription(serviceDesc string) (*Service, error) {
 
 // LoadDescriptinString loads a device description string.
 func (self *Service) LoadDescriptionString(desc string) error {
+	self.description = &ServiceDescription{}
+
 	err := xml.Unmarshal([]byte(desc), self.description)
 	if err != nil {
 		return err

@@ -37,8 +37,6 @@ func NewDevice() *Device {
 	dev := &Device{}
 
 	dev.DeviceDescription = &DeviceDescription{}
-	dev.ssdpMcastServerList = ssdp.NewMulticastServerList()
-	dev.httpServer = http.NewServer()
 
 	return dev
 }
@@ -97,27 +95,6 @@ func NewDeviceFromDescription(devDesc string) (*Device, error) {
 	return rootDev, nil
 }
 
-// Start starts this control point.
-func (self *Device) StartWithPort(port int) error {
-	self.ssdpMcastServerList.Listener = self
-	err := self.ssdpMcastServerList.Start()
-	if err != nil {
-		self.Stop()
-		return err
-	}
-
-	self.httpServer.Listener = self
-	err = self.httpServer.Start(port)
-	if err != nil {
-		self.Stop()
-		return err
-	}
-
-	self.Port = port
-
-	return nil
-}
-
 // LoadDescriptinString loads a device description string.
 func (self *Device) LoadDescriptionString(desc string) error {
 	err := xml.Unmarshal([]byte(desc), self)
@@ -146,22 +123,51 @@ func (self *Device) DescriptionString() (string, error) {
 }
 
 // Start starts this control point.
+func (self *Device) StartWithPort(port int) error {
+	self.ssdpMcastServerList = ssdp.NewMulticastServerList()
+	self.ssdpMcastServerList.Listener = self
+	err := self.ssdpMcastServerList.Start()
+	if err != nil {
+		self.Stop()
+		return err
+	}
+
+	self.httpServer = http.NewServer()
+	self.httpServer.Listener = self
+	err = self.httpServer.Start(port)
+	if err != nil {
+		self.Stop()
+		return err
+	}
+
+	self.Port = port
+
+	return nil
+}
+
+// Start starts this control point.
 func (self *Device) Start() error {
-	port := rand.Intn(DeviceDefautPortRange) + DeviceDefautPortBase
+	port := rand.Intn(DeviceDefaultPortRange) + DeviceDefaultPortBase
 	return self.StartWithPort(port)
 }
 
 // Stop stops this control point.
 func (self *Device) Stop() error {
+	var lastErr error = nil
+
 	err := self.ssdpMcastServerList.Stop()
 	if err != nil {
-		return err
+		lastErr = err
 	}
+	self.ssdpMcastServerList = nil
+
 	err = self.httpServer.Stop()
 	if err != nil {
-		return err
+		lastErr = err
 	}
-	return nil
+	self.httpServer = nil
+
+	return lastErr
 }
 
 func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
