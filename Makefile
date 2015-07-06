@@ -11,19 +11,22 @@
 PREFIX?=$(shell pwd)
 GOPATH=$(shell pwd)
 
+VERSION_GO="./src/net/upnp/version.go"
+USRAGNT_GO="./src/net/upnp/util/user_agent.go"
+
 packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util
 	
 .PHONY: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
 
 all: build
 
-./src/net/upnp/version.go: ./src/net/upnp/version.gen
+${VERSION_GO}: ./src/net/upnp/version.gen
 	$< > $@
 
-./src/net/upnp/util/user_agent.go: ./src/net/upnp/util/user_agent.gen
+${USRAGNT_GO}: ./src/net/upnp/util/user_agent.gen
 	$< > $@
 
-versions: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
+versions: ${VERSION_GO} ${USRAGNT_GO}
 
 format: versions
 	gofmt -w src cmd

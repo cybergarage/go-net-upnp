@@ -6,12 +6,10 @@ package upnp
 
 import (
 	"encoding/xml"
-	"fmt"
 	"io/ioutil"
 	"math/rand"
 
 	"net/upnp/http"
-	"net/upnp/log"
 	"net/upnp/ssdp"
 )
 
@@ -69,8 +67,6 @@ func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
 
 // NewDeviceFromDescriptionURL returns a device from the specified URL
 func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
-	log.Trace(fmt.Sprintf("NewDeviceFromDescriptionURL : %s", descURL))
-
 	res, err := http.Get(descURL)
 	if err != nil {
 		return nil, err
@@ -89,8 +85,6 @@ func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 
 // NewDeviceFromDescription returns a device from the specified string
 func NewDeviceFromDescription(devDesc string) (*Device, error) {
-	log.Trace(fmt.Sprintf("NewDeviceFromDescription :\n%s", devDesc))
-
 	root, err := NewDeviceDescriptionRootFromString(devDesc)
 	if err != nil {
 		return nil, err
