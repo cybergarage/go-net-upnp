@@ -123,6 +123,7 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 	defer self.Unlock()
 
 	if self.rootDeviceUdnMap.HasDevice(dev) {
+		log.Trace(fmt.Sprintf("device (%s) is already added", dev.UDN))
 		return false
 	}
 

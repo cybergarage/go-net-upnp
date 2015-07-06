@@ -143,7 +143,7 @@ func (self *Device) DescriptionString() (string, error) {
 		return "", err
 	}
 
-	descBytes, err := xml.MarshalIndent(root, "", "  ")
+	descBytes, err := xml.MarshalIndent(root, "", XML_MARSHALL_INDENT)
 	if err != nil {
 		return "", err
 	}

@@ -10,8 +10,6 @@ import (
 
 // A Service represents a UPnP service.
 type Service struct {
-	*ServiceDescription
-
 	XMLName     xml.Name `xml:"service"`
 	ServiceType string   `xml:"serviceType"`
 	ServiceId   string   `xml:"serviceId"`
@@ -19,38 +17,51 @@ type Service struct {
 	ControlURL  string   `xml:"controlURL"`
 	EventSubURL string   `xml:"eventSubURL"`
 
-	Description *ServiceDescription
-}
-
-// A ServiceDescription represents a UPnP service description.
-type ServiceDescription struct {
-	XMLName           xml.Name          `xml:"scpd"`
-	ServiceStateTable ServiceStateTable `xml:"serviceStateTable"`
-	ActionList        ActionList        `xml:"actionList"`
-}
-
-// A ServiceList represents a UPnP serviceList.
-type ServiceList struct {
-	XMLName  xml.Name  `xml:"serviceList"`
-	Services []Service `xml:"service"`
+	description       *ServiceDescription `xml:"-"`
+	ServiceStateTable *ServiceStateTable  `xml:"-"`
+	ActionList        *ActionList         `xml:"-"`
 }
 
 // NewService returns a new Service.
 func NewService() *Service {
 	service := &Service{}
-	service.ServiceDescription = &ServiceDescription{}
-	service.Description = &ServiceDescription{}
+	service.description = &ServiceDescription{}
+	service.ServiceStateTable = &ServiceStateTable{}
+	service.ActionList = &ActionList{}
 	return service
+}
+
+// NewServiceFromDescription returns a service from the specified descrition string
+func NewServiceFromDescription(serviceDesc string) (*Service, error) {
+	service := NewService()
+
+	err := service.LoadDescriptionString(serviceDesc)
+	if err != nil {
+		return nil, err
+	}
+
+	return service, err
 }
 
 // LoadDescriptinString loads a device description string.
 func (self *Service) LoadDescriptionString(desc string) error {
-	err := xml.Unmarshal([]byte(desc), self.Description)
+	err := xml.Unmarshal([]byte(desc), self.description)
 	if err != nil {
 		return err
 	}
 
-	self.ServiceDescription = self.Description
+	self.ServiceStateTable = &self.description.ServiceStateTable
+	self.ActionList = &self.description.ActionList
 
 	return nil
+}
+
+// DescriptionString returns a descrition string.
+func (self *Service) DescriptionString() (string, error) {
+	descBytes, err := xml.MarshalIndent(self.description, "", XML_MARSHALL_INDENT)
+	if err != nil {
+		return "", err
+	}
+
+	return string(descBytes), nil
 }
