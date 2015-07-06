@@ -30,7 +30,6 @@ type Device struct {
 	Port     int            `xml:"-"`
 	Listener DeviceListener `xml:"-"`
 
-	//Description         *DeviceDescription        `xml:"-"`
 	ssdpMcastServerList *ssdp.MulticastServerList `xml:"-"`
 	httpServer          *http.Server              `xml:"-"`
 }
@@ -40,7 +39,6 @@ func NewDevice() *Device {
 	dev := &Device{}
 
 	dev.DeviceDescription = &DeviceDescription{}
-	//dev.Description = &DeviceDescription{}
 	dev.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	dev.httpServer = http.NewServer()
 
@@ -101,7 +99,6 @@ func NewDeviceFromDescription(devDesc string) (*Device, error) {
 	rootDev := &root.Device
 	rootDev.SpecVersion = rootDev.SpecVersion
 	rootDev.URLBase = rootDev.URLBase
-	//rootDev.Description = rootDev.DeviceDescription
 
 	return rootDev, nil
 }
