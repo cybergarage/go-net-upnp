@@ -5,20 +5,19 @@
 package upnp
 
 const (
-	PRODUCT_VERSION = "0.8"
-	PRODUCT_NAME    = "go-net-upnp"
+	ProductName = "go-net-upnp"
 
-	SUPPORT_VERSION       = "1.1"
-	SUPPORT_VERSION_MAJOR = 1
-	SUPPORT_VERSION_MINOR = 1
+	SupportVersion      = "1.1"
+	SupportVersionMajor = 1
+	SupportVersionMinor = 1
 
-	CONTROLPOINT_DEFAULT_PORT_BASE  = 5004
-	CONTROLPOINT_DEFAULT_PORT_RANGE = 1024
-	CONTROLPOINT_DEFAULT_PORT_MAX   = CONTROLPOINT_DEFAULT_PORT_BASE + CONTROLPOINT_DEFAULT_PORT_RANGE
+	ControlPointDefautPortBase  = 5004
+	ControlPointDefautPortRange = 1024
+	ControlPointDefautPortMax   = ControlPointDefautPortBase + ControlPointDefautPortRange
 
-	DEVICE_DEFAULT_PORT_BASE  = 6004
-	DEVICE_DEFAULT_PORT_RANGE = 1024
-	DEVICE_DEFAULT_PORT_MAX   = DEVICE_DEFAULT_PORT_BASE + DEVICE_DEFAULT_PORT_RANGE
+	DeviceDefautPortBase  = 6004
+	DeviceDefautPortRange = 1024
+	DeviceDefautPortMax   = DeviceDefautPortBase + DeviceDefautPortRange
 
-	XML_MARSHALL_INDENT = " "
+	XmlMarshallIndent = " "
 )

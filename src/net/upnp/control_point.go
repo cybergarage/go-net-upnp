@@ -66,7 +66,7 @@ func (self *ControlPoint) StartWithPort(port int) error {
 
 // Start starts this control point.
 func (self *ControlPoint) Start() error {
-	port := rand.Intn(CONTROLPOINT_DEFAULT_PORT_RANGE) + CONTROLPOINT_DEFAULT_PORT_BASE
+	port := rand.Intn(ControlPointDefautPortRange) + ControlPointDefautPortBase
 	return self.StartWithPort(port)
 }
 
