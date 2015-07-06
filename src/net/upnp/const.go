@@ -11,13 +11,13 @@ const (
 	SupportVersionMajor = 1
 	SupportVersionMinor = 1
 
-	ControlPointDefautPortBase  = 5004
-	ControlPointDefautPortRange = 1024
-	ControlPointDefautPortMax   = ControlPointDefautPortBase + ControlPointDefautPortRange
+	ControlPointDefaultPortBase  = 5004
+	ControlPointDefaultPortRange = 1024
+	ControlPointDefaultPortMax   = ControlPointDefaultPortBase + ControlPointDefaultPortRange
 
-	DeviceDefautPortBase  = 6004
-	DeviceDefautPortRange = 1024
-	DeviceDefautPortMax   = DeviceDefautPortBase + DeviceDefautPortRange
+	DeviceDefaultPortBase  = 6004
+	DeviceDefaultPortRange = 1024
+	DeviceDefaultPortMax   = DeviceDefaultPortBase + DeviceDefaultPortRange
 
 	XmlMarshallIndent = " "
 )

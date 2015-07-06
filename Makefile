@@ -19,14 +19,14 @@ LIGHTDEV=${PREFIX}/bin/lightdev
 
 packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util
 	
-.PHONY: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
+# .PHONY: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
 
 all: build
 
 ${VERSION_GO}: ./src/net/upnp/version.gen
 	$< > $@
 
-${USRAGNT_GO}: ./src/net/upnp/util/user_agent.gen
+${USRAGNT_GO}: ./src/net/upnp/util/user_agent.gen ${VERSION_GO}
 	$< > $@
 
 versions: ${VERSION_GO} ${USRAGNT_GO}
