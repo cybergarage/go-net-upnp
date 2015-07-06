@@ -58,7 +58,7 @@ func (self *Service) LoadDescriptionString(desc string) error {
 
 // DescriptionString returns a descrition string.
 func (self *Service) DescriptionString() (string, error) {
-	descBytes, err := xml.MarshalIndent(self.description, "", XML_MARSHALL_INDENT)
+	descBytes, err := xml.MarshalIndent(self.description, "", XmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}

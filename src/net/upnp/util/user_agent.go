@@ -6,11 +6,14 @@ package util
 
 import (
 	"fmt"
-	//"net/upnp"
 	"runtime"
 )
 
 func GetUserAgent() string {
-	//return fmt.Sprintf("%s/%s UPnP/%s %s/%s", runtime.GOOS, runtime.GOARCH, upnp.SUPPORT_VERSION, upnp.PRODUCT_NAME, upnp.PRODUCT_VERSION)
-	return fmt.Sprintf("%s/%s UPnP/1.1 go-net-upnp/0.8", runtime.GOOS, runtime.GOARCH)
+	return fmt.Sprintf("%s/%s UPnP/1.1 go-net-upnp/%s",
+		runtime.GOOS,
+		runtime.GOARCH,
+		"go-net-upnp",
+		"1.1",
+		"0.1")
 }

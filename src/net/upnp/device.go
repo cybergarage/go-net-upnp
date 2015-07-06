@@ -143,7 +143,7 @@ func (self *Device) DescriptionString() (string, error) {
 		return "", err
 	}
 
-	descBytes, err := xml.MarshalIndent(root, "", XML_MARSHALL_INDENT)
+	descBytes, err := xml.MarshalIndent(root, "", XmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}
@@ -153,7 +153,7 @@ func (self *Device) DescriptionString() (string, error) {
 
 // Start starts this control point.
 func (self *Device) Start() error {
-	port := rand.Intn(DEVICE_DEFAULT_PORT_RANGE) + DEVICE_DEFAULT_PORT_BASE
+	port := rand.Intn(DeviceDefautPortRange) + DeviceDefautPortBase
 	return self.StartWithPort(port)
 }
 

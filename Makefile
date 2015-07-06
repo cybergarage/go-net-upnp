@@ -1,6 +1,6 @@
 ###################################################################
 #
-# net/upnp
+# go-net-upnp
 #
 # Copyright (C) The go-net-upnp Authors 2015
 #
@@ -13,9 +13,19 @@ GOPATH=$(shell pwd)
 
 packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util
 	
+.PHONY: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
+
 all: build
 
-format:
+./src/net/upnp/version.go: ./src/net/upnp/version.gen
+	$< > $@
+
+./src/net/upnp/util/user_agent.go: ./src/net/upnp/util/user_agent.gen
+	$< > $@
+
+versions: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
+
+format: versions
 	gofmt -w src cmd
 
 package: format $(shell find . -type f -name '*.go')
