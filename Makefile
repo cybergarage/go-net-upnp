@@ -14,6 +14,9 @@ GOPATH=$(shell pwd)
 VERSION_GO="./src/net/upnp/version.go"
 USRAGNT_GO="./src/net/upnp/util/user_agent.go"
 
+UPNPDUMP=${PREFIX}/bin/upnpdump
+LIGHTDEV=${PREFIX}/bin/lightdev
+
 packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util
 	
 .PHONY: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
@@ -29,15 +32,18 @@ ${USRAGNT_GO}: ./src/net/upnp/util/user_agent.gen
 versions: ${VERSION_GO} ${USRAGNT_GO}
 
 format: versions
-	gofmt -w src cmd
+	gofmt -w src example
 
 package: format $(shell find . -type f -name '*.go')
 	go build -v ${packages}
 
-${PREFIX}/bin/upnpdump: package $(shell find ./cmd/upnpdump -type f -name '*.go')
-	go build -o $@ ./cmd/upnpdump
+${UPNPDUMP}: package $(shell find ./example/controlpoint/upnpdump -type f -name '*.go')
+	go build -o $@ ./example/controlpoint/upnpdump
 
-build: ${PREFIX}/bin/upnpdump
+${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
+	go build -o $@ ./example/device/light
+
+build: ${UPNPDUMP} ${LIGHTDEV} 
 
 test: package
 	go test -v ${packages}
