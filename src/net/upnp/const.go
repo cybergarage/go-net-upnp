@@ -18,6 +18,7 @@ const (
 	DeviceDefaultPortBase  = 6004
 	DeviceDefaultPortRange = 1024
 	DeviceDefaultPortMax   = DeviceDefaultPortBase + DeviceDefaultPortRange
+	DeviceUUIDPrefix       = "uuid:"
 
 	XmlMarshallIndent = " "
 )
