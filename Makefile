@@ -29,7 +29,7 @@ ${VERSION_GO}: ./src/net/upnp/version.gen
 ${USRAGNT_GO}: ./src/net/upnp/util/user_agent.gen ${VERSION_GO}
 	$< > $@
 
-versions: ${VERSION_GO} ${USRAGNT_GO}
+version: ${VERSION_GO} ${USRAGNT_GO}
 
 format:
 	gofmt -w src example

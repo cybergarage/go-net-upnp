@@ -4,6 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
+version=$(git describe | awk 'BEGIN { FS = "-" } ; { print $1 }')
+
 cat <<EOF
 // Copyright 2015 Satoshi Konno. All rights reserved.
 // Use of this source code is governed by a BSD-style
@@ -22,6 +24,6 @@ func GetUserAgent() string {
 		runtime.GOARCH,
 		$(grep ProductName src/net/upnp/const.go | head -n 1 | awk '{print $3}'),
 		$(grep SupportVersion src/net/upnp/const.go | head -n 1 | awk '{print $3}'),
-		"$(git describe)")
+		"$version")
 }
 EOF
