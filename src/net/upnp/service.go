@@ -6,6 +6,13 @@ package upnp
 
 import (
 	"encoding/xml"
+	"errors"
+	"fmt"
+)
+
+const (
+	errorServiceHanNoActions   = "service has no actions"
+	errorServiceActionNotFound = "action (%s) is not found"
 )
 
 // A Service represents a UPnP service.
@@ -66,4 +73,18 @@ func (self *Service) DescriptionString() (string, error) {
 	}
 
 	return string(descBytes), nil
+}
+
+// GetActionByName returns an action by the specified name
+func (self *Service) GetActionByName(name string) (*Action, error) {
+	if self.ActionList == nil {
+		return nil, errors.New(errorServiceHanNoActions)
+	}
+
+	for _, action := range self.ActionList.Actions {
+		if action.Name == name {
+			return &action, nil
+		}
+	}
+	return nil, errors.New(fmt.Sprintf(errorServiceActionNotFound, name))
 }

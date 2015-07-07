@@ -43,7 +43,7 @@ ${UPNPDUMP}: package $(shell find ./example/controlpoint/upnpdump -type f -name 
 ${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
 	go build -o $@ ./example/device/light
 
-build: ${UPNPDUMP} ${LIGHTDEV} versions 
+build: ${UPNPDUMP} ${LIGHTDEV} 
 
 test: package
 	go test -v ${packages}

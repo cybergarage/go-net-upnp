@@ -6,6 +6,12 @@ package upnp
 
 import (
 	"encoding/xml"
+	"errors"
+	"fmt"
+)
+
+const (
+	errorActionArgumentNotFound = "argument (%s) is not found"
 )
 
 // A Action represents a UPnP action.
@@ -23,6 +29,16 @@ type ActionList struct {
 
 // NewAction returns a new Action.
 func NewAction() *Action {
-	icon := &Action{}
-	return icon
+	action := &Action{}
+	return action
+}
+
+// GetArgumentByName returns an argument by the specified name
+func (self *Action) GetArgumentByName(name string) (*Argument, error) {
+	for _, arg := range self.ArgumentList.Arguments {
+		if arg.Name == name {
+			return &arg, nil
+		}
+	}
+	return nil, errors.New(fmt.Sprintf(errorActionArgumentNotFound, name))
 }

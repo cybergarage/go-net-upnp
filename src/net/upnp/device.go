@@ -6,11 +6,14 @@ package upnp
 
 import (
 	"encoding/xml"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 
 	"net/upnp/http"
 	"net/upnp/ssdp"
+	"net/upnp/util"
 )
 
 // A DeviceListener represents a listener for Device.
@@ -31,6 +34,10 @@ type Device struct {
 	ssdpMcastServerList *ssdp.MulticastServerList `xml:"-"`
 	httpServer          *http.Server              `xml:"-"`
 }
+
+const (
+	errorDeviceServiceNotFound = "service (%s) is not found"
+)
 
 // NewDevice returns a new Device.
 func NewDevice() *Device {
@@ -122,11 +129,51 @@ func (self *Device) DescriptionString() (string, error) {
 	return string(descBytes), nil
 }
 
+// SetUDN sets a the specified UUID with a prefix.
+func (self *Device) SetUDN(uuid string) error {
+	self.UDN = fmt.Sprintf("%s%s", DeviceUUIDPrefix, uuid)
+	return nil
+}
+
+// GetServiceByType returns a service by the specified serviceType
+func (self *Device) GetServiceByType(serviceType string) (*Service, error) {
+	for _, service := range self.ServiceList.Services {
+		if service.ServiceType == serviceType {
+			return &service, nil
+		}
+	}
+	return nil, errors.New(fmt.Sprintf(errorDeviceServiceNotFound, serviceType))
+}
+
+// GetServiceById returns a service by the specified serviceId
+func (self *Device) GetServiceById(serviceId string) (*Service, error) {
+	for _, service := range self.ServiceList.Services {
+		if service.ServiceId == serviceId {
+			return &service, nil
+		}
+	}
+	return nil, errors.New(fmt.Sprintf(errorDeviceServiceNotFound, serviceId))
+}
+
+func (self *Device) reviseDescription() error {
+	// check UUID
+	if len(self.UDN) <= 0 {
+		self.SetUDN(util.CreateUUID())
+	}
+
+	return nil
+}
+
 // Start starts this control point.
 func (self *Device) StartWithPort(port int) error {
+	err := self.reviseDescription()
+	if err != nil {
+		return err
+	}
+
 	self.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	self.ssdpMcastServerList.Listener = self
-	err := self.ssdpMcastServerList.Start()
+	err = self.ssdpMcastServerList.Start()
 	if err != nil {
 		self.Stop()
 		return err

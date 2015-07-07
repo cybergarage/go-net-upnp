@@ -27,9 +27,12 @@ func NewSampleDevice() (*sampleDevice, error) {
 		return nil, errors.New("service is not found !!")
 	}
 
-	switchSrv := dev.ServiceList.Services[0]
+	service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
+	if err != nil {
+		t.Error(err)
+	}
 
-	err = switchSrv.LoadDescriptionString(switchPowerServiceDescription)
+	err = service.LoadDescriptionString(switchPowerServiceDescription)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +42,7 @@ func NewSampleDevice() (*sampleDevice, error) {
 	return sampleDev, nil
 }
 
-func TestNewNullDevice(t *testing.T) {
+func TestNullDevice(t *testing.T) {
 	dev := NewDevice()
 
 	err := dev.Start()
@@ -72,6 +75,45 @@ func TestSampleDevice(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
+	// check service
+
+	service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
+	if err != nil {
+		t.Error(err)
+	}
+
+	service, err = dev.GetServiceById("urn:upnp-org:serviceId:SwitchPower.1")
+	if err != nil {
+		t.Error(err)
+	}
+
+	// check actions
+
+	actionNames := []string{"SetTarget", "GetTarget", "GetStatus"}
+	for _, name := range actionNames {
+		_, err := service.GetActionByName(name)
+		if err != nil {
+			t.Error(err)
+		}
+	}
+
+	// check argumengs
+
+	action, err := service.GetActionByName("SetTarget")
+	if err == nil {
+		argNames := []string{"newTargetValue"}
+		for _, name := range argNames {
+			_, err := action.GetArgumentByName(name)
+			if err != nil {
+				t.Error(err)
+			}
+		}
+	} else {
+		t.Error(err)
+	}
+
+	// start and stop
 
 	err = dev.Start()
 	if err != nil {
