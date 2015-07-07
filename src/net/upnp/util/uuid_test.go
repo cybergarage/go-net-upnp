@@ -5,9 +5,22 @@
 package util
 
 import (
+	"strings"
 	"testing"
 )
 
+const (
+	errorInvalidUUID = "invalide uuid = '%s'"
+)
+
 func TestCreateUUID(t *testing.T) {
-	CreateUUID()
+	uuid := CreateUUID()
+
+	if strings.Index(uuid, " ") != -1 {
+		t.Errorf(errorInvalidUUID, uuid)
+	}
+
+	if len(uuid) != UUIDLength {
+		t.Errorf(errorInvalidUUID, uuid)
+	}
 }

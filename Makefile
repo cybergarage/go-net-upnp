@@ -31,7 +31,7 @@ ${USRAGNT_GO}: ./src/net/upnp/util/user_agent.gen ${VERSION_GO}
 
 versions: ${VERSION_GO} ${USRAGNT_GO}
 
-format: versions
+format:
 	gofmt -w src example
 
 package: format $(shell find . -type f -name '*.go')
@@ -43,7 +43,7 @@ ${UPNPDUMP}: package $(shell find ./example/controlpoint/upnpdump -type f -name 
 ${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
 	go build -o $@ ./example/device/light
 
-build: ${UPNPDUMP} ${LIGHTDEV} 
+build: ${UPNPDUMP} ${LIGHTDEV} versions 
 
 test: package
 	go test -v ${packages}
