@@ -11,8 +11,9 @@ import (
 )
 
 const (
-	errorServiceHanNoActions   = "service has no actions"
-	errorServiceActionNotFound = "action (%s) is not found"
+	errorServiceDescriptionNotFound = "action (%s) is not found. service (%s) description is null."
+	errorServiceHanNoActions        = "action (%s) is not found. service (%s) has no actions."
+	errorServiceActionNotFound      = "action (%s) is not found in the service (%s)"
 )
 
 // A Service represents a UPnP service.
@@ -32,9 +33,11 @@ type Service struct {
 // NewService returns a new Service.
 func NewService() *Service {
 	service := &Service{}
+
 	service.description = &ServiceDescription{}
 	service.ServiceStateTable = &ServiceStateTable{}
 	service.ActionList = &ActionList{}
+
 	return service
 }
 
@@ -77,14 +80,19 @@ func (self *Service) DescriptionString() (string, error) {
 
 // GetActionByName returns an action by the specified name
 func (self *Service) GetActionByName(name string) (*Action, error) {
-	if self.ActionList == nil {
-		return nil, errors.New(errorServiceHanNoActions)
+	if self.description == nil {
+		return nil, errors.New(fmt.Sprintf(errorServiceDescriptionNotFound, name, self.ServiceType))
 	}
 
-	for _, action := range self.ActionList.Actions {
+	if len(self.ActionList.Actions) <= 0 {
+		return nil, errors.New(fmt.Sprintf(errorServiceHanNoActions, name, self.ServiceType))
+	}
+
+	for n := 0; n < len(self.ActionList.Actions); n++ {
+		action := &self.ActionList.Actions[n]
 		if action.Name == name {
-			return &action, nil
+			return action, nil
 		}
 	}
-	return nil, errors.New(fmt.Sprintf(errorServiceActionNotFound, name))
+	return nil, errors.New(fmt.Sprintf(errorServiceActionNotFound, name, self.ServiceType))
 }
