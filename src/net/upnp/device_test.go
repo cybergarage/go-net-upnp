@@ -6,7 +6,6 @@ package upnp
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"testing"
 
@@ -23,13 +22,9 @@ func NewSampleDevice() (*sampleDevice, error) {
 		return nil, err
 	}
 
-	if len(dev.ServiceList.Services) != 1 {
-		return nil, errors.New("service is not found !!")
-	}
-
 	service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
 	if err != nil {
-		t.Error(err)
+		return nil, err
 	}
 
 	err = service.LoadDescriptionString(switchPowerServiceDescription)

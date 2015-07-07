@@ -137,9 +137,10 @@ func (self *Device) SetUDN(uuid string) error {
 
 // GetServiceByType returns a service by the specified serviceType
 func (self *Device) GetServiceByType(serviceType string) (*Service, error) {
-	for _, service := range self.ServiceList.Services {
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
 		if service.ServiceType == serviceType {
-			return &service, nil
+			return service, nil
 		}
 	}
 	return nil, errors.New(fmt.Sprintf(errorDeviceServiceNotFound, serviceType))
@@ -147,9 +148,10 @@ func (self *Device) GetServiceByType(serviceType string) (*Service, error) {
 
 // GetServiceById returns a service by the specified serviceId
 func (self *Device) GetServiceById(serviceId string) (*Service, error) {
-	for _, service := range self.ServiceList.Services {
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
 		if service.ServiceId == serviceId {
-			return &service, nil
+			return service, nil
 		}
 	}
 	return nil, errors.New(fmt.Sprintf(errorDeviceServiceNotFound, serviceId))

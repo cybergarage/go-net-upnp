@@ -35,9 +35,10 @@ func NewAction() *Action {
 
 // GetArgumentByName returns an argument by the specified name
 func (self *Action) GetArgumentByName(name string) (*Argument, error) {
-	for _, arg := range self.ArgumentList.Arguments {
+	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
+		arg := &self.ArgumentList.Arguments[n]
 		if arg.Name == name {
-			return &arg, nil
+			return arg, nil
 		}
 	}
 	return nil, errors.New(fmt.Sprintf(errorActionArgumentNotFound, name))
