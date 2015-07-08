@@ -15,6 +15,10 @@ func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 }
 
 func (self *Device) postResponseMessge(ssdpReq *ssdp.Request) {
+	from := ssdpReq.From
+
+	ssdpRes := ssdp.NewResponse()
+
 }
 
 func (self *Device) handleDiscoverRequest(ssdpReq *ssdp.Request) {
