@@ -30,6 +30,7 @@ type Device struct {
 
 	Port           int            `xml:"-"`
 	Listener       DeviceListener `xml:"-"`
+	LocationURL    string         `xml:"-"`
 	DescriptionURL string         `xml:"-"`
 
 	ssdpMcastServerList *ssdp.MulticastServerList `xml:"-"`
@@ -57,7 +58,13 @@ func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
 		return nil, err
 	}
 
-	return NewDeviceFromDescriptionURL(descURL)
+	dev, err := NewDeviceFromDescriptionURL(descURL)
+
+	if err != nil {
+		dev.SetLocationURL(descURL)
+	}
+
+	return dev, err
 }
 
 // NewDeviceFromSSDPRequest returns a device from the specified SSDP packet
@@ -68,7 +75,12 @@ func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
 		return nil, err
 	}
 
-	return NewDeviceFromDescriptionURL(descURL)
+	dev, err := NewDeviceFromDescriptionURL(descURL)
+	if err != nil {
+		dev.SetLocationURL(descURL)
+	}
+
+	return dev, err
 }
 
 // NewDeviceFromDescriptionURL returns a device from the specified URL
@@ -101,6 +113,18 @@ func NewDeviceFromDescription(devDesc string) (*Device, error) {
 	rootDev.URLBase = rootDev.URLBase
 
 	return rootDev, nil
+}
+
+// SetLocationURL set a location URL of SSDP packet.
+func (self *Device) SetLocationURL(url string) error {
+	self.LocationURL = url
+	return nil
+}
+
+// CreateLocationURL return a location URL for SSDP packet.
+func (self *Device) CreateLocationURLForAddress(addr string) (string, error) {
+	url := fmt.Sprint("http://%s:%s:%s", string, self.Port, self.DescriptionURL)
+	return url, nil
 }
 
 // LoadDescriptinString loads a device description string.
