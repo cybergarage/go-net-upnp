@@ -123,7 +123,7 @@ func (self *Device) SetLocationURL(url string) error {
 
 // CreateLocationURL return a location URL for SSDP packet.
 func (self *Device) CreateLocationURLForAddress(addr string) (string, error) {
-	url := fmt.Sprint("http://%s:%s:%s", string, self.Port, self.DescriptionURL)
+	url := fmt.Sprint("%s://%s:%s:%s", DeviceProtocol, addr, self.Port, self.DescriptionURL)
 	return url, nil
 }
 
@@ -242,4 +242,19 @@ func (self *Device) Stop() error {
 	self.httpServer = nil
 
 	return lastErr
+}
+
+// selectAvailableInterfaceForAddr return a interface from the specified address.
+func (self *Device) selectAvailableInterfaceForAddr(fromAddr string) (string, error) {
+	ifi, err := util.GetAvailableInterfaceForAddr(fromAddr)
+	if err != nil {
+		return "", nil
+	}
+
+	ifAddr, err := util.GetInterfaceAddress(ifi)
+	if err != nil {
+		return "", nil
+	}
+
+	return ifAddr, err
 }

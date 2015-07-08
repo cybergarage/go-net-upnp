@@ -49,7 +49,7 @@ func (self *UDPSocket) Read() (*Packet, error) {
 		return nil, errors.New(errorSocketIsClosed)
 	}
 
-	n, from, err := self.Conn.ReadFrom(self.readBuf)
+	n, from, err := self.Conn.ReadFromUDP(self.readBuf)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (self *UDPSocket) Read() (*Packet, error) {
 		return nil, err
 	}
 
-	ssdpPkt.From = from
+	ssdpPkt.From = *from
 	ssdpPkt.Interface = self.Interface
 
 	return ssdpPkt, nil

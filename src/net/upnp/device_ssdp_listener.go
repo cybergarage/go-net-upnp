@@ -14,11 +14,27 @@ func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	}
 }
 
-func (self *Device) postResponseMessge(ssdpReq *ssdp.Request) {
-	from := ssdpReq.From
+func (self *Device) postResponseMessge(ssdpReq *ssdp.Request) error {
+	fromAddr := ssdpReq.From.IP.String()
+	fromPort := ssdpReq.From.Port
+
+	ifAddr, err := self.selectAvailableInterfaceForAddr(fromAddr)
+	if err != nil {
+		return err
+	}
+
+	locationURL, err := self.CreateLocationURLForAddress(ifAddr)
+	if err != nil {
+		return err
+	}
 
 	ssdpRes := ssdp.NewResponse()
+	ssdpRes.SetLocation(locationURL)
 
+	sock := ssdp.NewUnicastSocket()
+	_, err = sock.WriteResponse(fromAddr, fromPort, ssdpRes)
+
+	return err
 }
 
 func (self *Device) handleDiscoverRequest(ssdpReq *ssdp.Request) {

@@ -17,8 +17,9 @@ type MulticastListener interface {
 
 // A MulticastServer represents a packet of SSDP.
 type MulticastServer struct {
-	Socket   *HTTPMUSocket
-	Listener MulticastListener
+	Socket    *HTTPMUSocket
+	Listener  MulticastListener
+	Interface net.Interface
 }
 
 // NewMulticastServer returns a new MulticastServer.
@@ -35,6 +36,7 @@ func (self *MulticastServer) Start(ifi net.Interface) error {
 	if err != nil {
 		return err
 	}
+	self.Interface = ifi
 	go handleMulticastConnection(self)
 	return nil
 }
