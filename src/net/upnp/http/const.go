@@ -5,10 +5,13 @@
 package http
 
 const (
-	GET  = "GET"
-	POST = "POST"
+	GET         = "GET"
+	POST        = "POST"
+	SUBSCRIBE   = "SUBSCRIBE"
+	UNSUBSCRIBE = "UNSUBSCRIBE"
 
 	ContentType = "Content-Type"
+	SoapAction  = "SOAPACTION"
 
 	ContentTypeXML = "text/html; charset=utf8"
 )
