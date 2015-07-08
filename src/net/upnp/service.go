@@ -78,6 +78,27 @@ func (self *Service) DescriptionString() (string, error) {
 	return string(descBytes), nil
 }
 
+func (self *Service) isDescriptionURL(path string) bool {
+	if path == self.SCPDURL {
+		return true
+	}
+	return false
+}
+
+func (self *Service) isControlURL(path string) bool {
+	if path == self.ControlURL {
+		return true
+	}
+	return false
+}
+
+func (self *Service) isEventSubURL(path string) bool {
+	if path == self.EventSubURL {
+		return true
+	}
+	return false
+}
+
 // GetActionByName returns an action by the specified name
 func (self *Service) GetActionByName(name string) (*Action, error) {
 	if self.description == nil {

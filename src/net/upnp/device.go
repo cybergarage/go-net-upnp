@@ -28,8 +28,9 @@ type Device struct {
 	SpecVersion SpecVersion `xml:"-"`
 	URLBase     string      `xml:"-"`
 
-	Port     int            `xml:"-"`
-	Listener DeviceListener `xml:"-"`
+	Port           int            `xml:"-"`
+	Listener       DeviceListener `xml:"-"`
+	DescriptionURL string         `xml:"-"`
 
 	ssdpMcastServerList *ssdp.MulticastServerList `xml:"-"`
 	httpServer          *http.Server              `xml:"-"`
@@ -217,34 +218,4 @@ func (self *Device) Stop() error {
 	self.httpServer = nil
 
 	return lastErr
-}
-
-func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
-	self.handleNotifyRequest(ssdpReq)
-
-	if self.Listener != nil {
-		self.Listener.DeviceNotifyReceived(ssdpReq)
-	}
-}
-
-func (self *Device) DeviceSearchReceived(ssdpReq *ssdp.Request) {
-	if self.Listener != nil {
-		self.Listener.DeviceSearchReceived(ssdpReq)
-	}
-
-}
-
-func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
-	if self.Listener != nil {
-		self.Listener.HTTPRequestReceived(httpReq, httpRes)
-		return
-	}
-
-	httpRes.WriteHeader(http.StatusInternalServerError)
-}
-
-func (self *Device) handleNotifyRequest(ssdpReq *ssdp.Request) {
-	if !ssdpReq.IsDiscover() {
-		return
-	}
 }
