@@ -17,7 +17,7 @@ USRAGNT_GO="./src/net/upnp/util/user_agent.go"
 UPNPDUMP=${PREFIX}/bin/upnpdump
 LIGHTDEV=${PREFIX}/bin/lightdev
 
-packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util
+packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util net/upnp/soap
 	
 # .PHONY: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
 
