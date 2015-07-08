@@ -15,10 +15,11 @@ const (
 	ControlPointDefaultPortRange = 1024
 	ControlPointDefaultPortMax   = ControlPointDefaultPortBase + ControlPointDefaultPortRange
 
-	DeviceDefaultPortBase  = 6004
-	DeviceDefaultPortRange = 1024
-	DeviceDefaultPortMax   = DeviceDefaultPortBase + DeviceDefaultPortRange
-	DeviceUUIDPrefix       = "uuid:"
+	DeviceDefaultPortBase       = 6004
+	DeviceDefaultPortRange      = 1024
+	DeviceDefaultPortMax        = DeviceDefaultPortBase + DeviceDefaultPortRange
+	DeviceUUIDPrefix            = "uuid:"
+	DeviceDefaultDescriptionURL = "/description.xml"
 
 	XmlMarshallIndent = " "
 )
