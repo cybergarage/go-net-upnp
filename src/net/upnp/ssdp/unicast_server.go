@@ -17,8 +17,9 @@ type UnicastListener interface {
 
 // A UnicastServer represents a packet of SSDP.
 type UnicastServer struct {
-	Socket   *UnicastSocket
-	Listener UnicastListener
+	Socket    *UnicastSocket
+	Listener  UnicastListener
+	Interface net.Interface
 }
 
 // NewUnicastServer returns a new UnicastServer.
@@ -35,6 +36,7 @@ func (self *UnicastServer) Start(ifi net.Interface, port int) error {
 	if err != nil {
 		return err
 	}
+	self.Interface = ifi
 	go handleSSDPUnicastConnection(self)
 	return nil
 }
@@ -55,7 +57,7 @@ func (self *UnicastServer) Search(st string) error {
 		return err
 	}
 
-	_, err = self.Socket.Write(ssdpReq)
+	_, err = self.Socket.WriteRequest(ssdpReq)
 
 	return err
 }

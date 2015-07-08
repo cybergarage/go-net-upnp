@@ -79,3 +79,54 @@ func GetAvailableInterfaces() ([]net.Interface, error) {
 
 	return useIfs, err
 }
+
+func getMatchAddressBlockCount(ifAddr string, targetAddr string) int {
+	const addrSep = "."
+	targetAddrs := strings.Split(targetAddr, addrSep)
+	ifAddrs := strings.Split(ifAddr, addrSep)
+
+	if len(targetAddrs) != len(ifAddrs) {
+		return -1
+	}
+
+	addrSize := len(targetAddrs)
+	for n := 0; n < len(targetAddrs); n++ {
+		if targetAddrs[n] != ifAddrs[n] {
+			return n
+		}
+	}
+
+	return addrSize
+}
+
+func GetAvailableInterfaceForAddr(fromAddr string) (net.Interface, error) {
+	ifis, err := GetAvailableInterfaces()
+	if err != nil {
+		return net.Interface{}, err
+	}
+
+	switch len(ifis) {
+	case 0:
+		return net.Interface{}, errors.New(errorAvailableInterfaceFound)
+	case 1:
+		return ifis[0], nil
+	}
+
+	ifAddrs := make([]string, len(ifis))
+	for n := 0; n < len(ifAddrs); n++ {
+		ifAddrs[n], _ = GetInterfaceAddress(ifis[n])
+	}
+
+	selIf := ifis[0]
+	selIfMatchBlocks := getMatchAddressBlockCount(fromAddr, ifAddrs[0])
+	for n := 0; n < len(ifAddrs); n++ {
+		matchBlocks := getMatchAddressBlockCount(fromAddr, ifAddrs[n])
+		if matchBlocks < selIfMatchBlocks {
+			continue
+		}
+		selIf = ifis[n]
+		selIfMatchBlocks = matchBlocks
+	}
+
+	return selIf, nil
+}

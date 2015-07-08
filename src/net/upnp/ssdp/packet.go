@@ -22,7 +22,7 @@ const (
 type Packet struct {
 	FirstLines []string
 	Headers    map[string]string
-	From       net.Addr
+	From       net.UDPAddr
 	Interface  net.Interface
 }
 
@@ -186,8 +186,8 @@ func (self *Packet) GetDate() (string, error) {
 	return self.GetHeaderString(DATE)
 }
 
-func (self *Packet) SetLocation(addr string, port int) error {
-	return self.SetHeaderString(LOCATION, fmt.Sprintf("%s:%d", addr, port))
+func (self *Packet) SetLocation(value string) error {
+	return self.SetHeaderString(LOCATION, value)
 }
 
 func (self *Packet) GetLocation() (string, error) {
