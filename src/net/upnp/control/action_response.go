@@ -4,14 +4,42 @@
 
 package control
 
-import ()
+import (
+	"strings"
+)
 
-// A Response represents a Response.
+const (
+	Response = "Response"
+)
+
+// A ActionResponse represents an action request.
 type ActionResponse struct {
+	*ActionControl
 }
 
-// NewResponse returns a new Response.
+// NewRequest returns a new Request.
 func NewActionResponse() *ActionResponse {
-	res := &ActionResponse{}
-	return res
+	req := &ActionResponse{}
+	req.ActionControl = NewActionControl()
+	return req
+}
+
+// NewRequest returns a new Request.
+func NewActionResponseFromSOAPString(reqStr string) (*ActionResponse, error) {
+	res := NewActionResponse()
+	err := res.decodeEnvelopeXMLString(reqStr)
+	if err != nil {
+		return nil, err
+	}
+
+	innerXMLString := res.Envelope.Body.Innerxml
+	err = res.decodeBodyInnerXMLString(innerXMLString)
+	if err != nil {
+		return nil, err
+	}
+
+	// Fix 'ActionResponse' -> 'Action'
+	res.Envelope.Body.Action.Name = strings.TrimSuffix(res.Envelope.Body.Action.Name, Response)
+
+	return res, nil
 }
