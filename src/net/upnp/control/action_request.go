@@ -5,17 +5,25 @@
 package control
 
 import (
-	"bytes"
 	"encoding/xml"
+	"errors"
 	"fmt"
-	"io"
+	"strings"
+)
+
+const (
+	errorActionRequestInvalidInnerXML   = "invalid inner XML (%s)"
+	errorActionRequestInvalidActionName = "invalid action name (%s)"
 )
 
 // A ActionRequest represents an action request.
 type ActionRequest struct {
 	Envelope struct {
-		Body struct {
-			Action Action
+		XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
+		Body    struct {
+			XMLName  xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
+			Innerxml string   `xml:",innerxml"`
+			Action   Action   `xml:"-"`
 		}
 	}
 }
@@ -35,55 +43,58 @@ type Argument struct {
 // NewRequest returns a new Request.
 func NewActionRequest() *ActionRequest {
 	req := &ActionRequest{}
+	req.Envelope.Body.Action.Arguments = make([]*Argument, 0)
 	return req
 }
 
 // NewRequest returns a new Request.
 func NewActionRequestFromSOAPString(reqStr string) (*ActionRequest, error) {
 	req := NewActionRequest()
-	err := req.decodeXMLBytes([]byte(reqStr))
+	err := xml.Unmarshal([]byte(reqStr), &req.Envelope)
 	if err != nil {
 		return nil, err
 	}
+
+	xmlSepFunc := func(r rune) bool {
+		switch r {
+		case '<', '>', ' ':
+			return true
+		}
+		return false
+	}
+
+	innerXML := req.Envelope.Body.Innerxml
+	params := strings.FieldsFunc(innerXML, xmlSepFunc)
+
+	for n, param := range params {
+		fmt.Printf("params[%d] =  %s\n", n, param)
+	}
+
+	if len(params) < 2 {
+		return nil, errors.New(fmt.Sprintf(errorActionRequestInvalidInnerXML, innerXML))
+	}
+
+	names := strings.Split(params[0], ":")
+	if len(names) < 2 {
+		return nil, errors.New(fmt.Sprintf(errorActionRequestInvalidActionName, params[0]))
+	}
+	req.Envelope.Body.Action.Name = names[1]
+
+	for n := 2; (n + 2) < len(params); n += 3 {
+		fmt.Printf("n = %d %d\n", n, len(params))
+		switch n {
+		case 0:
+		default:
+			arg := &Argument{Name: params[n], Value: params[n+1]}
+			req.Envelope.Body.Action.Arguments = append(req.Envelope.Body.Action.Arguments, arg)
+			fmt.Printf("[%d] %s %s (%p) %d\n", n, arg.Name, arg.Value, req.Envelope.Body.Action.Arguments, len(req.Envelope.Body.Action.Arguments))
+		}
+	}
+
 	return req, nil
 }
 
 // GetAction returns an actions in the SOPA request.
 func (self *ActionRequest) GetAction() (*Action, error) {
-	//decoder := xml.NewDecoder(body)
-	return nil, nil
-}
-
-func (req *ActionRequest) decodeXMLBytes(xmlBytes []byte) error {
-	decoder := xml.NewDecoder(bytes.NewReader(xmlBytes))
-
-	var value string
-	token, err := decoder.Token()
-	for n := 0; err != io.EOF; n++ {
-		fmt.Printf("token[%d] = %p\n", n, token)
-
-		if token == nil {
-			break
-		}
-		/*
-			if err != nil {
-				return err
-			}
-		*/
-
-		//var value string
-
-		//token.(type).String()
-		switch elem := token.(type) {
-		case xml.StartElement:
-			decoder.DecodeElement(&value, &elem)
-			fmt.Printf("startElem (%s) = %s\n", elem.Name, value)
-		case xml.EndElement:
-			fmt.Printf("EndElement (%s) = %s\n", elem.Name, value)
-		}
-
-		token, _ = decoder.Token()
-	}
-
-	return nil
+	return &self.Envelope.Body.Action, nil
 }
