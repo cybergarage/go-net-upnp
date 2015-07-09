@@ -31,6 +31,9 @@ const binaryLightDeviceDescription = xml.Header +
 	"      <service>" +
 	"        <serviceType>urn:schemas-upnp-org:service:SwitchPower:1</serviceType>" +
 	"        <serviceId>urn:upnp-org:serviceId:SwitchPower.1</serviceId>" +
+    "        <SCPDURL>/service/switch_power_description.xml</SCPDURL>
+    "        <controlURL>/service/control/SwitchPower</controlURL>
+    "        <eventSubURL>service/event/SwitchPower</eventSubURL>
 	"      </service>" +
 	"    </serviceList>" +
 	"  </device>" +
