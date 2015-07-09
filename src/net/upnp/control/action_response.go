@@ -17,17 +17,17 @@ type ActionResponse struct {
 	*ActionControl
 }
 
-// NewRequest returns a new Request.
+// NewActionResponse returns a new response.
 func NewActionResponse() *ActionResponse {
-	req := &ActionResponse{}
-	req.ActionControl = NewActionControl()
-	return req
+	res := &ActionResponse{}
+	res.ActionControl = NewActionControl()
+	return res
 }
 
-// NewRequest returns a new Request.
-func NewActionResponseFromSOAPString(reqStr string) (*ActionResponse, error) {
+// NewActionResponseFromSOAPString returns a new response.
+func NewActionResponseFromSOAPString(soapRes string) (*ActionResponse, error) {
 	res := NewActionResponse()
-	err := res.decodeEnvelopeXMLString(reqStr)
+	err := res.decodeEnvelopeXMLString(soapRes)
 	if err != nil {
 		return nil, err
 	}
