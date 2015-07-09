@@ -2,16 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package soap
+package control
 
 import ()
 
 // A Response represents a Response.
-type Response struct {
+type ActionResponse struct {
 }
 
 // NewResponse returns a new Response.
-func NewResponse() *Response {
-	soapRes := &Response{}
-	return soapRes
+func NewActionResponse() *ActionResponse {
+	res := &ActionResponse{}
+	return res
 }
