@@ -55,6 +55,17 @@ func NewActionRequestFromSOAPString(reqStr string) (*ActionRequest, error) {
 		return nil, err
 	}
 
+	innerXMLString := req.Envelope.Body.Innerxml
+	err = req.decodeInnerXML(innerXMLString)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// decodeInnerXML parses the innerXML
+func (self *ActionRequest) decodeInnerXML(innerXML string) error {
 	xmlSepFunc := func(r rune) bool {
 		switch r {
 		case '<', '>', ' ':
@@ -63,35 +74,28 @@ func NewActionRequestFromSOAPString(reqStr string) (*ActionRequest, error) {
 		return false
 	}
 
-	innerXML := req.Envelope.Body.Innerxml
 	params := strings.FieldsFunc(innerXML, xmlSepFunc)
 
-	for n, param := range params {
-		fmt.Printf("params[%d] =  %s\n", n, param)
-	}
-
 	if len(params) < 2 {
-		return nil, errors.New(fmt.Sprintf(errorActionRequestInvalidInnerXML, innerXML))
+		return errors.New(fmt.Sprintf(errorActionRequestInvalidInnerXML, innerXML))
 	}
 
 	names := strings.Split(params[0], ":")
 	if len(names) < 2 {
-		return nil, errors.New(fmt.Sprintf(errorActionRequestInvalidActionName, params[0]))
+		return errors.New(fmt.Sprintf(errorActionRequestInvalidActionName, params[0]))
 	}
-	req.Envelope.Body.Action.Name = names[1]
+	self.Envelope.Body.Action.Name = names[1]
 
 	for n := 2; (n + 2) < len(params); n += 3 {
-		fmt.Printf("n = %d %d\n", n, len(params))
 		switch n {
 		case 0:
 		default:
 			arg := &Argument{Name: params[n], Value: params[n+1]}
-			req.Envelope.Body.Action.Arguments = append(req.Envelope.Body.Action.Arguments, arg)
-			fmt.Printf("[%d] %s %s (%p) %d\n", n, arg.Name, arg.Value, req.Envelope.Body.Action.Arguments, len(req.Envelope.Body.Action.Arguments))
+			self.Envelope.Body.Action.Arguments = append(self.Envelope.Body.Action.Arguments, arg)
 		}
 	}
 
-	return req, nil
+	return nil
 }
 
 // GetAction returns an actions in the SOPA request.

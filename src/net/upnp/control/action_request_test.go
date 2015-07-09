@@ -6,30 +6,24 @@ package control
 
 import (
 	"encoding/xml"
-	"fmt"
 	"testing"
 )
 
 const (
-	errorActionRequestInvalidName  = "invalid action name = '%s': expected '%s'"
-	errorActionRequestInvalidParam = "invalid param (%s) = '%s': expected (%s) = '%s'"
+	errorActionRequestInvalidName   = "invalid action name = '%s': expected '%s'"
+	errorActionRequestInvalidArgCnt = "invalid arguments count (%d) = : expected (%d)'"
+	errorActionRequestInvalidArg    = "invalid param (%s) = '%s': expected (%s) = '%s'"
 )
 
-const (
-	testSoapActionRequest = xml.Header + "\n" +
+func TestNewActionRequestNoArguments(t *testing.T) {
+	const testSoapActionRequest = xml.Header + "\n" +
 		"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
 		"  <s:Body>" +
 		"    <u:SetValue xmlns:u=\"urn:schemas-upnp-org:service:serviceType:v\">" +
-		"      <Value1>100</Value1>" +
-		"      <Value2>200</Value2>" +
-		"      <Value3>300</Value3>" +
-		"      <Value4>400</Value4>" +
 		"    </u:SetValue>" +
 		"  </s:Body>" +
 		"</s:Envelope>"
-)
 
-func TestNewActionRequest(t *testing.T) {
 	req, err := NewActionRequestFromSOAPString(testSoapActionRequest)
 	if err != nil {
 		t.Error(err)
@@ -45,17 +39,99 @@ func TestNewActionRequest(t *testing.T) {
 		t.Errorf(errorActionRequestInvalidName, action.Name, expectValue)
 	}
 
-	expactedParamNames := []string{"Value1", "Value2", "Value3", "Value4"}
-	expactedParamValues := []string{"100", "200", "300", "400"}
+	expectedArgCnt := 0
+	if len(action.Arguments) != expectedArgCnt {
+		t.Errorf(errorActionRequestInvalidArgCnt, len(action.Arguments), expectedArgCnt)
+	}
+}
 
-	for n := 0; n < len(expactedParamNames); n++ {
-		fmt.Printf("expactedParamNames[%d] %p %d\n", n, action.Arguments, len(action.Arguments))
+func TestNewActionRequestOneArguments(t *testing.T) {
+	const testSoapActionRequest = xml.Header + "\n" +
+		"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+		"  <s:Body>" +
+		"    <u:SetValue xmlns:u=\"urn:schemas-upnp-org:service:serviceType:v\">" +
+		"      <Value>100</Value>" +
+		"    </u:SetValue>" +
+		"  </s:Body>" +
+		"</s:Envelope>"
+
+	req, err := NewActionRequestFromSOAPString(testSoapActionRequest)
+	if err != nil {
+		t.Error(err)
+	}
+
+	action, err := req.GetAction()
+	if err != nil {
+		t.Error(err)
+	}
+
+	expectValue := "SetValue"
+	if action.Name != expectValue {
+		t.Errorf(errorActionRequestInvalidName, action.Name, expectValue)
+	}
+
+	expectedArgCnt := 1
+	if len(action.Arguments) != expectedArgCnt {
+		t.Errorf(errorActionRequestInvalidArgCnt, len(action.Arguments), expectedArgCnt)
+	}
+
+	expactedArgNames := []string{"Value"}
+	expactedArgValues := []string{"100"}
+
+	for n := 0; n < len(expactedArgNames); n++ {
 		arg := action.Arguments[n]
-		if arg.Name != expactedParamNames[n] {
-			t.Errorf(errorActionRequestInvalidParam, arg.Name, arg.Value, expactedParamNames[n], expactedParamValues[n])
+		if arg.Name != expactedArgNames[n] {
+			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])
 		}
-		if arg.Value != expactedParamValues[n] {
-			t.Errorf(errorActionRequestInvalidParam, arg.Name, arg.Value, expactedParamNames[n], expactedParamValues[n])
+		if arg.Value != expactedArgValues[n] {
+			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])
+		}
+	}
+}
+
+func TestNewActionRequestForArguments(t *testing.T) {
+	const testSoapActionRequest = xml.Header + "\n" +
+		"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+		"  <s:Body>" +
+		"    <u:SetValue xmlns:u=\"urn:schemas-upnp-org:service:serviceType:v\">" +
+		"      <Value1>100</Value1>" +
+		"      <Value2>200</Value2>" +
+		"      <Value3>300</Value3>" +
+		"      <Value4>400</Value4>" +
+		"    </u:SetValue>" +
+		"  </s:Body>" +
+		"</s:Envelope>"
+
+	req, err := NewActionRequestFromSOAPString(testSoapActionRequest)
+	if err != nil {
+		t.Error(err)
+	}
+
+	action, err := req.GetAction()
+	if err != nil {
+		t.Error(err)
+	}
+
+	expectValue := "SetValue"
+	if action.Name != expectValue {
+		t.Errorf(errorActionRequestInvalidName, action.Name, expectValue)
+	}
+
+	expectedArgCnt := 4
+	if len(action.Arguments) != expectedArgCnt {
+		t.Errorf(errorActionRequestInvalidArgCnt, len(action.Arguments), expectedArgCnt)
+	}
+
+	expactedArgNames := []string{"Value1", "Value2", "Value3", "Value4"}
+	expactedArgValues := []string{"100", "200", "300", "400"}
+
+	for n := 0; n < len(expactedArgNames); n++ {
+		arg := action.Arguments[n]
+		if arg.Name != expactedArgNames[n] {
+			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])
+		}
+		if arg.Value != expactedArgValues[n] {
+			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])
 		}
 	}
 }
