@@ -6,8 +6,6 @@ package control
 
 import (
 	"encoding/xml"
-	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -40,6 +38,11 @@ type Argument struct {
 	Value string
 }
 
+// A Action represents arguments in as SOAP action.
+type ActionInnerXML struct {
+	Innerxml string `xml:",innerxml"`
+}
+
 // NewRequest returns a new Request.
 func NewActionRequest() *ActionRequest {
 	req := &ActionRequest{}
@@ -56,7 +59,7 @@ func NewActionRequestFromSOAPString(reqStr string) (*ActionRequest, error) {
 	}
 
 	innerXMLString := req.Envelope.Body.Innerxml
-	err = req.decodeInnerXML(innerXMLString)
+	err = req.decodeBodyInnerXMLString(innerXMLString)
 	if err != nil {
 		return nil, err
 	}
@@ -64,33 +67,58 @@ func NewActionRequestFromSOAPString(reqStr string) (*ActionRequest, error) {
 	return req, nil
 }
 
-// decodeInnerXML parses the innerXML
-func (self *ActionRequest) decodeInnerXML(innerXML string) error {
-	xmlSepFunc := func(r rune) bool {
-		switch r {
-		case '<', '>', ' ':
-			return true
+// decodeBodyInnerXMLString parses an innerXML of an action in body
+func (self *ActionRequest) decodeBodyInnerXMLString(bodyInnerXML string) error {
+	reader := strings.NewReader(bodyInnerXML)
+	decorder := xml.NewDecoder(reader)
+
+	for {
+		token, err := decorder.Token()
+		if token == nil {
+			break
 		}
-		return false
+		if err != nil {
+			return err
+		}
+		switch elem := token.(type) {
+		case xml.StartElement:
+			actionName := elem.Name.Local
+			self.Envelope.Body.Action.Name = actionName
+			var actionArgs ActionInnerXML
+			if err := decorder.DecodeElement(&actionArgs, &elem); err != nil {
+				return err
+			}
+			err := self.decodeActionInnerXMLString(actionArgs.Innerxml)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
-	params := strings.FieldsFunc(innerXML, xmlSepFunc)
+	return nil
+}
 
-	if len(params) < 2 {
-		return errors.New(fmt.Sprintf(errorActionRequestInvalidInnerXML, innerXML))
-	}
+// decodeActionInnerXMLString parses an innerXML of arguments in action
+func (self *ActionRequest) decodeActionInnerXMLString(actionInnerXML string) error {
+	reader := strings.NewReader(actionInnerXML)
+	decorder := xml.NewDecoder(reader)
 
-	names := strings.Split(params[0], ":")
-	if len(names) < 2 {
-		return errors.New(fmt.Sprintf(errorActionRequestInvalidActionName, params[0]))
-	}
-	self.Envelope.Body.Action.Name = names[1]
-
-	for n := 2; (n + 2) < len(params); n += 3 {
-		switch n {
-		case 0:
-		default:
-			arg := &Argument{Name: params[n], Value: params[n+1]}
+	for {
+		token, err := decorder.Token()
+		if token == nil {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		switch elem := token.(type) {
+		case xml.StartElement:
+			argName := elem.Name.Local
+			var argValue string
+			if err := decorder.DecodeElement(&argValue, &elem); err != nil {
+				return err
+			}
+			arg := &Argument{Name: argName, Value: argValue}
 			self.Envelope.Body.Action.Arguments = append(self.Envelope.Body.Action.Arguments, arg)
 		}
 	}

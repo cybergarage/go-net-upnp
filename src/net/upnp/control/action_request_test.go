@@ -15,7 +15,7 @@ const (
 	errorActionRequestInvalidArg    = "invalid param (%s) = '%s': expected (%s) = '%s'"
 )
 
-func TestNewActionRequestNoArguments(t *testing.T) {
+func TestNewActionRequestNoArgument(t *testing.T) {
 	const testSoapActionRequest = xml.Header + "\n" +
 		"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
 		"  <s:Body>" +
@@ -42,6 +42,50 @@ func TestNewActionRequestNoArguments(t *testing.T) {
 	expectedArgCnt := 0
 	if len(action.Arguments) != expectedArgCnt {
 		t.Errorf(errorActionRequestInvalidArgCnt, len(action.Arguments), expectedArgCnt)
+	}
+}
+
+func TestNewActionRequestOneSpaceArgument(t *testing.T) {
+	const testSoapActionRequest = xml.Header + "\n" +
+		"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+		"  <s:Body>" +
+		"    <u:SetValue xmlns:u=\"urn:schemas-upnp-org:service:serviceType:v\">" +
+		"      <Value>Hello World</Value>" +
+		"    </u:SetValue>" +
+		"  </s:Body>" +
+		"</s:Envelope>"
+
+	req, err := NewActionRequestFromSOAPString(testSoapActionRequest)
+	if err != nil {
+		t.Error(err)
+	}
+
+	action, err := req.GetAction()
+	if err != nil {
+		t.Error(err)
+	}
+
+	expectValue := "SetValue"
+	if action.Name != expectValue {
+		t.Errorf(errorActionRequestInvalidName, action.Name, expectValue)
+	}
+
+	expectedArgCnt := 1
+	if len(action.Arguments) != expectedArgCnt {
+		t.Errorf(errorActionRequestInvalidArgCnt, len(action.Arguments), expectedArgCnt)
+	}
+
+	expactedArgNames := []string{"Value"}
+	expactedArgValues := []string{"Hello World"}
+
+	for n := 0; n < len(expactedArgNames); n++ {
+		arg := action.Arguments[n]
+		if arg.Name != expactedArgNames[n] {
+			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])
+		}
+		if arg.Value != expactedArgValues[n] {
+			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])
+		}
 	}
 }
 
