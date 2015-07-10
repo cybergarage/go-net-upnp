@@ -188,6 +188,12 @@ func (self *Device) reviseDescription() error {
 		self.SetUDN(util.CreateUUID())
 	}
 
+	// check description URLs in the service
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
+		service.reviseDescription()
+	}
+
 	return nil
 }
 
