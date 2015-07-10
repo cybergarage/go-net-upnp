@@ -51,8 +51,8 @@ func (self *UnicastServer) Stop() error {
 }
 
 // Search sends a M-SEARCH request of the specified ST.
-func (self *UnicastServer) Search(st string) error {
-	ssdpReq, err := NewSearchRequest(st)
+func (self *UnicastServer) Search(st string, mx int) error {
+	ssdpReq, err := NewSearchRequest(st, mx)
 	if err != nil {
 		return err
 	}
