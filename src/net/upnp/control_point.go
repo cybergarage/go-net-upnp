@@ -23,7 +23,8 @@ type ControlPointListener interface {
 type ControlPoint struct {
 	*sync.Mutex
 
-	Port int
+	Port     int
+	SearchMX int
 
 	rootDeviceUdnMap    DeviceUdnMap
 	ssdpMcastServerList *ssdp.MulticastServerList
@@ -39,6 +40,8 @@ func NewControlPoint() *ControlPoint {
 	cp.rootDeviceUdnMap = NewDeviceUdnMap()
 	cp.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	cp.ssdpUcastServerList = ssdp.NewUnicastServerList()
+
+	cp.SearchMX = ControlPointDefaultSearchMX
 
 	return cp
 }
@@ -81,7 +84,7 @@ func (self *ControlPoint) Stop() error {
 
 // Search sends a M-SEARCH request of the specified ST.
 func (self *ControlPoint) Search(st string) error {
-	return self.ssdpUcastServerList.Search(st)
+	return self.ssdpUcastServerList.Search(st, self.SearchMX)
 }
 
 // SearchRootDevice sends a M-SEARCH request for root devices.

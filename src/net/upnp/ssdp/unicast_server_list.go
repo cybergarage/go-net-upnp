@@ -67,11 +67,11 @@ func (self *UnicastServerList) Stop() error {
 }
 
 // Search sends a M-SEARCH request of the specified ST.
-func (self *UnicastServerList) Search(st string) error {
+func (self *UnicastServerList) Search(st string, mx int) error {
 	var lastErr error = nil
 
 	for _, server := range self.Servers {
-		err := server.Search(st)
+		err := server.Search(st, mx)
 		if err != nil {
 			lastErr = err
 		}

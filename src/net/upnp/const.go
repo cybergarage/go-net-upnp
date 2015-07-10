@@ -4,6 +4,10 @@
 
 package upnp
 
+import (
+	"net/upnp/ssdp"
+)
+
 const (
 	ProductName = "go-net-upnp"
 
@@ -14,6 +18,7 @@ const (
 	ControlPointDefaultPortBase  = 5004
 	ControlPointDefaultPortRange = 1024
 	ControlPointDefaultPortMax   = ControlPointDefaultPortBase + ControlPointDefaultPortRange
+	ControlPointDefaultSearchMX  = ssdp.DEFAULT_MSEARCH_MX
 
 	DeviceDefaultPortBase  = 6004
 	DeviceDefaultPortRange = 1024

@@ -39,13 +39,13 @@ func NewRequestFromPacket(packet *Packet) (*Request, error) {
 }
 
 // NewSearchRequest a new Request from the specified bytes.
-func NewSearchRequest(st string) (*Request, error) {
+func NewSearchRequest(st string, mx int) (*Request, error) {
 	ssdpReq := NewRequest()
 
 	ssdpReq.SetMethod(M_SEARCH)
 	ssdpReq.SetHost(MULTICAST_ADDRESS)
 	ssdpReq.SetST(st)
-	ssdpReq.SetMX(DEFAULT_MSEARCH_MX)
+	ssdpReq.SetMX(mx)
 	ssdpReq.SetMAN(DISCOVER)
 
 	return ssdpReq, nil
