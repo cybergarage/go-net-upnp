@@ -122,7 +122,7 @@ func (self *Device) SetLocationURL(url string) error {
 }
 
 // CreateLocationURL return a location URL for SSDP packet.
-func (self *Device) CreateLocationURLForAddress(addr string) (string, error) {
+func (self *Device) createLocationURLForAddress(addr string) (string, error) {
 	url := fmt.Sprint("%s://%s:%s:%s", DeviceProtocol, addr, self.Port, self.DescriptionURL)
 	return url, nil
 }
@@ -183,6 +183,11 @@ func (self *Device) GetServiceById(serviceId string) (*Service, error) {
 }
 
 func (self *Device) reviseDescription() error {
+	// check descriptionURL
+	if len(self.DescriptionURL) <= 0 {
+		self.DescriptionURL = DeviceDefaultDescriptionURL
+	}
+
 	// check UUID
 	if len(self.UDN) <= 0 {
 		self.SetUDN(util.CreateUUID())

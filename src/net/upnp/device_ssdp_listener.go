@@ -23,7 +23,7 @@ func (self *Device) postResponseMessge(ssdpReq *ssdp.Request) error {
 		return err
 	}
 
-	locationURL, err := self.CreateLocationURLForAddress(ifAddr)
+	locationURL, err := self.createLocationURLForAddress(ifAddr)
 	if err != nil {
 		return err
 	}
