@@ -12,6 +12,10 @@ import (
 	gohttp "net/http"
 )
 
+const (
+	errorTestDeviceInvalidURL = "invalid %s = '%s', expected : '%s'"
+)
+
 type sampleDevice struct {
 	*Device
 }
@@ -108,13 +112,44 @@ func TestSampleDevice(t *testing.T) {
 		t.Error(err)
 	}
 
-	// start and stop
+	// start device
 
 	err = dev.Start()
 	if err != nil {
 		t.Error(err)
 	}
 
+	// check service
+
+	checkServiceURLs := func(dev *sampleDevice, serviceType string, urls []string) {
+		service, err := dev.GetServiceByType(serviceType)
+		if err != nil {
+			t.Error(err)
+		}
+
+		expectURL := urls[0]
+		if len(service.SCPDURL) <= 0 || service.SCPDURL != expectURL {
+			t.Errorf(errorTestDeviceInvalidURL, "SCPDURL", service.SCPDURL, expectURL)
+		}
+
+		expectURL = urls[1]
+		if len(service.ControlURL) <= 0 || service.ControlURL != expectURL {
+			t.Errorf(errorTestDeviceInvalidURL, "ControlURL", service.ControlURL, expectURL)
+		}
+
+		expectURL = urls[2]
+		if len(service.EventSubURL) <= 0 || service.EventSubURL != expectURL {
+			t.Errorf(errorTestDeviceInvalidURL, "EventSubURL", service.EventSubURL, expectURL)
+		}
+	}
+
+	urls := []string{
+		"/service/scpd/SwitchPower.xml",
+		"/service/control/SwitchPower",
+		"/service/event/SwitchPower"}
+	checkServiceURLs(dev, "urn:schemas-upnp-org:service:SwitchPower:1", urls)
+
+	// stop device
 	err = dev.Stop()
 	if err != nil {
 		t.Error(err)

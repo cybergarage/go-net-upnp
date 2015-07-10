@@ -8,6 +8,13 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"strings"
+)
+
+const (
+	defaultServiceScpdURL    = "/service/scpd/%s.xml"
+	defaultServiceControlURL = "/service/control/%s"
+	defaultServiceEventURL   = "/service/event/%s"
 )
 
 const (
@@ -76,6 +83,34 @@ func (self *Service) DescriptionString() (string, error) {
 	}
 
 	return string(descBytes), nil
+}
+
+func (self *Service) getShortServiceType() string {
+	serviceTypes := strings.Split(self.ServiceType, ":")
+	if len(serviceTypes) <= 1 {
+		return self.ServiceId
+	}
+	return serviceTypes[len(serviceTypes)-2]
+}
+
+func (self *Service) reviseDescription() error {
+	shortServiceId := self.getShortServiceType()
+
+	// check description URLs
+
+	if len(self.SCPDURL) <= 0 {
+		self.SCPDURL = fmt.Sprintf(defaultServiceScpdURL, shortServiceId)
+	}
+
+	if len(self.ControlURL) <= 0 {
+		self.ControlURL = fmt.Sprintf(defaultServiceControlURL, shortServiceId)
+	}
+
+	if len(self.EventSubURL) <= 0 {
+		self.EventSubURL = fmt.Sprintf(defaultServiceEventURL, shortServiceId)
+	}
+
+	return nil
 }
 
 func (self *Service) isDescriptionURL(path string) bool {
