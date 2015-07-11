@@ -34,6 +34,15 @@ func NewAction() *Action {
 	return action
 }
 
+func (self *Action) reviseParentObject() error {
+	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
+		arg := &self.ArgumentList.Arguments[n]
+		arg.ParentAction = self
+	}
+
+	return nil
+}
+
 // GetArgumentByName returns an argument by the specified name
 func (self *Action) GetArgumentByName(name string) (*Argument, error) {
 	for n := 0; n < len(self.ArgumentList.Arguments); n++ {

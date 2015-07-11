@@ -103,6 +103,7 @@ func (self *Service) reviseParentObject() error {
 	for n := 0; n < len(self.ActionList.Actions); n++ {
 		action := &self.ActionList.Actions[n]
 		action.ParentService = self
+		action.reviseParentObject()
 	}
 
 	for n := 0; n < len(self.ServiceStateTable.StateVariables); n++ {
