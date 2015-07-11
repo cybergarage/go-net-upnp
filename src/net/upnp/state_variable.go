@@ -18,6 +18,7 @@ type StateVariable struct {
 	AllowedValueRange AllowedValueRange `xml:"allowedValueRange"`
 	SendEvents        string            `xml:"sendEvents,attr"`
 	Multicast         string            `xml:"multicast,attr"`
+	ParentService     *Service          `xml:"-"`
 }
 
 // A StateVariable represents a UPnP state variable.

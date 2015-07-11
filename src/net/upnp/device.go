@@ -182,6 +182,20 @@ func (self *Device) GetServiceById(serviceId string) (*Service, error) {
 	return nil, errors.New(fmt.Sprintf(errorDeviceServiceNotFound, serviceId))
 }
 
+func (self *Device) reviseParentObject() error {
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
+		service.ParentDevice = self
+	}
+
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
+		service.reviseParentObject()
+	}
+
+	return nil
+}
+
 func (self *Device) reviseDescription() error {
 	// check descriptionURL
 	if len(self.DescriptionURL) <= 0 {
@@ -204,7 +218,12 @@ func (self *Device) reviseDescription() error {
 
 // Start starts this control point.
 func (self *Device) StartWithPort(port int) error {
-	err := self.reviseDescription()
+	err := self.reviseParentObject()
+	if err != nil {
+		return err
+	}
+
+	err = self.reviseDescription()
 	if err != nil {
 		return err
 	}

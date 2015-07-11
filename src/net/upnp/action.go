@@ -16,9 +16,10 @@ const (
 
 // A Action represents a UPnP action.
 type Action struct {
-	XMLName      xml.Name     `xml:"action"`
-	Name         string       `xml:"name"`
-	ArgumentList ArgumentList `xml:"argumentList"`
+	XMLName       xml.Name     `xml:"action"`
+	Name          string       `xml:"name"`
+	ArgumentList  ArgumentList `xml:"argumentList"`
+	ParentService *Service     `xml:"-"`
 }
 
 // A ActionList represents a UPnP action list.
