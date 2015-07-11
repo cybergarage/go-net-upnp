@@ -15,7 +15,8 @@ type Argument struct {
 	Direction            string   `xml:"direction"`
 	RelatedStateVariable string   `xml:"relatedStateVariable"`
 
-	Value string `xml:"-"`
+	Value        string  `xml:"-"`
+	ParentAction *Action `xml:"-"`
 }
 
 // A ArgumentList represents a UPnP argument list.
