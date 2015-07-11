@@ -35,6 +35,7 @@ type Service struct {
 	description       *ServiceDescription `xml:"-"`
 	ServiceStateTable *ServiceStateTable  `xml:"-"`
 	ActionList        *ActionList         `xml:"-"`
+	ParentDevice      *Device             `xml:"-"`
 }
 
 // NewService returns a new Service.
@@ -72,6 +73,11 @@ func (self *Service) LoadDescriptionString(desc string) error {
 	self.ServiceStateTable = &self.description.ServiceStateTable
 	self.ActionList = &self.description.ActionList
 
+	err = self.reviseParentObject()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -91,6 +97,20 @@ func (self *Service) getShortServiceType() string {
 		return self.ServiceId
 	}
 	return serviceTypes[len(serviceTypes)-2]
+}
+
+func (self *Service) reviseParentObject() error {
+	for n := 0; n < len(self.ActionList.Actions); n++ {
+		action := &self.ActionList.Actions[n]
+		action.ParentService = self
+	}
+
+	for n := 0; n < len(self.ServiceStateTable.StateVariables); n++ {
+		statVar := &self.ServiceStateTable.StateVariables[n]
+		statVar.ParentService = self
+	}
+
+	return nil
 }
 
 func (self *Service) reviseDescription() error {

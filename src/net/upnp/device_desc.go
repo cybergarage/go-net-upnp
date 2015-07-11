@@ -70,5 +70,10 @@ func NewDeviceDescriptionRootFromString(descStr string) (*DeviceDescriptionRoot,
 		return nil, err
 	}
 
+	err = root.Device.reviseParentObject()
+	if err != nil {
+		return nil, err
+	}
+
 	return root, err
 }

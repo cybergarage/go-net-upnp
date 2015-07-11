@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	errorTestDeviceInvalidURL        = "invalid %s = '%s', expected : '%s'"
-	errorTestDeviceInvalidStatusCode = "invalid status code (%s) = [%d] : expected : [%d]"
-	errorTestDeviceInvalidPortRange  = "invalid port range = [%d] : expected : [%d]~[%d]"
+	errorTestDeviceInvalidURL          = "invalid %s = '%s', expected : '%s'"
+	errorTestDeviceInvalidStatusCode   = "invalid status code (%s) = [%d] : expected : [%d]"
+	errorTestDeviceInvalidPortRange    = "invalid port range = [%d] : expected : [%d]~[%d]"
+	errorTestDeviceInvalidParentObject = "invalid parent object %p = '%p', expected : '%p'"
 )
 
 func TestNullDevice(t *testing.T) {
@@ -58,18 +59,29 @@ func TestSampleDevice(t *testing.T) {
 		t.Error(err)
 	}
 
+	if service.ParentDevice != dev.Device {
+		t.Errorf(errorTestDeviceInvalidParentObject, service, service.ParentDevice, dev.Device)
+	}
+
 	service, err = dev.GetServiceById("urn:upnp-org:serviceId:SwitchPower.1")
 	if err != nil {
 		t.Error(err)
+	}
+
+	if service.ParentDevice != dev.Device {
+		t.Errorf(errorTestDeviceInvalidParentObject, service, service.ParentDevice, dev.Device)
 	}
 
 	// check actions
 
 	actionNames := []string{"SetTarget", "GetTarget", "GetStatus"}
 	for _, name := range actionNames {
-		_, err := service.GetActionByName(name)
+		action, err := service.GetActionByName(name)
 		if err != nil {
 			t.Error(err)
+		}
+		if action.ParentService != service {
+			t.Errorf(errorTestDeviceInvalidParentObject, action, action.ParentService, service)
 		}
 	}
 
