@@ -100,15 +100,19 @@ func (self *Service) getShortServiceType() string {
 }
 
 func (self *Service) reviseParentObject() error {
-	for n := 0; n < len(self.ActionList.Actions); n++ {
-		action := &self.ActionList.Actions[n]
-		action.ParentService = self
-		action.reviseParentObject()
+	if self.ActionList != nil {
+		for n := 0; n < len(self.ActionList.Actions); n++ {
+			action := &self.ActionList.Actions[n]
+			action.ParentService = self
+			action.reviseParentObject()
+		}
 	}
 
-	for n := 0; n < len(self.ServiceStateTable.StateVariables); n++ {
-		statVar := &self.ServiceStateTable.StateVariables[n]
-		statVar.ParentService = self
+	if self.ServiceStateTable != nil {
+		for n := 0; n < len(self.ServiceStateTable.StateVariables); n++ {
+			statVar := &self.ServiceStateTable.StateVariables[n]
+			statVar.ParentService = self
+		}
 	}
 
 	return nil

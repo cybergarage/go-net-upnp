@@ -69,7 +69,6 @@ func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
 
 // NewDeviceFromSSDPRequest returns a device from the specified SSDP packet
 func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
-
 	descURL, err := ssdpRes.GetLocation()
 	if err != nil {
 		return nil, err
@@ -77,8 +76,10 @@ func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
 
 	dev, err := NewDeviceFromDescriptionURL(descURL)
 	if err != nil {
-		dev.SetLocationURL(descURL)
+		return nil, err
 	}
+
+	dev.SetLocationURL(descURL)
 
 	return dev, err
 }
