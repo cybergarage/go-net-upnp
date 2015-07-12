@@ -30,3 +30,14 @@ func NewArgument() *Argument {
 	arg := &Argument{}
 	return arg
 }
+
+// SetString sets a value into the specified argument
+func (self *Argument) SetString(value string) error {
+	self.Value = value
+	return nil
+}
+
+// GetString returns a value into the specified argument
+func (self *Argument) GetString() (string, error) {
+	return self.Value, nil
+}

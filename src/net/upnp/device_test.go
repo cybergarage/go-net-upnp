@@ -6,15 +6,17 @@ package upnp
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"testing"
 )
 
 const (
-	errorTestDeviceInvalidURL          = "invalid %s = '%s', expected : '%s'"
+	errorTestDeviceInvalidURL          = "invalid url %s = '%s', expected : '%s'"
 	errorTestDeviceInvalidStatusCode   = "invalid status code (%s) = [%d] : expected : [%d]"
 	errorTestDeviceInvalidPortRange    = "invalid port range = [%d] : expected : [%d]~[%d]"
 	errorTestDeviceInvalidParentObject = "invalid parent object %p = '%p', expected : '%p'"
+	errorTestDeviceInvalidArgument     = "invalid argument %s = '%s', expected : '%s'"
 )
 
 func TestNullDevice(t *testing.T) {
@@ -91,9 +93,24 @@ func TestSampleDevice(t *testing.T) {
 	if err == nil {
 		argNames := []string{"newTargetValue"}
 		for _, name := range argNames {
-			_, err := action.GetArgumentByName(name)
+			arg, err := action.GetArgumentByName(name)
 			if err != nil {
 				t.Error(err)
+			}
+			if arg.ParentAction != action {
+				t.Errorf(errorTestDeviceInvalidParentObject, arg, arg.ParentAction, action)
+			}
+			value := fmt.Sprintf("%d", rand.Int())
+			err = arg.SetString(value)
+			if err != nil {
+				t.Error(err)
+			}
+			argValue, err := arg.GetString()
+			if err != nil {
+				t.Error(err)
+			}
+			if value != argValue {
+				t.Errorf(errorTestDeviceInvalidArgument, name, argValue, value)
 			}
 		}
 	} else {
@@ -138,7 +155,6 @@ func TestSampleDevice(t *testing.T) {
 	checkServiceURLs(dev, "urn:schemas-upnp-org:service:SwitchPower:1", urls)
 
 	// check device
-
 	if (dev.Port < DeviceDefaultPortBase) || (DeviceDefaultPortMax < dev.Port) {
 		t.Errorf(errorTestDeviceInvalidPortRange, dev.Port, DeviceDefaultPortBase, DeviceDefaultPortMax)
 	}

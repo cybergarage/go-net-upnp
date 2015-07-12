@@ -53,3 +53,21 @@ func (self *Action) GetArgumentByName(name string) (*Argument, error) {
 	}
 	return nil, errors.New(fmt.Sprintf(errorActionArgumentNotFound, name))
 }
+
+// SetArgumentString sets a value into the specified argument
+func (self *Action) SetArgumentString(name string, value string) error {
+	arg, err := self.GetArgumentByName(name)
+	if err != nil {
+		return err
+	}
+	return arg.SetString(value)
+}
+
+// GetArgumentString return a value into the specified argument
+func (self *Action) GetArgumentString(name string) (string, error) {
+	arg, err := self.GetArgumentByName(name)
+	if err != nil {
+		return "", err
+	}
+	return arg.GetString()
+}
