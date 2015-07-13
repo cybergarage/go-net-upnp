@@ -11,6 +11,12 @@ import (
 )
 
 const (
+	actionMarshalAllArguments     = UnknownDirection
+	actionMarshalOnlyInArguments  = InDirection
+	actionMarshalOnlyOutArguments = OutDirection
+)
+
+const (
 	errorActionArgumentNotFound = "argument (%s) is not found"
 )
 
@@ -20,6 +26,7 @@ type Action struct {
 	Name          string       `xml:"name"`
 	ArgumentList  ArgumentList `xml:"argumentList"`
 	ParentService *Service     `xml:"-"`
+	marshalType   int          `xml:"-"`
 }
 
 // A ActionList represents a UPnP action list.
@@ -70,4 +77,32 @@ func (self *Action) GetArgumentString(name string) (string, error) {
 		return "", err
 	}
 	return arg.GetString()
+}
+
+// Post sends the specified arguments into the deveice.
+func (self *Action) Post() error {
+	return nil
+}
+
+func (self *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	start.Name.Local = self.Name
+	if self.ParentService != nil {
+		serviceType := self.ParentService.ServiceType
+		start.Attr = []xml.Attr{{Name: xml.Name{Local: XmlNs}, Value: serviceType}}
+	}
+
+	actionMarshalType := self.marshalType
+
+	e.EncodeToken(start)
+	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
+		arg := &self.ArgumentList.Arguments[n]
+		argDir := arg.GetDirection()
+		if (actionMarshalType != actionMarshalAllArguments) && (argDir != actionMarshalType) {
+			continue
+		}
+		argElem := xml.StartElement{Name: xml.Name{Local: arg.Name}}
+		e.EncodeElement(arg.Value, argElem)
+	}
+	e.EncodeToken(start.End())
+	return nil
 }

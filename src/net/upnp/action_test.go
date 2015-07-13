@@ -5,9 +5,31 @@
 package upnp
 
 import (
+	"encoding/xml"
+	"fmt"
 	"testing"
 )
 
 func TestNewAction(t *testing.T) {
 	NewAction()
+}
+
+func TestMarshalAction(t *testing.T) {
+	const nArgs = 5
+
+	action := NewAction()
+	action.Name = "Hello"
+	action.ArgumentList.Arguments = make([]Argument, nArgs)
+	for n := 0; n < nArgs; n++ {
+		arg := NewArgument()
+		arg.Name = fmt.Sprintf("name%d", n)
+		arg.Value = fmt.Sprintf("value%d", n)
+		action.ArgumentList.Arguments[n] = *arg
+	}
+
+	_, err := xml.MarshalIndent(action, "", "  ")
+	if err != nil {
+		t.Error(err)
+	}
+	//fmt.Println(string(buf))
 }

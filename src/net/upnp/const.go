@@ -28,5 +28,13 @@ const (
 	DeviceProtocol              = "http"
 	DeviceDefaultDescriptionURL = "/description.xml"
 
+	In  = "in"
+	Out = "out"
+
+	UnknownDirection = 0
+	InDirection      = 1
+	OutDirection     = 2
+
 	XmlMarshallIndent = " "
+	XmlNs             = "xmlns:u"
 )

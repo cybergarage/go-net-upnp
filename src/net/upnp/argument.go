@@ -41,3 +41,29 @@ func (self *Argument) SetString(value string) error {
 func (self *Argument) GetString() (string, error) {
 	return self.Value, nil
 }
+
+// isDirection returns true when the argument direction equals the specified value, otherwise false.
+func (self *Argument) isDirection(value string) bool {
+	return (self.Direction == value)
+}
+
+// IsInDirection returns true when the argument direction is in, otherwise false.
+func (self *Argument) IsInDirection() bool {
+	return self.isDirection(In)
+}
+
+// IsOutDirection returns true when the argument direction is out, otherwise false.
+func (self *Argument) IsOutDirection() bool {
+	return self.isDirection(Out)
+}
+
+// GetDirection returns a directional integer of the specified argument.
+func (self *Argument) GetDirection() int {
+	if self.IsInDirection() {
+		return InDirection
+	}
+	if self.IsOutDirection() {
+		return OutDirection
+	}
+	return UnknownDirection
+}

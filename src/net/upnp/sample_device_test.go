@@ -6,6 +6,18 @@ package upnp
 
 import (
 	"encoding/xml"
+	"fmt"
+	"math/rand"
+	"testing"
+)
+
+const (
+	errorTestDeviceInvalidURL           = "invalid url %s = '%s', expected : '%s'"
+	errorTestDeviceInvalidStatusCode    = "invalid status code (%s) = [%d] : expected : [%d]"
+	errorTestDeviceInvalidPortRange     = "invalid port range = [%d] : expected : [%d]~[%d]"
+	errorTestDeviceInvalidParentObject  = "invalid parent object %p = '%p', expected : '%p'"
+	errorTestDeviceInvalidArgumentValue = "invalid argument value %s = '%s', expected : '%s'"
+	errorTestDeviceInvalidArgumentDir   = "invalid argument direction %s = %d, expected : %d"
 )
 
 type sampleDevice struct {
@@ -31,6 +43,132 @@ func NewSampleDevice() (*sampleDevice, error) {
 	sampleDev := &sampleDevice{Device: dev}
 
 	return sampleDev, nil
+}
+
+func TestSampleDeviceDescription(t *testing.T) {
+	dev, err := NewSampleDevice()
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	// check service
+
+	service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if service.ParentDevice != dev.Device {
+		t.Errorf(errorTestDeviceInvalidParentObject, service, service.ParentDevice, dev.Device)
+	}
+
+	service, err = dev.GetServiceById("urn:upnp-org:serviceId:SwitchPower.1")
+	if err != nil {
+		t.Error(err)
+	}
+
+	if service.ParentDevice != dev.Device {
+		t.Errorf(errorTestDeviceInvalidParentObject, service, service.ParentDevice, dev.Device)
+	}
+
+	// check actions
+
+	actionNames := []string{"SetTarget", "GetTarget", "GetStatus"}
+	for _, name := range actionNames {
+		action, err := service.GetActionByName(name)
+		if err != nil {
+			t.Error(err)
+		}
+		if action.ParentService != service {
+			t.Errorf(errorTestDeviceInvalidParentObject, action, action.ParentService, service)
+		}
+	}
+
+	// check argumengs (SetTarget)
+
+	action, err := service.GetActionByName("SetTarget")
+	if err == nil {
+		argNames := []string{"newTargetValue"}
+		argDirs := []int{InDirection}
+		for n, name := range argNames {
+			arg, err := action.GetArgumentByName(name)
+			if err != nil {
+				t.Error(err)
+			}
+
+			argDir := arg.GetDirection()
+			if argDir != argDirs[n] {
+				t.Errorf(errorTestDeviceInvalidArgumentDir, name, argDir, argDirs[n])
+			}
+
+			// check parent service
+
+			if arg.ParentAction != action {
+				t.Errorf(errorTestDeviceInvalidParentObject, arg, arg.ParentAction, action)
+			}
+
+			// check setter and getter
+
+			value := fmt.Sprintf("%d", rand.Int())
+			err = arg.SetString(value)
+			if err != nil {
+				t.Error(err)
+			}
+			argValue, err := arg.GetString()
+			if err != nil {
+				t.Error(err)
+			}
+			if value != argValue {
+				t.Errorf(errorTestDeviceInvalidArgumentValue, name, argValue, value)
+			}
+		}
+	} else {
+		t.Error(err)
+	}
+
+	// start device
+
+	err = dev.Start()
+	if err != nil {
+		t.Error(err)
+	}
+
+	// check service
+
+	checkServiceURLs := func(dev *sampleDevice, serviceType string, urls []string) {
+		service, err := dev.GetServiceByType(serviceType)
+		if err != nil {
+			t.Error(err)
+		}
+
+		expectURL := urls[0]
+		if len(service.SCPDURL) <= 0 || service.SCPDURL != expectURL {
+			t.Errorf(errorTestDeviceInvalidURL, "SCPDURL", service.SCPDURL, expectURL)
+		}
+
+		expectURL = urls[1]
+		if len(service.ControlURL) <= 0 || service.ControlURL != expectURL {
+			t.Errorf(errorTestDeviceInvalidURL, "ControlURL", service.ControlURL, expectURL)
+		}
+
+		expectURL = urls[2]
+		if len(service.EventSubURL) <= 0 || service.EventSubURL != expectURL {
+			t.Errorf(errorTestDeviceInvalidURL, "EventSubURL", service.EventSubURL, expectURL)
+		}
+	}
+
+	urls := []string{
+		"/service/scpd/SwitchPower.xml",
+		"/service/control/SwitchPower",
+		"/service/event/SwitchPower"}
+	checkServiceURLs(dev, "urn:schemas-upnp-org:service:SwitchPower:1", urls)
+
+	// stop device
+	err = dev.Stop()
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 const binaryLightDeviceDescription = xml.Header +
