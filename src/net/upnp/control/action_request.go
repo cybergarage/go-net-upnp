@@ -4,8 +4,6 @@
 
 package control
 
-import ()
-
 // A ActionRequest represents an action request.
 type ActionRequest struct {
 	*ActionControl
