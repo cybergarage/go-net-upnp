@@ -57,6 +57,19 @@ func (self *Argument) IsOutDirection() bool {
 	return self.isDirection(Out)
 }
 
+// SetDirection sets a directional string of the specified diractional integer.
+func (self *Argument) SetDirection(dir int) bool {
+	switch dir {
+	case InDirection:
+		self.Direction = In
+		return true
+	case OutDirection:
+		self.Direction = Out
+		return true
+	}
+	return false
+}
+
 // GetDirection returns a directional integer of the specified argument.
 func (self *Argument) GetDirection() int {
 	if self.IsInDirection() {

@@ -7,6 +7,8 @@ package control
 import (
 	"encoding/xml"
 	"strings"
+
+	"net/upnp"
 )
 
 const (
@@ -21,15 +23,9 @@ type ActionControl struct {
 		Body    struct {
 			XMLName  xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
 			Innerxml string   `xml:",innerxml"`
-			Action   Action   `xml:"-"`
+			Action   Action
 		}
 	}
-}
-
-// A Action represents a SOAP action.
-type Action struct {
-	Name      string
-	Arguments []*Argument
 }
 
 // A Action represents arguments in as SOAP action.
@@ -111,4 +107,18 @@ func (self *ActionControl) decodeActionInnerXMLString(actionInnerXML string) err
 // GetAction returns an actions in the SOAP Control.
 func (self *ActionControl) GetAction() (*Action, error) {
 	return &self.Envelope.Body.Action, nil
+}
+
+// SOAPContentBytes returns a SOAP content bytes.
+func (self *ActionControl) SOAPContentBytes() ([]byte, error) {
+	return xml.MarshalIndent(&self.Envelope, "", upnp.XmlMarshallIndent)
+}
+
+// SOAPContent returns a SOAP content string.
+func (self *ActionControl) SOAPContentString() (string, error) {
+	buf, err := self.SOAPContentBytes()
+	if err != nil {
+		return "", err
+	}
+	return string(buf), nil
 }

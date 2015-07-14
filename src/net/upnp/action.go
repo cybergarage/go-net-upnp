@@ -76,20 +76,3 @@ func (self *Action) GetArgumentString(name string) (string, error) {
 func (self *Action) Post() error {
 	return nil
 }
-
-func (self *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	start.Name.Local = self.Name
-	if self.ParentService != nil {
-		serviceType := self.ParentService.ServiceType
-		start.Attr = []xml.Attr{{Name: xml.Name{Local: XmlNs}, Value: serviceType}}
-	}
-
-	e.EncodeToken(start)
-	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
-		arg := &self.ArgumentList.Arguments[n]
-		argElem := xml.StartElement{Name: xml.Name{Local: arg.Name}}
-		e.EncodeElement(arg.Value, argElem)
-	}
-	e.EncodeToken(start.End())
-	return nil
-}

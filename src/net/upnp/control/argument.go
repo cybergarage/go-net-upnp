@@ -4,7 +4,9 @@
 
 package control
 
-import ()
+import (
+	"net/upnp"
+)
 
 // A Argument represents arguments in as SOAP action.
 type Argument struct {
@@ -16,4 +18,14 @@ type Argument struct {
 func NewArgument() *Argument {
 	arg := &Argument{}
 	return arg
+}
+
+// NewArgument returns a new argument.
+func NewArgumentFromArgument(arg *upnp.Argument) *Argument {
+	newArg := NewArgument()
+
+	newArg.Name = arg.Name
+	newArg.Value = arg.Value
+
+	return newArg
 }
