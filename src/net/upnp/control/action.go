@@ -6,8 +6,6 @@ package control
 
 import (
 	"encoding/xml"
-
-	"net/upnp"
 )
 
 // A Action represents a SOAP action.
@@ -19,7 +17,7 @@ type Action struct {
 
 func (self *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name.Local = self.Name
-	start.Attr = []xml.Attr{{Name: xml.Name{Local: upnp.XmlNs}, Value: self.ServiceType}}
+	start.Attr = []xml.Attr{{Name: xml.Name{Local: XmlNs}, Value: self.ServiceType}}
 
 	e.EncodeToken(start)
 	for n := 0; n < len(self.Arguments); n++ {

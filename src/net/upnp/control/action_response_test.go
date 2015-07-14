@@ -6,10 +6,7 @@ package control
 
 import (
 	"encoding/xml"
-	"fmt"
 	"testing"
-
-	"net/upnp"
 )
 
 const (
@@ -27,7 +24,7 @@ func TestNewActionResponseNoArgument(t *testing.T) {
 		"  </s:Body>" +
 		"</s:Envelope>"
 
-	res, err := NewActionResponseFromSOAPString(testSoapActionResponse)
+	res, err := NewActionResponseFromSOAPBytes([]byte(testSoapActionResponse))
 	if err != nil {
 		t.Error(err)
 	}
@@ -45,7 +42,7 @@ func TestNewActionResponseOneSpaceArgument(t *testing.T) {
 		"  </s:Body>" +
 		"</s:Envelope>"
 
-	res, err := NewActionResponseFromSOAPString(testSoapActionResponse)
+	res, err := NewActionResponseFromSOAPBytes([]byte(testSoapActionResponse))
 	if err != nil {
 		t.Error(err)
 	}
@@ -66,7 +63,7 @@ func TestNewActionResponseOneArguments(t *testing.T) {
 		"  </s:Body>" +
 		"</s:Envelope>"
 
-	res, err := NewActionResponseFromSOAPString(testSoapActionResponse)
+	res, err := NewActionResponseFromSOAPBytes([]byte(testSoapActionResponse))
 	if err != nil {
 		t.Error(err)
 	}
@@ -90,7 +87,7 @@ func TestNewActionResponseForArguments(t *testing.T) {
 		"  </s:Body>" +
 		"</s:Envelope>"
 
-	res, err := NewActionResponseFromSOAPString(testSoapActionResponse)
+	res, err := NewActionResponseFromSOAPBytes([]byte(testSoapActionResponse))
 	if err != nil {
 		t.Error(err)
 	}
@@ -99,52 +96,6 @@ func TestNewActionResponseForArguments(t *testing.T) {
 	expactedArgValues := []string{"100", "200", "300", "400"}
 
 	checkActionResponseParams(t, res, "SetValue", 4, expactedArgNames, expactedArgValues)
-}
-
-func TestMarshalActionResponseFromAction(t *testing.T) {
-	const nArgs = 5
-
-	// create a new argument
-
-	action := upnp.NewAction()
-	action.Name = "Hello"
-	action.ArgumentList.Arguments = make([]upnp.Argument, nArgs)
-	argNames := make([]string, nArgs)
-	argValues := make([]string, nArgs)
-	for n := 0; n < nArgs; n++ {
-		arg := upnp.NewArgument()
-
-		argNames[n] = fmt.Sprintf("Name%d", n)
-		arg.Name = argNames[n]
-
-		argValues[n] = fmt.Sprintf("Value%d", n)
-		arg.Value = argValues[n]
-
-		arg.SetDirection(upnp.OutDirection)
-
-		action.ArgumentList.Arguments[n] = *arg
-	}
-
-	// marshal the argument request
-
-	actionRes, err := NewActionResponseFromAction(action)
-	if err != nil {
-		t.Error(err)
-	}
-
-	soapRes, err := actionRes.SOAPContentString()
-	if err != nil {
-		t.Error(err)
-	}
-
-	// unmarshal the action request
-
-	actionRes, err = NewActionResponseFromSOAPString(soapRes)
-	if err != nil {
-		t.Error(err)
-	}
-
-	checkActionResponseParams(t, actionRes, action.Name, nArgs, argNames, argValues)
 }
 
 func checkActionResponseParams(t *testing.T, res *ActionResponse, actionName string, argCnt int, argNames []string, argValues []string) {
