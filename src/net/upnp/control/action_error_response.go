@@ -27,12 +27,6 @@ type ErrorResponse struct {
 	}
 }
 
-type UPnPError struct {
-	XMLName          xml.Name `xml:"urn:schemas-upnp-org:control-1-0 UPnPError"`
-	ErrorCode        int      `xml:"errorCode"`
-	ErrorDescription string   `xml:"errorDescription"`
-}
-
 // NewErrorResponse returns a new error response.
 func NewErrorResponse() *ErrorResponse {
 	res := &ErrorResponse{}
