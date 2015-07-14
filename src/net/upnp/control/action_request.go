@@ -4,6 +4,10 @@
 
 package control
 
+import (
+	"net/upnp"
+)
+
 // A ActionRequest represents an action request.
 type ActionRequest struct {
 	*ActionControl
@@ -28,6 +32,21 @@ func NewActionRequestFromSOAPString(soapReq string) (*ActionRequest, error) {
 	err = req.decodeBodyInnerXMLString(innerXMLString)
 	if err != nil {
 		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewActionRequestFromAction returns a new Request.
+func NewActionRequestFromAction(action *upnp.Action) (*ActionRequest, error) {
+	req := NewActionRequest()
+
+	req.Envelope.Body.Action.Name = action.Name
+	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+		arg := &action.ArgumentList.Arguments[n]
+		if arg.GetDirection() != upnp.InDirection {
+			continue
+		}
 	}
 
 	return req, nil

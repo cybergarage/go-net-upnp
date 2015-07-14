@@ -5,6 +5,7 @@
 package http
 
 import (
+	"io"
 	gohttp "net/http"
 )
 
@@ -20,6 +21,11 @@ func NewRequestFromRequest(req *gohttp.Request) *Request {
 }
 
 // NewRequest returns a new Request.
-func NewRequest(req *gohttp.Request) *Request {
-	return NewRequestFromRequest(&gohttp.Request{})
+func NewRequest(method, urlStr string, body io.Reader) (*Request, error) {
+	req, err := gohttp.NewRequest(method, urlStr, body)
+	if err != nil {
+		return nil, err
+	}
+	httpReq := NewRequestFromRequest(req)
+	return httpReq, nil
 }

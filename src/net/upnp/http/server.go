@@ -76,5 +76,5 @@ func (self *Server) ServeHTTP(res gohttp.ResponseWriter, req *gohttp.Request) {
 		return
 	}
 
-	self.Listener.HTTPRequestReceived(NewRequest(req), res)
+	self.Listener.HTTPRequestReceived(NewRequestFromRequest(req), res)
 }
