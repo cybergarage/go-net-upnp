@@ -6,6 +6,8 @@ package control
 
 import (
 	"strings"
+
+	"net/upnp"
 )
 
 const (
@@ -40,6 +42,30 @@ func NewActionResponseFromSOAPString(soapRes string) (*ActionResponse, error) {
 
 	// Fix 'ActionResponse' -> 'Action'
 	res.Envelope.Body.Action.Name = strings.TrimSuffix(res.Envelope.Body.Action.Name, Response)
+
+	return res, nil
+}
+
+// NewActionResponseFromAction returns a new Response.
+func NewActionResponseFromAction(action *upnp.Action) (*ActionResponse, error) {
+	res := NewActionResponse()
+
+	// Fix 'Action' -> 'ActionResponse'
+	res.Envelope.Body.Action.Name = action.Name + Response
+
+	service := action.ParentService
+	if service != nil {
+		res.Envelope.Body.Action.ServiceType = service.ServiceType
+	}
+
+	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+		arg := &action.ArgumentList.Arguments[n]
+		if arg.GetDirection() != upnp.OutDirection {
+			continue
+		}
+		resArg := NewArgumentFromArgument(arg)
+		res.Envelope.Body.Action.Arguments = append(res.Envelope.Body.Action.Arguments, resArg)
+	}
 
 	return res, nil
 }

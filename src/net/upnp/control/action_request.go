@@ -42,11 +42,19 @@ func NewActionRequestFromAction(action *upnp.Action) (*ActionRequest, error) {
 	req := NewActionRequest()
 
 	req.Envelope.Body.Action.Name = action.Name
+
+	service := action.ParentService
+	if service != nil {
+		req.Envelope.Body.Action.ServiceType = service.ServiceType
+	}
+
 	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
 		arg := &action.ArgumentList.Arguments[n]
 		if arg.GetDirection() != upnp.InDirection {
 			continue
 		}
+		reqArg := NewArgumentFromArgument(arg)
+		req.Envelope.Body.Action.Arguments = append(req.Envelope.Body.Action.Arguments, reqArg)
 	}
 
 	return req, nil
