@@ -33,17 +33,11 @@ type Action struct {
 }
 
 // A Action represents arguments in as SOAP action.
-type Argument struct {
-	Name  string
-	Value string
-}
-
-// A Action represents arguments in as SOAP action.
 type ActionInnerXML struct {
 	Innerxml string `xml:",innerxml"`
 }
 
-// NewControl returns a new Control.
+// NewActionControl returns a new Control.
 func NewActionControl() *ActionControl {
 	ctrl := &ActionControl{}
 	ctrl.Envelope.Body.Action.Arguments = make([]*Argument, 0)
