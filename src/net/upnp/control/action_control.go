@@ -5,10 +5,8 @@
 package control
 
 import (
+	"bytes"
 	"encoding/xml"
-	"strings"
-
-	"net/upnp"
 )
 
 const (
@@ -41,13 +39,13 @@ func NewActionControl() *ActionControl {
 }
 
 // decodeEnvelopeXMLString parses an evnelope XML
-func (self *ActionControl) decodeEnvelopeXMLString(envXML string) error {
+func (self *ActionControl) decodeEnvelopeXMLBytes(envXML []byte) error {
 	return xml.Unmarshal([]byte(envXML), &self.Envelope)
 }
 
-// decodeBodyInnerXMLString parses an innerXML of an action in body
-func (self *ActionControl) decodeBodyInnerXMLString(bodyInnerXML string) error {
-	reader := strings.NewReader(bodyInnerXML)
+// decodeBodyInnerXMLBytes parses an innerXML of an action in body
+func (self *ActionControl) decodeBodyInnerXMLBytes(bodyInnerXML []byte) error {
+	reader := bytes.NewReader(bodyInnerXML)
 	decorder := xml.NewDecoder(reader)
 
 	for {
@@ -66,7 +64,7 @@ func (self *ActionControl) decodeBodyInnerXMLString(bodyInnerXML string) error {
 			if err := decorder.DecodeElement(&actionArgs, &elem); err != nil {
 				return err
 			}
-			err := self.decodeActionInnerXMLString(actionArgs.Innerxml)
+			err := self.decodeActionInnerXMLBytes([]byte(actionArgs.Innerxml))
 			if err != nil {
 				return err
 			}
@@ -76,9 +74,9 @@ func (self *ActionControl) decodeBodyInnerXMLString(bodyInnerXML string) error {
 	return nil
 }
 
-// decodeActionInnerXMLString parses an innerXML of arguments in action
-func (self *ActionControl) decodeActionInnerXMLString(actionInnerXML string) error {
-	reader := strings.NewReader(actionInnerXML)
+// decodeActionInnerXMLBytes parses an innerXML of arguments in action
+func (self *ActionControl) decodeActionInnerXMLBytes(actionInnerXML []byte) error {
+	reader := bytes.NewReader(actionInnerXML)
 	decorder := xml.NewDecoder(reader)
 
 	for {
@@ -111,7 +109,7 @@ func (self *ActionControl) GetAction() (*Action, error) {
 
 // SOAPContentBytes returns a SOAP content bytes.
 func (self *ActionControl) SOAPContentBytes() ([]byte, error) {
-	return xml.MarshalIndent(&self.Envelope, "", upnp.XmlMarshallIndent)
+	return xml.MarshalIndent(&self.Envelope, "", XmlMarshallIndent)
 }
 
 // SOAPContent returns a SOAP content string.

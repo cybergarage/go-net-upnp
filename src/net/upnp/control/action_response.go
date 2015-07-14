@@ -6,8 +6,6 @@ package control
 
 import (
 	"strings"
-
-	"net/upnp"
 )
 
 const (
@@ -27,45 +25,21 @@ func NewActionResponse() *ActionResponse {
 }
 
 // NewActionResponseFromSOAPString returns a new response.
-func NewActionResponseFromSOAPString(soapRes string) (*ActionResponse, error) {
+func NewActionResponseFromSOAPBytes(soapRes []byte) (*ActionResponse, error) {
 	res := NewActionResponse()
-	err := res.decodeEnvelopeXMLString(soapRes)
+	err := res.decodeEnvelopeXMLBytes(soapRes)
 	if err != nil {
 		return nil, err
 	}
 
-	innerXMLString := res.Envelope.Body.Innerxml
-	err = res.decodeBodyInnerXMLString(innerXMLString)
+	innerXMLBytes := res.Envelope.Body.Innerxml
+	err = res.decodeBodyInnerXMLBytes([]byte(innerXMLBytes))
 	if err != nil {
 		return nil, err
 	}
 
 	// Fix 'ActionResponse' -> 'Action'
 	res.Envelope.Body.Action.Name = strings.TrimSuffix(res.Envelope.Body.Action.Name, Response)
-
-	return res, nil
-}
-
-// NewActionResponseFromAction returns a new Response.
-func NewActionResponseFromAction(action *upnp.Action) (*ActionResponse, error) {
-	res := NewActionResponse()
-
-	// Fix 'Action' -> 'ActionResponse'
-	res.Envelope.Body.Action.Name = action.Name + Response
-
-	service := action.ParentService
-	if service != nil {
-		res.Envelope.Body.Action.ServiceType = service.ServiceType
-	}
-
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
-		arg := &action.ArgumentList.Arguments[n]
-		if arg.GetDirection() != upnp.OutDirection {
-			continue
-		}
-		resArg := NewArgumentFromArgument(arg)
-		res.Envelope.Body.Action.Arguments = append(res.Envelope.Body.Action.Arguments, resArg)
-	}
 
 	return res, nil
 }

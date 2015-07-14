@@ -5,9 +5,14 @@
 package upnp
 
 import (
+	"bytes"
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"io/ioutil"
+
+	"net/upnp/control"
+	"net/upnp/http"
 )
 
 const (
@@ -74,5 +79,50 @@ func (self *Action) GetArgumentString(name string) (string, error) {
 
 // Post sends the specified arguments into the deveice.
 func (self *Action) Post() error {
+	req, err := NewActionRequestFromAction(self)
+	if err != nil {
+		return err
+	}
+
+	soapReqBytes, err := req.SOAPContentBytes()
+	if err != nil {
+		return err
+	}
+
+	httpReq, err := http.NewSOAPRequest("", "", bytes.NewBuffer(soapReqBytes))
+	if err != nil {
+		return err
+	}
+
+	httpClient, err := http.NewClient()
+	if err != nil {
+		return err
+	}
+
+	httpRes, err := httpClient.Do(httpReq)
+	if err != nil {
+		return err
+	}
+
+	statusCode := httpRes.StatusCode
+	defer httpRes.Body.Close()
+	soapResBytes, err := ioutil.ReadAll(httpRes.Body)
+	if err != nil {
+		return err
+	}
+
+	if statusCode == http.StatusOK {
+		_, err = control.NewActionResponseFromSOAPBytes(soapResBytes)
+		if err != nil {
+			return err
+		}
+
+	} else {
+		_, err := control.NewErrorResponseFromSOAPBytes(soapResBytes)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

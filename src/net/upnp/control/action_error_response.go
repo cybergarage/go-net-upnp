@@ -40,10 +40,10 @@ func NewErrorResponse() *ErrorResponse {
 }
 
 // NewErrorResponseFromSOAPString returns a  new error response.
-func NewErrorResponseFromSOAPString(soapStr string) (*ErrorResponse, error) {
+func NewErrorResponseFromSOAPBytes(soapStr []byte) (*ErrorResponse, error) {
 	res := NewErrorResponse()
 
-	err := xml.Unmarshal([]byte(soapStr), &res.Envelope)
+	err := xml.Unmarshal(soapStr, &res.Envelope)
 	if err != nil {
 		return nil, err
 	}

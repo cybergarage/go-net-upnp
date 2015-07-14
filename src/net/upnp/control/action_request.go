@@ -4,9 +4,7 @@
 
 package control
 
-import (
-	"net/upnp"
-)
+import ()
 
 // A ActionRequest represents an action request.
 type ActionRequest struct {
@@ -21,40 +19,17 @@ func NewActionRequest() *ActionRequest {
 }
 
 // NewActionRequestFromSOAPString returns a new Request.
-func NewActionRequestFromSOAPString(soapReq string) (*ActionRequest, error) {
+func NewActionRequestFromSOAPBytes(soapReq []byte) (*ActionRequest, error) {
 	req := NewActionRequest()
-	err := req.decodeEnvelopeXMLString(soapReq)
+	err := req.decodeEnvelopeXMLBytes(soapReq)
 	if err != nil {
 		return nil, err
 	}
 
-	innerXMLString := req.Envelope.Body.Innerxml
-	err = req.decodeBodyInnerXMLString(innerXMLString)
+	InnerXMLBytes := req.Envelope.Body.Innerxml
+	err = req.decodeBodyInnerXMLBytes([]byte(InnerXMLBytes))
 	if err != nil {
 		return nil, err
-	}
-
-	return req, nil
-}
-
-// NewActionRequestFromAction returns a new Request.
-func NewActionRequestFromAction(action *upnp.Action) (*ActionRequest, error) {
-	req := NewActionRequest()
-
-	req.Envelope.Body.Action.Name = action.Name
-
-	service := action.ParentService
-	if service != nil {
-		req.Envelope.Body.Action.ServiceType = service.ServiceType
-	}
-
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
-		arg := &action.ArgumentList.Arguments[n]
-		if arg.GetDirection() != upnp.InDirection {
-			continue
-		}
-		reqArg := NewArgumentFromArgument(arg)
-		req.Envelope.Body.Action.Arguments = append(req.Envelope.Body.Action.Arguments, reqArg)
 	}
 
 	return req, nil

@@ -5,6 +5,7 @@
 package upnp
 
 import (
+	"net/upnp/control"
 	"net/upnp/ssdp"
 )
 
@@ -35,6 +36,6 @@ const (
 	InDirection      = 1
 	OutDirection     = 2
 
-	XmlMarshallIndent = " "
-	XmlNs             = "xmlns:u"
+	XmlMarshallIndent = control.XmlMarshallIndent
+	XmlNs             = control.XmlNs
 )

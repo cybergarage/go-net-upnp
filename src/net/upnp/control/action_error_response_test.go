@@ -31,7 +31,7 @@ func TestNewErrorResponseNoArgument(t *testing.T) {
 		"  </s:Body>" +
 		"</s:Envelope>"
 
-	res, err := NewErrorResponseFromSOAPString(testSoapErrorResponse)
+	res, err := NewErrorResponseFromSOAPBytes([]byte(testSoapErrorResponse))
 	if err != nil {
 		t.Error(err)
 	}
