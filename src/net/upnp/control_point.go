@@ -11,6 +11,7 @@ import (
 
 	"net/upnp/log"
 	"net/upnp/ssdp"
+	"net/upnp/util"
 )
 
 // A ControlPointListener represents a listener for ControlPoint.
@@ -139,7 +140,21 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 	return ok
 }
 
+func getFromToMessageFromSSDPPacket(req *ssdp.Packet) string {
+	fromAddr := req.From.String()
+	toAddr := ""
+	ifAddr, err := util.GetInterfaceAddress(req.Interface)
+	if err == nil {
+		toAddr = ifAddr
+	}
+
+	return fmt.Sprintf("(%s -> %s)", fromAddr, toAddr)
+}
+
 func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
+	usn, _ := ssdpReq.GetUSN()
+	log.Trace(fmt.Sprintf("notiry req : %s %s", usn, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
+
 	if ssdpReq.IsRootDevice() {
 		newDev, err := NewDeviceFromSSDPRequest(ssdpReq)
 		if err == nil {
@@ -155,12 +170,18 @@ func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 }
 
 func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
+	st, _ := ssdpReq.GetST()
+	log.Trace(fmt.Sprintf("search req : %s %s", st, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
+
 	if self.Listener != nil {
 		self.Listener.DeviceSearchReceived(ssdpReq)
 	}
 }
 
 func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
+	url, _ := ssdpRes.GetLocation()
+	log.Trace(fmt.Sprintf("search res : %s %s", url, getFromToMessageFromSSDPPacket(ssdpRes.Packet)))
+
 	newDev, err := NewDeviceFromSSDPResponse(ssdpRes)
 	if err == nil {
 		self.addDevice(newDev)

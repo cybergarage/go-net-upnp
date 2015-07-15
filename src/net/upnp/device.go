@@ -126,7 +126,7 @@ func (self *Device) SetLocationURL(url string) error {
 
 // CreateLocationURL return a location URL for SSDP packet.
 func (self *Device) createLocationURLForAddress(addr string) (string, error) {
-	url := fmt.Sprint("%s://%s:%s:%s", DeviceProtocol, addr, self.Port, self.DescriptionURL)
+	url := fmt.Sprintf("%s://%s:%d%s", DeviceProtocol, addr, self.Port, self.DescriptionURL)
 	return url, nil
 }
 
