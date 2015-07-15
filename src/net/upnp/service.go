@@ -6,8 +6,8 @@ package upnp
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -21,6 +21,7 @@ const (
 	errorServiceDescriptionNotFound = "action (%s) is not found. service (%s) description is null."
 	errorServiceHanNoActions        = "action (%s) is not found. service (%s) has no actions."
 	errorServiceActionNotFound      = "action (%s) is not found in the service (%s)"
+	errorServiceHasNoParentDevice   = "service (%s) has no parent device"
 )
 
 // A Service represents a UPnP service.
@@ -159,14 +160,33 @@ func (self *Service) isEventSubURL(path string) bool {
 	return false
 }
 
+func (self *Service) getAbsoluteURL(path string) (*url.URL, error) {
+	if self.ParentDevice == nil {
+		return nil, fmt.Errorf(errorServiceHasNoParentDevice, self.ServiceType)
+	}
+	return self.ParentDevice.GetAbsoluteURL(path)
+}
+
+func (self *Service) GetAbsoluteSCPDURL() (*url.URL, error) {
+	return self.getAbsoluteURL(self.SCPDURL)
+}
+
+func (self *Service) GetAbsoluteControlURL() (*url.URL, error) {
+	return self.getAbsoluteURL(self.ControlURL)
+}
+
+func (self *Service) GetAbsoluteEventSubURLL() (*url.URL, error) {
+	return self.getAbsoluteURL(self.EventSubURL)
+}
+
 // GetActionByName returns an action by the specified name
 func (self *Service) GetActionByName(name string) (*Action, error) {
 	if self.description == nil {
-		return nil, errors.New(fmt.Sprintf(errorServiceDescriptionNotFound, name, self.ServiceType))
+		return nil, fmt.Errorf(errorServiceDescriptionNotFound, name, self.ServiceType)
 	}
 
 	if len(self.ActionList.Actions) <= 0 {
-		return nil, errors.New(fmt.Sprintf(errorServiceHanNoActions, name, self.ServiceType))
+		return nil, fmt.Errorf(errorServiceHanNoActions, name, self.ServiceType)
 	}
 
 	for n := 0; n < len(self.ActionList.Actions); n++ {
@@ -175,5 +195,5 @@ func (self *Service) GetActionByName(name string) (*Action, error) {
 			return action, nil
 		}
 	}
-	return nil, errors.New(fmt.Sprintf(errorServiceActionNotFound, name, self.ServiceType))
+	return nil, fmt.Errorf(errorServiceActionNotFound, name, self.ServiceType)
 }

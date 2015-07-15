@@ -9,15 +9,87 @@ import (
 )
 
 const (
-	errorUrlNotInvalid = "url (%s) is not invalid"
+	errorUrlNotInvalid = "url '%s' is not invalid"
+	errorInvalidUrl    = "invalid url '%s' : expected '%s'"
 )
 
-func TestInvalidBaseAndPathURL(t *testing.T) {
-	bases := []string{"", "192.168.100.1"}
-	paths := []string{""}
+func badBases() []string {
+	return []string{
+		"",
+		"192.168.100.1",
+		"yahoo.co.jp",
+		"bad://192.168.100.1",
+		"bad://yahoo.co.jp",
+	}
+}
 
-	for _, base := range bases {
-		for _, path := range paths {
+func okBases() []string {
+	return []string{
+		"http://192.168.100.1/",
+		"http://192.168.100.1",
+		"http://yahoo.co.jp",
+		"http://yahoo.co.jp/",
+		"http://192.168.100.1:80/",
+		"http://192.168.100.1:80",
+		"http://yahoo.co.jp:80",
+		"http://yahoo.co.jp/:80",
+		"https://192.168.100.1/",
+		"https://192.168.100.1",
+		"https://yahoo.co.jp",
+		"https://yahoo.co.jp/",
+		"https://192.168.100.1:80/",
+		"https://192.168.100.1:80",
+		"https://yahoo.co.jp:80",
+		"https://yahoo.co.jp/:80",
+	}
+}
+
+func badPaths() []string {
+	return []string{
+		"{}",
+		"[]",
+		"\\",
+	}
+}
+
+func okPaths() []string {
+	return []string{
+		"",
+		"/",
+		"index.html",
+		"/index.html",
+		"foo/index.html",
+		"/foo/index.html",
+	}
+}
+
+func absPaths() []string {
+	return []string{
+		"http://192.168.100.1",
+		"http://192.168.100.1/",
+		"http://192.168.100.1/index.html",
+		"http://192.168.100.1/foo/index.html",
+		"http://cybergarage.org",
+		"http://cybergarage.org/",
+		"http://yahoo.co.jp/index.html",
+		"http://yahoo.co.jp/foo/index.html",
+	}
+}
+
+func TestInvalidBaseAndPathURL(t *testing.T) {
+	for _, base := range badBases() {
+		for _, path := range badPaths() {
+			url, err := GetAbsoluteURLFromBaseAndPath(base, path)
+			if err == nil {
+				t.Errorf(errorUrlNotInvalid, url.String())
+			}
+		}
+	}
+}
+
+func TestInvalidBaseAndValidPathURL(t *testing.T) {
+	for _, base := range badBases() {
+		for _, path := range okPaths() {
 			url, err := GetAbsoluteURLFromBaseAndPath(base, path)
 			if err == nil {
 				t.Errorf(errorUrlNotInvalid, url.String())
@@ -27,14 +99,25 @@ func TestInvalidBaseAndPathURL(t *testing.T) {
 }
 
 func TestValidBaseAndPathURL(t *testing.T) {
-	bases := []string{"http://192.168.100.1/", "http://192.168.100.1"}
-	paths := []string{"/index.html", "index.html"}
-
-	for _, base := range bases {
-		for _, path := range paths {
+	for _, base := range okBases() {
+		for _, path := range okPaths() {
 			_, err := GetAbsoluteURLFromBaseAndPath(base, path)
 			if err != nil {
 				t.Error(err)
+			}
+		}
+	}
+}
+
+func TestAbaPathURL(t *testing.T) {
+	for _, base := range okBases() {
+		for _, path := range absPaths() {
+			url, err := GetAbsoluteURLFromBaseAndPath(base, path)
+			if err != nil {
+				t.Error(err)
+			}
+			if url.String() != path {
+				t.Errorf(errorInvalidUrl, url.String(), path)
 			}
 		}
 	}

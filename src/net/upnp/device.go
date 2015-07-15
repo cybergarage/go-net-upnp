@@ -6,10 +6,10 @@ package upnp
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"net/url"
 
 	"net/upnp/http"
 	"net/upnp/ssdp"
@@ -38,7 +38,9 @@ type Device struct {
 }
 
 const (
-	errorDeviceServiceNotFound = "service (%s) is not found"
+	errorDeviceServiceNotFound          = "service (%s) is not found"
+	errorDeviceBadLocationURL           = "location url is invalid (%s)"
+	errorDeviceBadUrlBaseAndLocationURL = "URLBase and location url are invalid ('%s', '%s'). Couldn't get an absolute URL ('%s')"
 )
 
 // NewDevice returns a new Device.
@@ -169,7 +171,7 @@ func (self *Device) GetServiceByType(serviceType string) (*Service, error) {
 			return service, nil
 		}
 	}
-	return nil, errors.New(fmt.Sprintf(errorDeviceServiceNotFound, serviceType))
+	return nil, fmt.Errorf(errorDeviceServiceNotFound, serviceType)
 }
 
 // GetServiceById returns a service by the specified serviceId
@@ -180,7 +182,29 @@ func (self *Device) GetServiceById(serviceId string) (*Service, error) {
 			return service, nil
 		}
 	}
-	return nil, errors.New(fmt.Sprintf(errorDeviceServiceNotFound, serviceId))
+	return nil, fmt.Errorf(errorDeviceServiceNotFound, serviceId)
+}
+
+// GetServiceByControlURL returns a service by the specified control URL
+func (self *Device) GetServiceByControlURL(ctrlURL string) (*Service, error) {
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
+		if service.ControlURL == ctrlURL {
+			return service, nil
+		}
+	}
+	return nil, fmt.Errorf(errorDeviceServiceNotFound, ctrlURL)
+}
+
+// GetServiceByEventSubURL returns a service by the specified event subscription URL
+func (self *Device) GetServiceByEventSubURL(eventURL string) (*Service, error) {
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
+		if service.EventSubURL == eventURL {
+			return service, nil
+		}
+	}
+	return nil, fmt.Errorf(errorDeviceServiceNotFound, eventURL)
 }
 
 func (self *Device) reviseParentObject() error {
@@ -215,6 +239,50 @@ func (self *Device) reviseDescription() error {
 	}
 
 	return nil
+}
+
+// selectAvailableInterfaceForAddr return a interface from the specified address.
+func (self *Device) selectAvailableInterfaceForAddr(fromAddr string) (string, error) {
+	ifi, err := util.GetAvailableInterfaceForAddr(fromAddr)
+	if err != nil {
+		return "", nil
+	}
+
+	ifAddr, err := util.GetInterfaceAddress(ifi)
+	if err != nil {
+		return "", nil
+	}
+
+	return ifAddr, err
+}
+
+// GetAbsoluteURL return a absoulte URL of the specified path using URLBase or LocationURL.
+func (self *Device) GetAbsoluteURL(path string) (*url.URL, error) {
+	if 0 < len(self.URLBase) {
+		url, err := util.GetAbsoluteURLFromBaseAndPath(self.URLBase, path)
+		if err == nil {
+			return url, err
+		}
+	}
+
+	if 0 < len(self.LocationURL) {
+		locationUrl, err := url.Parse(self.LocationURL)
+		if err != nil {
+			return nil, fmt.Errorf(errorDeviceBadLocationURL, self.LocationURL)
+		}
+		baseLocation := locationUrl.Scheme + "://" + locationUrl.Host
+		url, err := util.GetAbsoluteURLFromBaseAndPath(baseLocation, path)
+		if err == nil {
+			return url, err
+		}
+	}
+
+	url, err := util.GetAbsoluteURLFromBaseAndPath("", path)
+	if err != nil {
+		return nil, fmt.Errorf(errorDeviceBadUrlBaseAndLocationURL, self.URLBase, self.LocationURL, path)
+	}
+
+	return url, nil
 }
 
 // Start starts this control point.
@@ -273,19 +341,4 @@ func (self *Device) Stop() error {
 	self.httpServer = nil
 
 	return lastErr
-}
-
-// selectAvailableInterfaceForAddr return a interface from the specified address.
-func (self *Device) selectAvailableInterfaceForAddr(fromAddr string) (string, error) {
-	ifi, err := util.GetAvailableInterfaceForAddr(fromAddr)
-	if err != nil {
-		return "", nil
-	}
-
-	ifAddr, err := util.GetInterfaceAddress(ifi)
-	if err != nil {
-		return "", nil
-	}
-
-	return ifAddr, err
 }

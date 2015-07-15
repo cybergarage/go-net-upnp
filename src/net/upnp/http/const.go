@@ -12,7 +12,9 @@ const (
 
 	UserAgent   = "User-Agent"
 	ContentType = "Content-Type"
-	SoapAction  = "SOAPACTION"
+
+	SoapAction      = "SOAPACTION"
+	SoapActionDelim = "#"
 
 	ContentTypeXML = "text/html; charset=utf8"
 )
