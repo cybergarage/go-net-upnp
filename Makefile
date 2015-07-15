@@ -46,7 +46,7 @@ ${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
 build: ${UPNPDUMP} ${LIGHTDEV} 
 
 test: package
-	go test -v ${packages}
+	go test -v -cover ${packages}
 
 install: build
 	go install ${packages}
