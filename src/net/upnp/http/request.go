@@ -6,6 +6,9 @@ package http
 
 import (
 	"io"
+	"net/url"
+	"strings"
+
 	gohttp "net/http"
 
 	"net/upnp/util"
@@ -34,8 +37,8 @@ func NewRequest(method, urlStr string, body io.Reader) (*Request, error) {
 }
 
 // NewSOAPRequest returns a new Request.
-func NewSOAPRequest(urlStr string, soapAction string, body io.Reader) (*Request, error) {
-	httpReq, err := NewRequest(POST, urlStr, body)
+func NewSOAPRequest(url *url.URL, soapAction string, body io.Reader) (*Request, error) {
+	httpReq, err := NewRequest(POST, url.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -44,4 +47,23 @@ func NewSOAPRequest(urlStr string, soapAction string, body io.Reader) (*Request,
 	httpReq.Header.Add(SoapAction, soapAction)
 
 	return httpReq, nil
+}
+
+func (self *Request) IsSOAPRequest() bool {
+	_, ok := self.Header[SoapAction]
+	return ok
+}
+
+func (self *Request) GetSOAPServiceActionName() (string, bool) {
+	soapAction := self.Header.Get(SoapAction)
+	if len(soapAction) <= 0 {
+		return "", false
+	}
+
+	actions := strings.Split(soapAction, SoapActionDelim)
+	if len(actions) < 2 {
+		return "", false
+	}
+
+	return actions[len(actions)-1], true
 }

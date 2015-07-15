@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	errorActionArgumentNotFound = "argument (%s) is not found"
-	errorActionNameIsInvalid    = "action name of action response (%s) is not equal this action name (%s)"
+	errorActionArgumentNotFound   = "argument (%s) is not found"
+	errorActionNameIsInvalid      = "action name of action response (%s) is not equal this action name (%s)"
+	errorActionHasNoParentService = "action (%s) has no parent service"
 )
 
 // A Action represents a UPnP action.
@@ -78,27 +79,37 @@ func (self *Action) GetArgumentString(name string) (string, error) {
 	return arg.GetString()
 }
 
-// SetArgumentsByActionResponse sets a value into the specified argument
-func (self *Action) SetArgumentsByActionResponse(actionRes *control.ActionResponse) error {
-	resAction, err := actionRes.GetAction()
+// setArgumentsByActionControl sets control arguments into the specified argument
+func (self *Action) setArgumentsByActionControl(actionCtrl *control.ActionControl) error {
+	ctrlAction, err := actionCtrl.GetAction()
 	if err != nil {
 		return err
 	}
 
-	if resAction.Name != self.Name {
-		return errors.New(fmt.Sprintf(errorActionNameIsInvalid, resAction.Name, self.Name))
+	if ctrlAction.Name != self.Name {
+		return errors.New(fmt.Sprintf(errorActionNameIsInvalid, ctrlAction.Name, self.Name))
 	}
 
-	for n := 0; n < len(resAction.Arguments); n++ {
-		resArg := resAction.Arguments[n]
-		targetArg, err := self.GetArgumentByName(resArg.Name)
+	for n := 0; n < len(ctrlAction.Arguments); n++ {
+		ctrlArg := ctrlAction.Arguments[n]
+		selfArg, err := self.GetArgumentByName(ctrlArg.Name)
 		if err != nil {
 			continue
 		}
-		targetArg.Value = resArg.Value
+		selfArg.Value = ctrlArg.Value
 	}
 
 	return nil
+}
+
+// SetArgumentsByActionRequest sets request arguments into the specified argument
+func (self *Action) SetArgumentsByActionRequest(actionReq *control.ActionRequest) error {
+	return self.setArgumentsByActionControl(actionReq.ActionControl)
+}
+
+// SetArgumentsByActionResponse sets response arguments into the specified argument
+func (self *Action) SetArgumentsByActionResponse(actionRes *control.ActionResponse) error {
+	return self.setArgumentsByActionControl(actionRes.ActionControl)
 }
 
 // Post sends the specified arguments into the deveice.
@@ -116,8 +127,17 @@ func (self *Action) Post() error {
 	}
 
 	service := self.ParentService
-	soapAction := service.ServiceType + "#" + self.Name
-	httpReq, err := http.NewSOAPRequest("", soapAction, bytes.NewBuffer(soapReqBytes))
+	if service == nil {
+		return fmt.Errorf(errorActionHasNoParentService, self.Name)
+	}
+
+	controlAbsURL, err := service.GetAbsoluteControlURL()
+	if err != nil {
+		return err
+	}
+
+	soapAction := service.ServiceType + http.SoapActionDelim + self.Name
+	httpReq, err := http.NewSOAPRequest(controlAbsURL, soapAction, bytes.NewBuffer(soapReqBytes))
 	if err != nil {
 		return err
 	}

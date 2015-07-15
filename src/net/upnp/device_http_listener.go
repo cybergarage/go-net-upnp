@@ -5,6 +5,9 @@
 package upnp
 
 import (
+	"io/ioutil"
+
+	"net/upnp/control"
 	"net/upnp/http"
 )
 
@@ -15,6 +18,10 @@ func writeStatusCode(httpRes http.ResponseWriter, code int) error {
 
 func responseInternalServerError(httpRes http.ResponseWriter) error {
 	return writeStatusCode(httpRes, http.StatusInternalServerError)
+}
+
+func responseBadRequest(httpRes http.ResponseWriter) error {
+	return writeStatusCode(httpRes, http.StatusBadRequest)
 }
 
 func writeXMLHeader(httpRes http.ResponseWriter) error {
@@ -85,7 +92,56 @@ func (self *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.R
 	return false
 }
 
+func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter, action *Action) error {
+	defer httpReq.Body.Close()
+	soapReqBytes, err := ioutil.ReadAll(httpReq.Body)
+	if err != nil {
+		return err
+	}
+
+	actionReq, err := control.NewActionRequestFromSOAPBytes(soapReqBytes)
+	if err != nil {
+		return err
+	}
+
+	err = action.SetArgumentsByActionRequest(actionReq)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (self *Device) httpSoapRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
+	ctrlURL := httpReq.URL.Path
+	service, err := self.GetServiceByControlURL(ctrlURL)
+	if err != nil {
+		return false
+	}
+
+	actionName, ok := httpReq.GetSOAPServiceActionName()
+	if !ok {
+		return false
+	}
+
+	action, err := service.GetActionByName(actionName)
+	if err != nil {
+		return false
+	}
+
+	err = self.httpActionRequestReceived(httpReq, httpRes, action)
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
 func (self *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
+	if httpReq.IsSOAPRequest() {
+		return self.httpSoapRequestReceived(httpReq, httpRes)
+	}
+
 	return false
 }
 
@@ -107,5 +163,5 @@ func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.Resp
 		return
 	}
 
-	responseInternalServerError(httpRes)
+	responseBadRequest(httpRes)
 }
