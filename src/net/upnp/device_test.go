@@ -28,7 +28,7 @@ func TestNullDevice(t *testing.T) {
 		t.Error(err)
 	}
 
-	if res.StatusCode != http.StatusInternalServerError {
+	if res.StatusCode != http.StatusBadRequest {
 		t.Errorf(errorTestDeviceInvalidStatusCode, url, res.StatusCode, http.StatusInternalServerError)
 	}
 

@@ -5,10 +5,12 @@
 package upnp
 
 import (
+	"fmt"
 	"io/ioutil"
 
 	"net/upnp/control"
 	"net/upnp/http"
+	"net/upnp/log"
 )
 
 func writeStatusCode(httpRes http.ResponseWriter, code int) error {
@@ -146,6 +148,8 @@ func (self *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.
 }
 
 func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
+	log.Info(fmt.Sprintf("%s %s", httpReq.Method, httpReq.URL.Path))
+
 	switch httpReq.Method {
 	case http.GET:
 		if self.httpGetRequestReceived(httpReq, httpRes) {
