@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	upnpErrorFormat = "[%d] %s"
+	upnpErrorFormat = "UPnP Error : [%d] %s"
 )
 
 const (

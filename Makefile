@@ -16,6 +16,7 @@ USRAGNT_GO="./src/net/upnp/util/user_agent.go"
 
 UPNPDUMP=${PREFIX}/bin/upnpdump
 LIGHTDEV=${PREFIX}/bin/lightdev
+UPNPCTRL=${PREFIX}/bin/upnpctrl
 
 packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util net/upnp/control
 	
@@ -37,13 +38,16 @@ format:
 package: format $(shell find . -type f -name '*.go')
 	go build -v ${packages}
 
-${UPNPDUMP}: package $(shell find ./example/controlpoint/upnpdump -type f -name '*.go')
-	go build -o $@ ./example/controlpoint/upnpdump
+${UPNPDUMP}: package $(shell find ./example/ctrlpoint/upnpdump -type f -name '*.go')
+	go build -o $@ ./example/ctrlpoint/upnpdump
 
 ${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
 	go build -o $@ ./example/device/light
 
-build: ${UPNPDUMP} ${LIGHTDEV} 
+${UPNPCTRL}: package $(shell find ./example/ctrlpoint/upnpctrl -type f -name '*.go')
+	go build -o $@ ./example/ctrlpoint/upnpctrl
+
+build: ${UPNPDUMP} ${LIGHTDEV} ${UPNPCTRL}
 
 test: package
 	go test -v -cover ${packages}

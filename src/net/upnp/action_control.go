@@ -19,8 +19,7 @@ func NewActionRequestFromAction(action *Action) (*control.ActionRequest, error) 
 		req.Envelope.Body.Action.ServiceType = service.ServiceType
 	}
 
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
-		arg := &action.ArgumentList.Arguments[n]
+	for _, arg := range action.GetArguments() {
 		if arg.GetDirection() != InDirection {
 			continue
 		}
@@ -43,8 +42,7 @@ func NewActionResponseFromAction(action *Action) (*control.ActionResponse, error
 		res.Envelope.Body.Action.ServiceType = service.ServiceType
 	}
 
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
-		arg := &action.ArgumentList.Arguments[n]
+	for _, arg := range action.GetArguments() {
 		if arg.GetDirection() != OutDirection {
 			continue
 		}

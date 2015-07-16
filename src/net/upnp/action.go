@@ -51,6 +51,42 @@ func (self *Action) reviseParentObject() error {
 	return nil
 }
 
+// GetArguments returns all arguments
+func (self *Action) GetArguments() []*Argument {
+	argCnt := len(self.ArgumentList.Arguments)
+	args := make([]*Argument, argCnt)
+	for n := 0; n < argCnt; n++ {
+		args[n] = &self.ArgumentList.Arguments[n]
+	}
+	return args
+}
+
+// GetInputArguments returns all input arguments
+func (self *Action) GetInputArguments() []*Argument {
+	args := make([]*Argument, 0)
+	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
+		arg := &self.ArgumentList.Arguments[n]
+		if !arg.IsInDirection() {
+			continue
+		}
+		args = append(args, arg)
+	}
+	return args
+}
+
+// GetOutputArguments returns all output arguments
+func (self *Action) GetOutputArguments() []*Argument {
+	args := make([]*Argument, 0)
+	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
+		arg := &self.ArgumentList.Arguments[n]
+		if !arg.IsOutDirection() {
+			continue
+		}
+		args = append(args, arg)
+	}
+	return args
+}
+
 // GetArgumentByName returns an argument by the specified name
 func (self *Action) GetArgumentByName(name string) (*Argument, error) {
 	for n := 0; n < len(self.ArgumentList.Arguments); n++ {

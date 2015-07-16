@@ -200,6 +200,16 @@ func (self *Device) SetUDN(uuid string) error {
 	return nil
 }
 
+// GetServices returns all services
+func (self *Device) GetServices() []*Service {
+	servicCnt := len(self.ServiceList.Services)
+	services := make([]*Service, servicCnt)
+	for n := 0; n < servicCnt; n++ {
+		services[n] = &self.ServiceList.Services[n]
+	}
+	return services
+}
+
 // GetServiceByType returns a service by the specified serviceType
 func (self *Device) GetServiceByType(serviceType string) (*Service, error) {
 	for n := 0; n < len(self.ServiceList.Services); n++ {
