@@ -11,6 +11,7 @@ import (
 	"net/upnp/control"
 	"net/upnp/http"
 	"net/upnp/log"
+	"net/upnp/util"
 )
 
 func writeStatusCode(httpRes http.ResponseWriter, code int) error {
@@ -18,12 +19,9 @@ func writeStatusCode(httpRes http.ResponseWriter, code int) error {
 	return nil
 }
 
-func responseInternalServerError(httpRes http.ResponseWriter) error {
-	return writeStatusCode(httpRes, http.StatusInternalServerError)
-}
-
-func responseBadRequest(httpRes http.ResponseWriter) error {
-	return writeStatusCode(httpRes, http.StatusBadRequest)
+func writeServerHeader(httpRes http.ResponseWriter) error {
+	httpRes.Header().Set(http.ServerHeader, util.GetServer())
+	return nil
 }
 
 func writeXMLHeader(httpRes http.ResponseWriter) error {
@@ -36,12 +34,31 @@ func writeContent(httpRes http.ResponseWriter, content []byte) error {
 	return nil
 }
 
+func responseInternalServerError(httpRes http.ResponseWriter) error {
+	writeStatusCode(httpRes, http.StatusInternalServerError)
+	writeServerHeader(httpRes)
+	return nil
+}
+
+func responseBadRequest(httpRes http.ResponseWriter) error {
+	writeStatusCode(httpRes, http.StatusBadRequest)
+	writeServerHeader(httpRes)
+	return nil
+}
+
 func responseXMLContent(httpRes http.ResponseWriter, content string) error {
 	writeStatusCode(httpRes, http.StatusOK)
+	writeServerHeader(httpRes)
 	writeXMLHeader(httpRes)
 	writeContent(httpRes, []byte(content))
 
 	return nil
+}
+
+func responseUPnPError(httpRes http.ResponseWriter, upnpErr *control.UPnPError) error {
+	errRes := control.NewErrorResponseFromUPnPError(upnpErr)
+	errStr, _ := errRes.SOAPContentString()
+	return responseXMLContent(httpRes, errStr)
 }
 
 func (self *Device) isDescriptionUri(path string) bool {
@@ -95,23 +112,51 @@ func (self *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.R
 }
 
 func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter, action *Action) error {
+	// has listener ?
+
+	if self.ActionListener == nil {
+		upnpErr := control.NewUPnPErrorFromCode(control.ErrorOptionalActionNotImplemented)
+		return responseUPnPError(httpRes, upnpErr)
+	}
+
+	// read request
+
 	defer httpReq.Body.Close()
 	soapReqBytes, err := ioutil.ReadAll(httpReq.Body)
+
 	if err != nil {
-		return err
+		upnpErr := control.NewUPnPErrorFromCode(control.ErrorInvalidAction)
+		return responseUPnPError(httpRes, upnpErr)
 	}
+
+	log.Trace(fmt.Sprintf("action req = \n%s", string(soapReqBytes)))
+
+	// parse request
 
 	actionReq, err := control.NewActionRequestFromSOAPBytes(soapReqBytes)
 	if err != nil {
-		return err
+		upnpErr := control.NewUPnPErrorFromCode(control.ErrorInvalidAction)
+		return responseUPnPError(httpRes, upnpErr)
 	}
 
 	err = action.SetArgumentsByActionRequest(actionReq)
 	if err != nil {
-		return err
+		upnpErr := control.NewUPnPErrorFromCode(control.ErrorInvalidArgs)
+		return responseUPnPError(httpRes, upnpErr)
 	}
 
-	return nil
+	// run listener
+
+	upnpErr := self.ActionListener.ActionRequestReceived(action)
+	if upnpErr != nil {
+		return responseUPnPError(httpRes, upnpErr)
+	}
+
+	// return listener response
+
+	actionRes, err := NewActionResponseFromAction(action)
+	errStr, _ := actionRes.SOAPContentString()
+	return responseXMLContent(httpRes, errStr)
 }
 
 func (self *Device) httpSoapRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
@@ -144,7 +189,7 @@ func (self *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.
 		return self.httpSoapRequestReceived(httpReq, httpRes)
 	}
 
-	return false
+	return self.httpSoapRequestReceived(httpReq, httpRes)
 }
 
 func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
@@ -162,8 +207,8 @@ func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.Resp
 		}
 	}
 
-	if self.Listener != nil {
-		self.Listener.HTTPRequestReceived(httpReq, httpRes)
+	if self.HTTPListener != nil {
+		self.HTTPListener.HTTPRequestReceived(httpReq, httpRes)
 		return
 	}
 

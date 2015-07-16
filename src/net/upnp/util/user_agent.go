@@ -10,10 +10,14 @@ import (
 )
 
 func GetUserAgent() string {
-	return fmt.Sprintf("%s/%s UPnP/1.1 go-net-upnp/%s",
+	return fmt.Sprintf("%s/%s UPnP/%s %s/%s",
 		runtime.GOOS,
 		runtime.GOARCH,
-		"go-net-upnp",
 		"1.1",
+		"go-net-upnp",
 		"0.1")
+}
+
+func GetServer() string {
+	return GetUserAgent()
 }

@@ -9,8 +9,8 @@ import (
 )
 
 func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
-	if self.Listener != nil {
-		self.Listener.DeviceNotifyReceived(ssdpReq)
+	if self.SSDPListener != nil {
+		self.SSDPListener.DeviceNotifyReceived(ssdpReq)
 	}
 }
 
@@ -49,7 +49,7 @@ func (self *Device) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 		self.handleDiscoverRequest(ssdpReq)
 	}
 
-	if self.Listener != nil {
-		self.Listener.DeviceSearchReceived(ssdpReq)
+	if self.SSDPListener != nil {
+		self.SSDPListener.DeviceSearchReceived(ssdpReq)
 	}
 }

@@ -5,14 +5,15 @@
 package upnp
 
 import (
-	"bytes"
 	"encoding/xml"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"strings"
 
 	"net/upnp/control"
 	"net/upnp/http"
+	"net/upnp/log"
 )
 
 const (
@@ -121,7 +122,7 @@ func (self *Action) Post() error {
 		return err
 	}
 
-	soapReqBytes, err := req.SOAPContentBytes()
+	soapReqStr, err := req.SOAPContentString()
 	if err != nil {
 		return err
 	}
@@ -137,7 +138,7 @@ func (self *Action) Post() error {
 	}
 
 	soapAction := service.ServiceType + http.SoapActionDelim + self.Name
-	httpReq, err := http.NewSOAPRequest(controlAbsURL, soapAction, bytes.NewBuffer(soapReqBytes))
+	httpReq, err := http.NewSOAPRequest(controlAbsURL, soapAction, strings.NewReader(soapReqStr))
 	if err != nil {
 		return err
 	}
@@ -152,7 +153,7 @@ func (self *Action) Post() error {
 		return err
 	}
 
-	// parse response
+	// read response
 
 	statusCode := httpRes.StatusCode
 	defer httpRes.Body.Close()
@@ -160,6 +161,10 @@ func (self *Action) Post() error {
 	if err != nil {
 		return err
 	}
+
+	log.Trace(fmt.Sprintf("action res [%d] = \n%s", statusCode, string(soapResBytes)))
+
+	// parse response
 
 	if statusCode == http.StatusOK {
 		actionRes, err := control.NewActionResponseFromSOAPBytes(soapResBytes)

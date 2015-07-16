@@ -107,16 +107,11 @@ func (self *ActionControl) GetAction() (*Action, error) {
 	return &self.Envelope.Body.Action, nil
 }
 
-// SOAPContentBytes returns a SOAP content bytes.
-func (self *ActionControl) SOAPContentBytes() ([]byte, error) {
-	return xml.MarshalIndent(&self.Envelope, "", XmlMarshallIndent)
-}
-
 // SOAPContent returns a SOAP content string.
 func (self *ActionControl) SOAPContentString() (string, error) {
-	buf, err := self.SOAPContentBytes()
+	buf, err := xml.MarshalIndent(&self.Envelope, "", XmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}
-	return string(buf), nil
+	return XMLHeader + string(buf), nil
 }

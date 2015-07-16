@@ -11,15 +11,32 @@ import (
 	"math/rand"
 	"net/url"
 
+	"net/upnp/control"
 	"net/upnp/http"
 	"net/upnp/ssdp"
 	"net/upnp/util"
 )
 
-// A DeviceListener represents a listener for Device.
-type DeviceListener interface {
-	ssdp.MulticastListener
+// A DeviceHTTPListener represents a listener for HTTP requests.
+type DeviceHTTPListener interface {
 	http.RequestListener
+}
+
+// A DeviceSSDPListener represents a listener for SSDP requests.
+type DeviceSSDPListener interface {
+	ssdp.MulticastListener
+}
+
+// A DeviceActionListener represents a listener for action request.
+type DeviceActionListener interface {
+	ActionRequestReceived(*Action) *control.UPnPError
+}
+
+// A DeviceListener represents a listener for all requests.
+type DeviceListener interface {
+	DeviceHTTPListener
+	DeviceSSDPListener
+	DeviceActionListener
 }
 
 // A Device represents a UPnP device.
@@ -28,10 +45,12 @@ type Device struct {
 	SpecVersion SpecVersion `xml:"-"`
 	URLBase     string      `xml:"-"`
 
-	Port           int            `xml:"-"`
-	Listener       DeviceListener `xml:"-"`
-	LocationURL    string         `xml:"-"`
-	DescriptionURL string         `xml:"-"`
+	Port           int                  `xml:"-"`
+	HTTPListener   DeviceHTTPListener   `xml:"-"`
+	SSDPListener   DeviceSSDPListener   `xml:"-"`
+	ActionListener DeviceActionListener `xml:"-"`
+	LocationURL    string               `xml:"-"`
+	DescriptionURL string               `xml:"-"`
 
 	ssdpMcastServerList *ssdp.MulticastServerList `xml:"-"`
 	httpServer          *http.Server              `xml:"-"`

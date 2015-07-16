@@ -45,7 +45,23 @@ func NewErrorResponseFromSOAPBytes(soapStr []byte) (*ErrorResponse, error) {
 	return res, nil
 }
 
+// NewErrorResponseFromUPnPError returns a new error response.
+func NewErrorResponseFromUPnPError(upnpError *UPnPError) *ErrorResponse {
+	res := NewErrorResponse()
+	res.Envelope.Body.Fault.Detail.UPnPError = *upnpError
+	return res
+}
+
 // GetUPnPError returns an UPnP error.
 func (self *ErrorResponse) GetUPnPError() (*UPnPError, error) {
 	return &self.Envelope.Body.Fault.Detail.UPnPError, nil
+}
+
+// SOAPContent returns a SOAP content string.
+func (self *ErrorResponse) SOAPContentString() (string, error) {
+	buf, err := xml.MarshalIndent(&self.Envelope, "", XmlMarshallIndent)
+	if err != nil {
+		return "", err
+	}
+	return XMLHeader + string(buf), nil
 }

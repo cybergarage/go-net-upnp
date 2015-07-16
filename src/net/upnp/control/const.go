@@ -4,7 +4,12 @@
 
 package control
 
+import (
+	"encoding/xml"
+)
+
 const (
 	XmlMarshallIndent = " "
-	XmlNs             = "xmlns:u"
+	XmlNs             = "xmlns"
+	XMLHeader         = xml.Header
 )
