@@ -179,6 +179,8 @@ func (self *Action) Post() error {
 		return err
 	}
 
+	log.Trace(fmt.Sprintf("action req = \n%s", soapReqStr))
+
 	httpClient, err := http.NewClient()
 	if err != nil {
 		return err
