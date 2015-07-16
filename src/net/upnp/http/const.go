@@ -17,5 +17,5 @@ const (
 	SoapAction      = "SOAPACTION"
 	SoapActionDelim = "#"
 
-	ContentTypeXML = "text/html; charset=utf8"
+	ContentTypeXML = "text/xml; charset=\"utf-8\""
 )
