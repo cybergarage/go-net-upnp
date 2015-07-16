@@ -11,5 +11,11 @@ import (
 const (
 	XmlMarshallIndent = " "
 	XmlNs             = "xmlns"
-	XMLHeader         = xml.Header
+	XmlNsDelim        = ":"
+
+	SoapActionSpace      = "u"
+	SoapActionNamePrefix = SoapActionSpace + XmlNsDelim
+	SoapActionNameSpace  = XmlNs + XmlNsDelim + SoapActionSpace
+
+	XMLHeader = xml.Header
 )
