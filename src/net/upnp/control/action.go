@@ -8,6 +8,12 @@ import (
 	"encoding/xml"
 )
 
+const (
+	soapActionSpace     = "u"
+	soapActionPrefix    = soapActionSpace + XmlNsDelim
+	soapActionSpaceAttr = XmlNs + XmlNsDelim + soapActionSpace
+)
+
 // A Action represents a SOAP action.
 type Action struct {
 	Name        string
@@ -16,9 +22,9 @@ type Action struct {
 }
 
 func (self *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	start.Name.Local = SoapActionNamePrefix + self.Name
+	start.Name.Local = soapActionPrefix + self.Name
 	start.Attr = []xml.Attr{
-		{Name: xml.Name{Local: SoapActionNameSpace}, Value: self.ServiceType},
+		{Name: xml.Name{Local: soapActionSpaceAttr}, Value: self.ServiceType},
 	}
 
 	e.EncodeToken(start)
