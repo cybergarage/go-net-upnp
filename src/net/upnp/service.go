@@ -7,8 +7,11 @@ package upnp
 import (
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"strings"
+
+	"net/upnp/http"
 )
 
 const (
@@ -22,6 +25,7 @@ const (
 	errorServiceHanNoActions        = "action (%s) is not found. service (%s) has no actions."
 	errorServiceActionNotFound      = "action (%s) is not found in the service (%s)"
 	errorServiceHasNoParentDevice   = "service (%s) has no parent device"
+	errorServiceBadSCPDURL          = "SCPDURL (%s) is bad response (%d)"
 )
 
 // A Service represents a UPnP service.
@@ -51,10 +55,10 @@ func NewService() *Service {
 }
 
 // NewServiceFromDescription returns a service from the specified descrition string
-func NewServiceFromDescription(serviceDesc string) (*Service, error) {
+func NewServiceFromDescriptionBytes(descBytes []byte) (*Service, error) {
 	service := NewService()
 
-	err := service.LoadDescriptionString(serviceDesc)
+	err := service.LoadDescriptionBytes(descBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -62,11 +66,11 @@ func NewServiceFromDescription(serviceDesc string) (*Service, error) {
 	return service, err
 }
 
-// LoadDescriptinString loads a device description string.
-func (self *Service) LoadDescriptionString(desc string) error {
+// LoadDescriptionBytes loads a device description string.
+func (self *Service) LoadDescriptionBytes(descBytes []byte) error {
 	self.description = &ServiceDescription{}
 
-	err := xml.Unmarshal([]byte(desc), self.description)
+	err := xml.Unmarshal(descBytes, self.description)
 	if err != nil {
 		return err
 	}
@@ -80,6 +84,30 @@ func (self *Service) LoadDescriptionString(desc string) error {
 	}
 
 	return nil
+}
+
+// LoadDescriptinString loads a device description string.
+func (self *Service) LoadDescriptionFromSCPDURL() error {
+	scpdURL, err := self.GetAbsoluteSCPDURL()
+	if err != nil {
+		return err
+	}
+
+	res, err := http.Get(scpdURL.String())
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf(errorServiceBadSCPDURL, scpdURL.String(), res.StatusCode)
+	}
+
+	scpdBytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+
+	return self.LoadDescriptionBytes(scpdBytes)
 }
 
 // DescriptionString returns a descrition string.

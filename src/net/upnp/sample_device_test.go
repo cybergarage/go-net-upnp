@@ -35,7 +35,7 @@ func NewSampleDevice() (*sampleDevice, error) {
 		return nil, err
 	}
 
-	err = service.LoadDescriptionString(switchPowerServiceDescription)
+	err = service.LoadDescriptionBytes([]byte(switchPowerServiceDescription))
 	if err != nil {
 		return nil, err
 	}
@@ -43,6 +43,26 @@ func NewSampleDevice() (*sampleDevice, error) {
 	sampleDev := &sampleDevice{Device: dev}
 
 	return sampleDev, nil
+}
+
+func (self *sampleDevice) GetSwitchPowerService() (*Service, error) {
+	return self.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
+}
+
+func (self *sampleDevice) GetSwitchPowerSetTargetAction() (*Action, error) {
+	service, err := self.GetSwitchPowerService()
+	if err != nil {
+		return nil, err
+	}
+	return service.GetActionByName("SetTarget")
+}
+
+func (self *sampleDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
+	service, err := self.GetSwitchPowerService()
+	if err != nil {
+		return nil, err
+	}
+	return service.GetActionByName("GetTarget")
 }
 
 func TestSampleDeviceDescription(t *testing.T) {

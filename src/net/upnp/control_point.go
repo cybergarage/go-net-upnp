@@ -131,6 +131,11 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 		return false
 	}
 
+	err := dev.LoadServiceDescriptions()
+	if err != nil {
+		return false
+	}
+
 	ok := self.rootDeviceUdnMap.AddDevice(dev)
 
 	if ok {
