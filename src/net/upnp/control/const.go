@@ -13,9 +13,5 @@ const (
 	XmlNs             = "xmlns"
 	XmlNsDelim        = ":"
 
-	SoapActionSpace      = "u"
-	SoapActionNamePrefix = SoapActionSpace + XmlNsDelim
-	SoapActionNameSpace  = XmlNs + XmlNsDelim + SoapActionSpace
-
 	XMLHeader = xml.Header
 )
