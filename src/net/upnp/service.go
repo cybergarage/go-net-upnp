@@ -207,6 +207,16 @@ func (self *Service) GetAbsoluteEventSubURLL() (*url.URL, error) {
 	return self.getAbsoluteURL(self.EventSubURL)
 }
 
+// GetActions returns all actions
+func (self *Service) GetActions() []*Action {
+	actionCnt := len(self.ActionList.Actions)
+	actions := make([]*Action, actionCnt)
+	for n := 0; n < actionCnt; n++ {
+		actions[n] = &self.ActionList.Actions[n]
+	}
+	return actions
+}
+
 // GetActionByName returns an action by the specified name
 func (self *Service) GetActionByName(name string) (*Action, error) {
 	if self.description == nil {
@@ -223,5 +233,6 @@ func (self *Service) GetActionByName(name string) (*Action, error) {
 			return action, nil
 		}
 	}
+
 	return nil, fmt.Errorf(errorServiceActionNotFound, name, self.ServiceType)
 }

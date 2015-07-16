@@ -6,9 +6,9 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"net/upnp"
+	"net/upnp/log"
 	"net/upnp/ssdp"
 	"net/upnp/util"
 )
@@ -31,7 +31,7 @@ func NewControlPoint() *ControlPoint {
 }
 
 func printMessage(msg string) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", msg))
+	log.Trace(msg)
 }
 
 func GetFromToMessageFromSSDPPacket(req *ssdp.Packet) string {

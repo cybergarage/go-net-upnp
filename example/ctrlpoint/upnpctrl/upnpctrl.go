@@ -26,14 +26,47 @@ package main
 
 import (
 	"bufio"
-	"net/upnp/log"
+	"fmt"
 	"os"
+
+	"net/upnp/log"
 )
+
+const (
+	errorNoInput = "no input"
+)
+
+var gKeyboardReader *bufio.Reader
+
+func GetKeyboardReader() *bufio.Reader {
+	return gKeyboardReader
+}
+
+func ReadKeyboardLine() (string, error) {
+	b, _, err := GetKeyboardReader().ReadLine()
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
+}
+
+func ReadKeyboardKey() (byte, error) {
+	b, _, err := GetKeyboardReader().ReadLine()
+	if err != nil {
+		return 0, err
+	}
+
+	if len(b) == 0 {
+		return 0, fmt.Errorf(errorNoInput)
+	}
+
+	return b[0], nil
+}
 
 func handleInput(ctrlPoint *ControlPoint) {
 	for {
-		reader := bufio.NewReader(os.Stdin)
-		key, err := reader.ReadByte()
+		key, err := ReadKeyboardKey()
 		if err != nil {
 			continue
 		}
@@ -44,8 +77,8 @@ func handleInput(ctrlPoint *ControlPoint) {
 }
 
 func main() {
-	logger := log.NewStdoutLogger(log.LoggerLevelTrace)
-	log.SetSharedLogger(logger)
+	/*logger := */ log.NewStdoutLogger(log.LoggerLevelTrace)
+	//log.SetSharedLogger(logger)
 
 	ctrlPoint := NewControlPoint()
 	err := ctrlPoint.Start()
@@ -55,6 +88,13 @@ func main() {
 	}
 	defer ctrlPoint.Stop()
 
+	err = ctrlPoint.SearchRootDevice()
+	if err != nil {
+		log.Error(err)
+		os.Exit(1)
+	}
+
+	gKeyboardReader = bufio.NewReader(os.Stdin)
 	handleInput(ctrlPoint)
 
 	os.Exit(0)
