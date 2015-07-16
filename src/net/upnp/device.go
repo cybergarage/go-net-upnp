@@ -41,6 +41,7 @@ const (
 	errorDeviceServiceNotFound          = "service (%s) is not found"
 	errorDeviceBadLocationURL           = "location url is invalid (%s)"
 	errorDeviceBadUrlBaseAndLocationURL = "URLBase and location url are invalid ('%s', '%s'). Couldn't get an absolute URL ('%s')"
+	errorDeviceBadDescriptionURL        = "DescriptionURL (%s) is bad response (%d)"
 )
 
 // NewDevice returns a new Device.
@@ -93,7 +94,7 @@ func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 		return nil, err
 	}
 	if res.StatusCode != http.StatusOK {
-		return nil, err
+		return nil, fmt.Errorf(errorDeviceBadDescriptionURL, descURL, res.StatusCode)
 	}
 
 	devDescBytes, err := ioutil.ReadAll(res.Body)
@@ -125,14 +126,18 @@ func (self *Device) SetLocationURL(url string) error {
 }
 
 // CreateLocationURL return a location URL for SSDP packet.
-func (self *Device) createLocationURLForAddress(addr string) (string, error) {
-	url := fmt.Sprintf("%s://%s:%d%s", DeviceProtocol, addr, self.Port, self.DescriptionURL)
+func (self *Device) createLocationURLForAddress(addr string) (*url.URL, error) {
+	locationBase := fmt.Sprintf("%s://%s:%d", DeviceProtocol, addr, self.Port)
+	url, err := util.GetAbsoluteURLFromBaseAndPath(locationBase, self.DescriptionURL)
+	if err != nil {
+		return nil, err
+	}
 	return url, nil
 }
 
-// LoadDescriptinString loads a device description string.
-func (self *Device) LoadDescriptionString(desc string) error {
-	err := xml.Unmarshal([]byte(desc), self)
+// LoadDescriptionBytes loads a device description string.
+func (self *Device) LoadDescriptionBytes(descBytes []byte) error {
+	err := xml.Unmarshal(descBytes, self)
 	if err != nil {
 		return err
 	}
@@ -155,6 +160,19 @@ func (self *Device) DescriptionString() (string, error) {
 	}
 
 	return string(descBytes), nil
+}
+
+// LoadServiceDescriptions loads service descriptions.
+func (self *Device) LoadServiceDescriptions() error {
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
+		err := service.LoadDescriptionFromSCPDURL()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // SetUDN sets a the specified UUID with a prefix.

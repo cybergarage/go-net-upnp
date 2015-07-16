@@ -29,7 +29,7 @@ func (self *Device) postResponseMessge(ssdpReq *ssdp.Request) error {
 	}
 
 	ssdpRes := ssdp.NewResponse()
-	ssdpRes.SetLocation(locationURL)
+	ssdpRes.SetLocation(locationURL.String())
 
 	sock := ssdp.NewUnicastSocket()
 	_, err = sock.WriteResponse(fromAddr, fromPort, ssdpRes)

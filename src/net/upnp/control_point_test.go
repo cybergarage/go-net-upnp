@@ -6,6 +6,8 @@ package upnp
 
 import (
 	"errors"
+	"fmt"
+	"math/rand"
 	"testing"
 	"time"
 )
@@ -88,6 +90,38 @@ func TestControlPointSearchDevice(t *testing.T) {
 
 	if foundDev == nil {
 		t.Errorf(errorControlPointDeviceNotFound, devUDN)
+	}
+
+	// check service
+
+	devService, _ := dev.GetSwitchPowerService()
+
+	foundService, err := foundDev.GetServiceByType(devService.ServiceType)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// post action (set)
+
+	postValue := fmt.Sprintf("target%d", rand.Int())
+
+	devSetAction, _ := dev.GetSwitchPowerSetTargetAction()
+
+	foundSetAction, err := foundService.GetActionByName(devSetAction.Name)
+	if err != nil {
+		t.Error(err)
+	}
+
+	foundSetActionArg := foundSetAction.ArgumentList.Arguments[0]
+	foundSetActionArg.Value = postValue
+
+	// post action (get)
+
+	devGetAction, _ := dev.GetSwitchPowerGetTargetAction()
+
+	_, err = foundService.GetActionByName(devGetAction.Name)
+	if err != nil {
+		t.Error(err)
 	}
 
 	// stop control point

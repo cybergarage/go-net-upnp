@@ -61,7 +61,7 @@ func checkTestServiceDescription(t *testing.T, srv *Service) {
 func TestServiceLoadDescription(t *testing.T) {
 	// Check loaded description
 
-	srv, err := NewServiceFromDescription(TestServiceContentDirectory1)
+	srv, err := NewServiceFromDescriptionBytes([]byte(TestServiceContentDirectory1))
 	if err != nil {
 		t.Error(err)
 	}
@@ -75,7 +75,7 @@ func TestServiceLoadDescription(t *testing.T) {
 		t.Error(err)
 	}
 
-	outSrv, err := NewServiceFromDescription(outDesc)
+	outSrv, err := NewServiceFromDescriptionBytes([]byte(outDesc))
 	if err != nil {
 		t.Error(err)
 	}
