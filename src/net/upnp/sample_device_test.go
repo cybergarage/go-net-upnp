@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
+
+	"net/upnp/control"
 )
 
 const (
@@ -20,8 +22,16 @@ const (
 	errorTestDeviceInvalidArgumentDir   = "invalid argument direction %s = %d, expected : %d"
 )
 
+const (
+	SetTarget      = "SetTarget"
+	GetTarget      = "GetTarget"
+	NewTargetValue = "newTargetValue"
+	RetTargetValue = "RetTargetValue"
+)
+
 type sampleDevice struct {
 	*Device
+	Target string
 }
 
 func NewSampleDevice() (*sampleDevice, error) {
@@ -41,6 +51,7 @@ func NewSampleDevice() (*sampleDevice, error) {
 	}
 
 	sampleDev := &sampleDevice{Device: dev}
+	sampleDev.ActionListener = sampleDev
 
 	return sampleDev, nil
 }
@@ -54,7 +65,7 @@ func (self *sampleDevice) GetSwitchPowerSetTargetAction() (*Action, error) {
 	if err != nil {
 		return nil, err
 	}
-	return service.GetActionByName("SetTarget")
+	return service.GetActionByName(SetTarget)
 }
 
 func (self *sampleDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
@@ -62,7 +73,26 @@ func (self *sampleDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
 	if err != nil {
 		return nil, err
 	}
-	return service.GetActionByName("GetTarget")
+	return service.GetActionByName(GetTarget)
+}
+
+func (self *sampleDevice) ActionRequestReceived(action *Action) *control.UPnPError {
+	switch action.Name {
+	case SetTarget:
+		arg, err := action.GetArgumentByName(NewTargetValue)
+		if err == nil {
+			self.Target = arg.Value
+		}
+		return nil
+	case GetTarget:
+		arg, err := action.GetArgumentByName(RetTargetValue)
+		if err == nil {
+			arg.Value = self.Target
+		}
+		return nil
+	}
+
+	return control.NewUPnPErrorFromCode(control.ErrorOptionalActionNotImplemented)
 }
 
 func TestSampleDeviceDescription(t *testing.T) {

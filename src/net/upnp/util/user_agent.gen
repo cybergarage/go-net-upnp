@@ -19,11 +19,15 @@ import (
 )
 
 func GetUserAgent() string {
-	return fmt.Sprintf("%s/%s UPnP/1.1 go-net-upnp/%s",
+	return fmt.Sprintf("%s/%s UPnP/%s %s/%s",
 		runtime.GOOS,
 		runtime.GOARCH,
-		$(grep ProductName src/net/upnp/const.go | head -n 1 | awk '{print $3}'),
 		$(grep SupportVersion src/net/upnp/const.go | head -n 1 | awk '{print $3}'),
+		$(grep ProductName src/net/upnp/const.go | head -n 1 | awk '{print $3}'),
 		"$version")
+}
+
+func GetServer() string {
+	return GetUserAgent()
 }
 EOF

@@ -15,6 +15,7 @@ import (
 const (
 	errorInvalidControlPoint        = "ControlPoint is invalid"
 	errorControlPointDeviceNotFound = "ControlPoint can't the device (%s)"
+	errorPostActionFailed           = "post action failed '%s' : expected '%s'"
 )
 
 func TestNewControlPoint(t *testing.T) {
@@ -112,16 +113,31 @@ func TestControlPointSearchDevice(t *testing.T) {
 		t.Error(err)
 	}
 
-	foundSetActionArg := foundSetAction.ArgumentList.Arguments[0]
+	foundSetActionArg := &foundSetAction.ArgumentList.Arguments[0]
 	foundSetActionArg.Value = postValue
+
+	upnpErr := foundSetAction.Post()
+	if upnpErr != nil {
+		t.Error(upnpErr)
+	}
 
 	// post action (get)
 
 	devGetAction, _ := dev.GetSwitchPowerGetTargetAction()
 
-	_, err = foundService.GetActionByName(devGetAction.Name)
+	foundGetAction, err := foundService.GetActionByName(devGetAction.Name)
 	if err != nil {
 		t.Error(err)
+	}
+
+	upnpErr = foundGetAction.Post()
+	if upnpErr != nil {
+		t.Error(upnpErr)
+	}
+
+	foundGetActionArg := foundGetAction.ArgumentList.Arguments[0]
+	if foundGetActionArg.Value != postValue {
+		t.Errorf(errorPostActionFailed, foundGetActionArg.Value, postValue)
 	}
 
 	// stop control point

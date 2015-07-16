@@ -10,8 +10,9 @@ const (
 	SUBSCRIBE   = "SUBSCRIBE"
 	UNSUBSCRIBE = "UNSUBSCRIBE"
 
-	UserAgent   = "User-Agent"
-	ContentType = "Content-Type"
+	UserAgent    = "User-Agent"
+	ContentType  = "Content-Type"
+	ServerHeader = "Server"
 
 	SoapAction      = "SOAPACTION"
 	SoapActionDelim = "#"
