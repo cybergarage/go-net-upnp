@@ -14,6 +14,11 @@ const (
 	errorActionControlInvalidActionName = "invalid action name (%s)"
 )
 
+const (
+	envelopeNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
+	envelopeEncoding  = "http://schemas.xmlsoap.org/soap/encoding/"
+)
+
 // A ActionControl represents an action Control.
 type ActionControl struct {
 	Envelope struct {
