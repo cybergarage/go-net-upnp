@@ -3,10 +3,10 @@
 // license that can be found in the LICENSE file.
 
 /*
-upnpdump dumps SSDP messages in the local network.
+upntctrl browses UPnP devices in the local network, and post the actions.
 
         NAME
-        upnpdump
+        upntctrl
 
         SYNOPSIS
         upnpdump [OPTIONS]
@@ -16,18 +16,24 @@ upnpdump dumps SSDP messages in the local network.
 
 
         OPTIONS
-        -v : *level* Enable verbose output.
+        -v [0 | 1] : Enable verbose output.
 
-        RETURN VALUE
+        EXIT STATUS
           Return EXIT_SUCCESS or EXIT_FAILURE
+
+        EXAMPLES
+          The following is how to enable the verbose output
+            upntctrl -v 1
 */
 
 package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"net/upnp/log"
 )
@@ -77,8 +83,22 @@ func handleInput(ctrlPoint *ControlPoint) {
 }
 
 func main() {
-	/*logger := */ log.NewStdoutLogger(log.LoggerLevelTrace)
-	//log.SetSharedLogger(logger)
+	// Set command line options
+
+	verbose := flag.Int("v", 0, "Enable verbose mode [0|1]")
+	flag.Usage = func() {
+		cmd := strings.Split(os.Args[0], "/")
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", cmd[len(cmd)-1])
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	flag.Parse()
+
+	if 0 < *verbose {
+		logger := log.NewStdoutLogger(log.LoggerLevelTrace)
+		log.SetSharedLogger(logger)
+	}
 
 	ctrlPoint := NewControlPoint()
 	err := ctrlPoint.Start()
