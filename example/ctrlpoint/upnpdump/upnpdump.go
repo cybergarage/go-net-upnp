@@ -16,15 +16,20 @@ upnpdump dumps prints all devices in the local network.
 
 
         OPTIONS
-        -v : *level* Enable verbose output.
+        -v [0 | 1] : Enable verbose output.
 
-        RETURN VALUE
+        EXIT STATUS
           Return EXIT_SUCCESS or EXIT_FAILURE
+
+        EXAMPLES
+          The following is how to enable the verbose output
+            upnpdump -v 1
 */
 
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"time"
@@ -34,8 +39,13 @@ import (
 )
 
 func main() {
-	//logger := log.NewStdoutLogger(log.LoggerLevelTrace)
-	//log.SetSharedLogger(logger)
+	// Set command line options
+
+	verbose := flag.Int("v", 0, "Output log level.")
+	if 0 < *verbose {
+		logger := log.NewStdoutLogger(log.LoggerLevelTrace)
+		log.SetSharedLogger(logger)
+	}
 
 	// Start a control point
 
