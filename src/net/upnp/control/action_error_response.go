@@ -16,6 +16,10 @@ type ErrorResponse struct {
 // NewErrorResponse returns a new error response.
 func NewErrorResponse() *ErrorResponse {
 	res := &ErrorResponse{}
+
+	res.Envelope.Body.Fault.FaultCode = soapFaultCodeDefault
+	res.Envelope.Body.Fault.FaultString = soapFaultStringDefault
+
 	return res
 }
 
