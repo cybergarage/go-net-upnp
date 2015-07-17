@@ -60,6 +60,6 @@ install: build
 	go install ${packages}
 
 clean:
-	rm ${PREFIX}/bin/upnpdump
+	rm ${PREFIX}/bin/*
 	rm -rf _obj
 	go clean -i ${packages}

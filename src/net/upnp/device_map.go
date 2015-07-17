@@ -10,9 +10,9 @@ import ()
 type DeviceMap map[string]map[string]*Device
 
 // DeviceMap returns a new device map.
-func NewDeviceMap() DeviceMap {
+func NewDeviceMap() *DeviceMap {
 	devMap := make(DeviceMap)
-	return devMap
+	return &devMap
 }
 
 // AddDevice adds a specified device.
@@ -21,19 +21,36 @@ func (self *DeviceMap) AddDevice(dev *Device) bool {
 		return false
 	}
 
-	udn := dev.UDN
-	if len(udn) <= 0 {
+	devUdn := dev.UDN
+	if len(devUdn) <= 0 {
 		return false
 	}
 
-	deviceType := dev.DeviceType
-	if len(deviceType) <= 0 {
+	devType := dev.DeviceType
+	if len(devType) <= 0 {
 		return false
 	}
 
-	(*self)[deviceType][udn] = dev
+	devTypeMap, ok := (*self)[devType]
+	if !ok {
+		devTypeMap = make(map[string]*Device)
+		(*self)[devType] = devTypeMap
+	}
+
+	devTypeMap[devUdn] = dev
 
 	return true
+}
+
+// Size() returns all device count.
+func (self *DeviceMap) Size() int {
+	devCnt := 0
+
+	for _, typeDevs := range *self {
+		devCnt += len(typeDevs)
+	}
+
+	return devCnt
 }
 
 // GetAllDevices returns all devices.

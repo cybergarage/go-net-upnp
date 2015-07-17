@@ -27,7 +27,7 @@ type ControlPoint struct {
 	Port     int
 	SearchMX int
 
-	rootDeviceMap       DeviceMap
+	rootDeviceMap       *DeviceMap
 	ssdpMcastServerList *ssdp.MulticastServerList
 	ssdpUcastServerList *ssdp.UnicastServerList
 	Listener            ControlPointListener
@@ -132,7 +132,7 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 	defer self.Unlock()
 
 	if self.rootDeviceMap.HasDevice(dev) {
-		log.Trace(fmt.Sprintf("device (%s) is already added", dev.UDN))
+		log.Trace(fmt.Sprintf("device (%s, %s) is already added", dev.DeviceType, dev.UDN))
 		return false
 	}
 
@@ -144,7 +144,7 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 	ok := self.rootDeviceMap.AddDevice(dev)
 
 	if ok {
-		log.Trace(fmt.Sprintf("device (%s) is added", dev.UDN))
+		log.Trace(fmt.Sprintf("device (%s, %s) is added", dev.DeviceType, dev.UDN))
 	}
 
 	return ok
