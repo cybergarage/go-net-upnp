@@ -165,7 +165,7 @@ func TestControlPointSearchDevice(t *testing.T) {
 	}
 
 	expectErrorCode := control.ErrorOptionalActionNotImplemented
-	if upnpErr.Code == expectErrorCode {
+	if upnpErr.Code != expectErrorCode {
 		t.Errorf(errorPostActionInvalidErrorCode, foundOptAction.Name, upnpErr.Code, expectErrorCode)
 	}
 
