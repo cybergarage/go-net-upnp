@@ -25,6 +25,14 @@ const (
 	ErrorStringArgumentTooLong        = 605
 )
 
+const (
+	soapUPnPError          = "UPnPError"
+	soapUPnPErrorNamespace = "urn:schemas-upnp-org:control-1-0"
+
+	soapUPnPErrorCode = "errorCode"
+	soapUPnPErrorDesc = "errorDescription"
+)
+
 func errorCodeToString(code int) string {
 	errMsgs := map[int]string{
 		ErrorInvalidAction:                "Invalid Action",
@@ -69,4 +77,27 @@ func NewUPnPErrorFromCode(code int) *UPnPError {
 
 func (self UPnPError) Error() string {
 	return fmt.Sprintf(upnpErrorFormat, self.Code, self.Description)
+}
+
+func (self *UPnPError) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	start.Name.Local = soapUPnPError
+	start.Attr = []xml.Attr{
+		{Name: xml.Name{Local: XmlNs}, Value: soapUPnPErrorNamespace},
+	}
+
+	e.EncodeToken(start)
+
+	// errorCode
+
+	errCode := xml.StartElement{Name: xml.Name{Local: soapUPnPErrorCode}}
+	e.EncodeElement(self.Code, errCode)
+
+	// errorDescripton
+
+	errDesc := xml.StartElement{Name: xml.Name{Local: soapUPnPErrorDesc}}
+	e.EncodeElement(self.Description, errDesc)
+
+	e.EncodeToken(start.End())
+
+	return nil
 }

@@ -15,8 +15,8 @@ type ErrorEnvelope struct {
 		XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
 		Fault   struct {
 			XMLName     xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault"`
-			Faultcode   string   `xml:"faultcode"`
-			Faultstring string   `xml:"faultstring"`
+			FaultCode   string   `xml:"faultcode"`
+			FaultString string   `xml:"faultstring"`
 			Detail      struct {
 				XMLName   xml.Name  `xml:"detail"`
 				UPnPError UPnPError `xml:"urn:schemas-upnp-org:control-1-0 UPnPError"`
@@ -25,7 +25,20 @@ type ErrorEnvelope struct {
 	}
 }
 
-/*
+const (
+	soapFault       = "Fault"
+	soapFaultSpace  = "s"
+	soapFaultPrefix = soapFaultSpace + XmlNsDelim
+
+	soapFaultCode        = "faultcode"
+	soapFaultCodeDefault = "s:Client"
+
+	soapFaultString        = "faultstring"
+	soapFaultStringDefault = "UPnPError"
+
+	soapDetail = "detail"
+)
+
 func (self *ErrorEnvelope) MarshalXML(e *xml.Encoder, env xml.StartElement) error {
 	// <Envelope>
 
@@ -41,10 +54,34 @@ func (self *ErrorEnvelope) MarshalXML(e *xml.Encoder, env xml.StartElement) erro
 	body := xml.StartElement{Name: xml.Name{Local: (soapSoapPrefix + soapBody)}}
 	e.EncodeToken(body)
 
-	// <Action>
+	// <Fault>
 
-	action := &self.Body.Action
-	action.MarshalXML(e, xml.StartElement{})
+	fault := xml.StartElement{Name: xml.Name{Local: (soapFaultPrefix + soapFault)}}
+	e.EncodeToken(fault)
+
+	faultCode := xml.StartElement{Name: xml.Name{Local: soapFaultCode}}
+	e.EncodeElement(self.Body.Fault.FaultCode, faultCode)
+
+	faultStr := xml.StartElement{Name: xml.Name{Local: soapFaultString}}
+	e.EncodeElement(self.Body.Fault.FaultString, faultStr)
+
+	// <detail>
+
+	detail := xml.StartElement{Name: xml.Name{Local: soapDetail}}
+	e.EncodeToken(detail)
+
+	// <UPnPError>
+
+	upnpErr := &self.Body.Fault.Detail.UPnPError
+	upnpErr.MarshalXML(e, xml.StartElement{})
+
+	// </detail>
+
+	e.EncodeToken(detail.End())
+
+	// </Fault>
+
+	e.EncodeToken(fault.End())
 
 	// </Body>
 
@@ -56,4 +93,3 @@ func (self *ErrorEnvelope) MarshalXML(e *xml.Encoder, env xml.StartElement) erro
 
 	return nil
 }
-*/
