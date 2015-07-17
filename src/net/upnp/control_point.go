@@ -7,6 +7,7 @@ package upnp
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"sync"
 
 	"net/upnp/log"
@@ -103,6 +104,24 @@ func (self *ControlPoint) GetRootDevices() []*Device {
 	for _, dev := range self.rootDeviceUdnMap {
 		devs[n] = dev
 		n++
+	}
+
+	self.Unlock()
+
+	return devs
+}
+
+// GetRootDevicesByType returns found root devices of the specified device type.
+func (self *ControlPoint) GetRootDevicesByType(deviceType string) []*Device {
+	devs := make([]*Device, 0)
+
+	self.Lock()
+
+	for _, dev := range self.rootDeviceUdnMap {
+		if strings.Index(dev.DeviceType, deviceType) < 0 {
+			continue
+		}
+		devs = append(devs, dev)
 	}
 
 	self.Unlock()
