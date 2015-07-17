@@ -8,6 +8,6 @@ import (
 	"testing"
 )
 
-func TesNewDeviceUdnMap(t *testing.T) {
-	NewDeviceUdnMap()
+func TesNewDeviceMap(t *testing.T) {
+	NewDeviceMap()
 }
