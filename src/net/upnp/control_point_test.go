@@ -60,6 +60,7 @@ func TestControlPointSearchDevice(t *testing.T) {
 	}
 	defer dev.Stop()
 
+	devType := dev.DeviceType
 	devUDN := dev.UDN
 
 	// start control point
@@ -88,7 +89,7 @@ func TestControlPointSearchDevice(t *testing.T) {
 		waitMillSec := time.Duration(cp.SearchMX * 1000 / loopCnt)
 		time.Sleep(waitMillSec * time.Millisecond)
 		var ok bool
-		foundDev, ok = cp.FindDeviceByUDN(devUDN)
+		foundDev, ok = cp.FindDeviceByTypeAndUDN(devType, devUDN)
 		if ok {
 			break
 		}

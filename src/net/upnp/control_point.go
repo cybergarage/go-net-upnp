@@ -7,7 +7,6 @@ package upnp
 import (
 	"fmt"
 	"math/rand"
-	"strings"
 	"sync"
 
 	"net/upnp/log"
@@ -28,7 +27,7 @@ type ControlPoint struct {
 	Port     int
 	SearchMX int
 
-	rootDeviceUdnMap    DeviceUdnMap
+	rootDeviceMap       DeviceMap
 	ssdpMcastServerList *ssdp.MulticastServerList
 	ssdpUcastServerList *ssdp.UnicastServerList
 	Listener            ControlPointListener
@@ -39,7 +38,7 @@ func NewControlPoint() *ControlPoint {
 	cp := &ControlPoint{}
 
 	cp.Mutex = &sync.Mutex{}
-	cp.rootDeviceUdnMap = NewDeviceUdnMap()
+	cp.rootDeviceMap = NewDeviceMap()
 	cp.ssdpMcastServerList = ssdp.NewMulticastServerList()
 	cp.ssdpUcastServerList = ssdp.NewUnicastServerList()
 
@@ -98,13 +97,7 @@ func (self *ControlPoint) SearchRootDevice() error {
 func (self *ControlPoint) GetRootDevices() []*Device {
 	self.Lock()
 
-	devCnt := len(self.rootDeviceUdnMap)
-	devs := make([]*Device, devCnt)
-	n := 0
-	for _, dev := range self.rootDeviceUdnMap {
-		devs[n] = dev
-		n++
-	}
+	devs := self.rootDeviceMap.GetAllDevices()
 
 	self.Unlock()
 
@@ -113,27 +106,20 @@ func (self *ControlPoint) GetRootDevices() []*Device {
 
 // GetRootDevicesByType returns found root devices of the specified device type.
 func (self *ControlPoint) GetRootDevicesByType(deviceType string) []*Device {
-	devs := make([]*Device, 0)
-
 	self.Lock()
 
-	for _, dev := range self.rootDeviceUdnMap {
-		if strings.Index(dev.DeviceType, deviceType) < 0 {
-			continue
-		}
-		devs = append(devs, dev)
-	}
+	devs := self.rootDeviceMap.GetDevicesByType(deviceType)
 
 	self.Unlock()
 
 	return devs
 }
 
-// FindDeviceByUSN returns a devices of the specified UDN
-func (self *ControlPoint) FindDeviceByUDN(udn string) (*Device, bool) {
+// FindDeviceByTypeAndUDN returns a devices of the specified deviceType and UDN
+func (self *ControlPoint) FindDeviceByTypeAndUDN(deviceType string, udn string) (*Device, bool) {
 	self.Lock()
 
-	dev, ok := self.rootDeviceUdnMap.FindDeviceByUDN(udn)
+	dev, ok := self.rootDeviceMap.FindDeviceByTypeAndUDN(deviceType, udn)
 
 	self.Unlock()
 
@@ -145,7 +131,7 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 	self.Lock()
 	defer self.Unlock()
 
-	if self.rootDeviceUdnMap.HasDevice(dev) {
+	if self.rootDeviceMap.HasDevice(dev) {
 		log.Trace(fmt.Sprintf("device (%s) is already added", dev.UDN))
 		return false
 	}
@@ -155,7 +141,7 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 		return false
 	}
 
-	ok := self.rootDeviceUdnMap.AddDevice(dev)
+	ok := self.rootDeviceMap.AddDevice(dev)
 
 	if ok {
 		log.Trace(fmt.Sprintf("device (%s) is added", dev.UDN))
