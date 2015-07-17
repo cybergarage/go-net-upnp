@@ -10,12 +10,17 @@ import (
 	"math/rand"
 	"testing"
 	"time"
+
+	"net/upnp/control"
 )
 
 const (
-	errorInvalidControlPoint        = "ControlPoint is invalid"
-	errorControlPointDeviceNotFound = "ControlPoint can't the device (%s)"
-	errorPostActionFailed           = "post action failed '%s' : expected '%s'"
+	errorInvalidControlPoint        = "control point is invalid"
+	errorControlPointDeviceNotFound = "control point can't the device (%s)"
+	errorPostActionResultFailed     = "post action (%s) failed '%s' : expected '%s'"
+	errorPostActionSuccess          = "post action (%s) successed : expected failed"
+	errorPostActionInvalidErrorType = "error object is invalid : %#v"
+	errorPostActionInvalidErrorCode = "post action (%s) error code = %d : expected %d"
 )
 
 func TestNewControlPoint(t *testing.T) {
@@ -116,9 +121,9 @@ func TestControlPointSearchDevice(t *testing.T) {
 	foundSetActionArg := &foundSetAction.ArgumentList.Arguments[0]
 	foundSetActionArg.Value = postValue
 
-	upnpErr := foundSetAction.Post()
-	if upnpErr != nil {
-		t.Error(upnpErr)
+	err = foundSetAction.Post()
+	if err != nil {
+		t.Error(err)
 	}
 
 	// post action (get)
@@ -130,14 +135,38 @@ func TestControlPointSearchDevice(t *testing.T) {
 		t.Error(err)
 	}
 
-	upnpErr = foundGetAction.Post()
-	if upnpErr != nil {
-		t.Error(upnpErr)
+	err = foundGetAction.Post()
+	if err != nil {
+		t.Error(err)
 	}
 
 	foundGetActionArg := foundGetAction.ArgumentList.Arguments[0]
 	if foundGetActionArg.Value != postValue {
-		t.Errorf(errorPostActionFailed, foundGetActionArg.Value, postValue)
+		t.Errorf(errorPostActionResultFailed, foundGetActionArg.Name, foundGetActionArg.Value, postValue)
+	}
+
+	// post optionl action which is not implemented yet
+
+	devOptAction, _ := dev.GetOptionalAction()
+
+	foundOptAction, err := foundService.GetActionByName(devOptAction.Name)
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = foundOptAction.Post()
+	if err == nil {
+		t.Errorf(errorPostActionSuccess, foundOptAction.Name)
+	}
+
+	upnpErr, ok := err.(control.UPnPError)
+	if !ok {
+		t.Errorf(errorPostActionInvalidErrorType, err)
+	}
+
+	expectErrorCode := control.ErrorOptionalActionNotImplemented
+	if upnpErr.Code == expectErrorCode {
+		t.Errorf(errorPostActionInvalidErrorCode, foundOptAction.Name, upnpErr.Code, expectErrorCode)
 	}
 
 	// stop control point

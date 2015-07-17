@@ -10,21 +10,7 @@ import (
 
 // A ErrorResponse represents an error response.
 type ErrorResponse struct {
-	Envelope struct {
-		XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
-		Body    struct {
-			XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
-			Fault   struct {
-				XMLName     xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault"`
-				Faultcode   string   `xml:"faultcode"`
-				Faultstring string   `xml:"faultstring"`
-				Detail      struct {
-					XMLName   xml.Name  `xml:"detail"`
-					UPnPError UPnPError `xml:"urn:schemas-upnp-org:control-1-0 UPnPError"`
-				}
-			}
-		}
-	}
+	Envelope ErrorEnvelope `xml:"Envelope"`
 }
 
 // NewErrorResponse returns a new error response.

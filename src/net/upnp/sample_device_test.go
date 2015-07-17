@@ -25,6 +25,7 @@ const (
 const (
 	SetTarget      = "SetTarget"
 	GetTarget      = "GetTarget"
+	GetStatus      = "GetStatus"
 	NewTargetValue = "newTargetValue"
 	RetTargetValue = "RetTargetValue"
 )
@@ -74,6 +75,14 @@ func (self *sampleDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
 		return nil, err
 	}
 	return service.GetActionByName(GetTarget)
+}
+
+func (self *sampleDevice) GetOptionalAction() (*Action, error) {
+	service, err := self.GetSwitchPowerService()
+	if err != nil {
+		return nil, err
+	}
+	return service.GetActionByName(GetStatus)
 }
 
 func (self *sampleDevice) ActionRequestReceived(action *Action) *control.UPnPError {

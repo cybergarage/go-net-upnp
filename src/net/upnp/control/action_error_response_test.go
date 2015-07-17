@@ -42,12 +42,12 @@ func TestNewErrorResponseNoArgument(t *testing.T) {
 	}
 
 	expectCode := 401
-	if upnpErr.ErrorCode != expectCode {
-		t.Errorf(errorErrorResponseInvalidErrCode, upnpErr.ErrorCode, expectCode)
+	if upnpErr.Code != expectCode {
+		t.Errorf(errorErrorResponseInvalidErrCode, upnpErr.Code, expectCode)
 	}
 
 	expectedMsg := "Invalid Action"
-	if upnpErr.ErrorDescription != expectedMsg {
-		t.Errorf(errorErrorResponseInvalidErrMsg, upnpErr.ErrorDescription, expectedMsg)
+	if upnpErr.Description != expectedMsg {
+		t.Errorf(errorErrorResponseInvalidErrMsg, upnpErr.Description, expectedMsg)
 	}
 }

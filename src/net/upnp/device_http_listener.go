@@ -46,19 +46,22 @@ func responseBadRequest(httpRes http.ResponseWriter) error {
 	return nil
 }
 
-func responseXMLContent(httpRes http.ResponseWriter, content string) error {
-	writeStatusCode(httpRes, http.StatusOK)
+func responseXMLContent(httpRes http.ResponseWriter, status int, content string) error {
+	writeStatusCode(httpRes, status)
 	writeServerHeader(httpRes)
 	writeXMLHeader(httpRes)
 	writeContent(httpRes, []byte(content))
-
 	return nil
+}
+
+func responseSuccessXMLContent(httpRes http.ResponseWriter, content string) error {
+	return responseXMLContent(httpRes, http.StatusOK, content)
 }
 
 func responseUPnPError(httpRes http.ResponseWriter, upnpErr *control.UPnPError) error {
 	errRes := control.NewErrorResponseFromUPnPError(upnpErr)
 	errStr, _ := errRes.SOAPContentString()
-	return responseXMLContent(httpRes, errStr)
+	return responseXMLContent(httpRes, http.StatusInternalServerError, errStr)
 }
 
 func (self *Device) isDescriptionUri(path string) bool {
@@ -73,7 +76,7 @@ func (self *Device) responseDeviceDescription(httpRes http.ResponseWriter) error
 	if err != nil {
 		return err
 	}
-	return responseXMLContent(httpRes, devDesc)
+	return responseSuccessXMLContent(httpRes, devDesc)
 }
 
 func (self *Device) responseServiceDescription(httpRes http.ResponseWriter, service *Service) error {
@@ -81,7 +84,7 @@ func (self *Device) responseServiceDescription(httpRes http.ResponseWriter, serv
 	if err != nil {
 		return err
 	}
-	return responseXMLContent(httpRes, srvDesc)
+	return responseSuccessXMLContent(httpRes, srvDesc)
 }
 
 func (self *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
@@ -156,7 +159,7 @@ func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes htt
 
 	actionRes, err := NewActionResponseFromAction(action)
 	errStr, _ := actionRes.SOAPContentString()
-	return responseXMLContent(httpRes, errStr)
+	return responseSuccessXMLContent(httpRes, errStr)
 }
 
 func (self *Device) httpSoapRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
