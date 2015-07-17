@@ -6,8 +6,16 @@ package upnp
 
 import (
 	"testing"
+	"math/rand"
 )
 
 func TesNewDeviceMap(t *testing.T) {
 	NewDeviceMap()
+}
+
+func TesDeviceMapCount(t *testing.T) {
+	devMap := NewDeviceMap()
+
+	const typeCnt = (rand.Int() % 10) + 10
+	const udnCnt = (rand.Int() % 10) + 10
 }
