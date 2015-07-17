@@ -233,6 +233,7 @@ func TestSampleDeviceDescription(t *testing.T) {
 const binaryLightDeviceDescription = xml.Header +
 	"<root>" +
 	"  <device>" +
+	"    <deviceType>urn:schemas-upnp-org:device:BinaryLight:1</deviceType>" +
 	"    <serviceList>" +
 	"      <service>" +
 	"        <serviceType>urn:schemas-upnp-org:service:SwitchPower:1</serviceType>" +

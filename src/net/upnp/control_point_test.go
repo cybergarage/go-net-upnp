@@ -16,7 +16,7 @@ import (
 
 const (
 	errorInvalidControlPoint        = "control point is invalid"
-	errorControlPointDeviceNotFound = "control point can't the device (%s)"
+	errorControlPointDeviceNotFound = "control point can't find the device (%s, %s)"
 	errorPostActionResultFailed     = "post action (%s) failed '%s' : expected '%s'"
 	errorPostActionSuccess          = "post action (%s) successed : expected failed"
 	errorPostActionInvalidErrorType = "error object is invalid : %#v"
@@ -96,7 +96,8 @@ func TestControlPointSearchDevice(t *testing.T) {
 	}
 
 	if foundDev == nil {
-		t.Errorf(errorControlPointDeviceNotFound, devUDN)
+		t.Errorf(errorControlPointDeviceNotFound, devType, devUDN)
+		return
 	}
 
 	// check service
