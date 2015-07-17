@@ -47,9 +47,9 @@ func errorCodeToString(code int) string {
 }
 
 type UPnPError struct {
-	XMLName          xml.Name `xml:"urn:schemas-upnp-org:control-1-0 UPnPError"`
-	ErrorCode        int      `xml:"errorCode"`
-	ErrorDescription string   `xml:"errorDescription"`
+	XMLName     xml.Name `xml:"urn:schemas-upnp-org:control-1-0 UPnPError"`
+	Code        int      `xml:"errorCode"`
+	Description string   `xml:"errorDescription"`
 }
 
 // NewUPnPError returns a new null UPnPError.
@@ -61,12 +61,12 @@ func NewUPnPError() *UPnPError {
 // NewUPnPErrorFromCode returns a new UPnPError from the specified code.
 func NewUPnPErrorFromCode(code int) *UPnPError {
 	err := &UPnPError{
-		ErrorCode:        code,
-		ErrorDescription: errorCodeToString(code),
+		Code:        code,
+		Description: errorCodeToString(code),
 	}
 	return err
 }
 
 func (self UPnPError) Error() string {
-	return fmt.Sprintf(upnpErrorFormat, self.ErrorCode, self.ErrorDescription)
+	return fmt.Sprintf(upnpErrorFormat, self.Code, self.Description)
 }
