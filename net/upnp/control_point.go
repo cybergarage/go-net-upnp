@@ -168,11 +168,9 @@ func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	if ssdpReq.IsRootDevice() {
 		newDev, err := NewDeviceFromSSDPRequest(ssdpReq)
 		if err == nil {
-			_, err := self.addDevice(newDev)
-			if err != nil {
-				log.Warn(err)
-			}
-		} else {
+			_, err = self.addDevice(newDev)
+		}
+		if err != nil {
 			log.Warn(err)
 		}
 	}
@@ -197,8 +195,9 @@ func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
 
 	newDev, err := NewDeviceFromSSDPResponse(ssdpRes)
 	if err == nil {
-		self.addDevice(newDev)
-	} else {
+		_, err = self.addDevice(newDev)
+	}
+	if err != nil {
 		log.Warn(err)
 	}
 
