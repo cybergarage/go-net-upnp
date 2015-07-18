@@ -11,10 +11,10 @@ import (
 	"math/rand"
 	"net/url"
 
-	"net/upnp/control"
-	"net/upnp/http"
-	"net/upnp/ssdp"
-	"net/upnp/util"
+	"./control"
+	"./http"
+	"./ssdp"
+	"./util"
 )
 
 // A DeviceHTTPListener represents a listener for HTTP requests.

@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"net/upnp/log"
+	"./log"
 )
 
 func TestMain(m *testing.M) {

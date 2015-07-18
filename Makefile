@@ -11,30 +11,30 @@
 PREFIX?=$(shell pwd)
 GOPATH=$(shell pwd)
 
-VERSION_GO="./src/net/upnp/version.go"
-USRAGNT_GO="./src/net/upnp/util/user_agent.go"
+VERSION_GO="./net/upnp/version.go"
+USRAGNT_GO="./net/upnp/util/user_agent.go"
 
 UPNPDUMP=${PREFIX}/bin/upnpdump
 UPNPGWDUMP=${PREFIX}/bin/upnpgwdump
 LIGHTDEV=${PREFIX}/bin/lightdev
 UPNPCTRL=${PREFIX}/bin/upnpctrl
 
-packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util net/upnp/control
+packages = ./net/upnp ./net/upnp/log ./net/upnp/ssdp ./net/upnp/util ./net/upnp/control
 	
-# .PHONY: ./src/net/upnp/version.go ./src/net/upnp/util/user_agent.go
+# .PHONY: .//net/upnp/version.go .//net/upnp/util/user_agent.go
 
 all: build
 
-${VERSION_GO}: ./src/net/upnp/version.gen
+${VERSION_GO}: ./net/upnp/version.gen
 	$< > $@
 
-${USRAGNT_GO}: ./src/net/upnp/util/user_agent.gen ${VERSION_GO}
+${USRAGNT_GO}: ./net/upnp/util/user_agent.gen ${VERSION_GO}
 	$< > $@
 
 version: ${VERSION_GO} ${USRAGNT_GO}
 
 format:
-	gofmt -w src example
+	gofmt -w net example
 
 package: format $(shell find . -type f -name '*.go')
 	go build -v ${packages}

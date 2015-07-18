@@ -5,7 +5,7 @@
 package upnp
 
 import (
-	"net/upnp/ssdp"
+	"./ssdp"
 )
 
 func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {

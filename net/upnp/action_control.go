@@ -5,7 +5,7 @@
 package upnp
 
 import (
-	"net/upnp/control"
+	"./control"
 )
 
 // NewActionRequestFromAction returns a new Request.

@@ -6,7 +6,8 @@ package ssdp
 
 import (
 	"net"
-	"net/upnp/log"
+
+	"../log"
 )
 
 // A MulticastListener represents a listener for MulticastServer.

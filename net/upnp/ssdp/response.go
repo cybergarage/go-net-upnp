@@ -7,7 +7,7 @@ package ssdp
 import (
 	"time"
 
-	"net/upnp/http"
+	"../http"
 )
 
 type Response struct {

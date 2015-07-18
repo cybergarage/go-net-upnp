@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	"net/upnp/control"
+	"./control"
 )
 
 const (

@@ -7,7 +7,7 @@ package ssdp
 import (
 	"net"
 
-	"net/upnp/log"
+	"../log"
 )
 
 // A UnicastListener represents a listener for UnicastServer.

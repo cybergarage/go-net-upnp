@@ -5,8 +5,9 @@
 package ssdp
 
 import (
-	"net/upnp/http"
 	"testing"
+
+	"../http"
 )
 
 func TestNewResponse(t *testing.T) {

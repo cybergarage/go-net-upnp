@@ -5,8 +5,8 @@
 package upnp
 
 import (
-	"net/upnp/control"
-	"net/upnp/ssdp"
+	"./control"
+	"./ssdp"
 )
 
 const (
