@@ -9,7 +9,9 @@ import (
 )
 
 const (
-	InternetGatewayDeviceType           = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
+	InternetGatewayDeviceType = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
+	WANConnectionDevice       = "urn:schemas-upnp-org:device:WANConnectionDevice:1"
+
 	WANIPConnectionServiceType          = "urn:schemas-upnp-org:service:WANIPConnection:1"
 	WANCommonInterfaceConfigServiceType = "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1"
 
@@ -38,10 +40,16 @@ func NewGatewayDevice(dev *upnp.Device) *GatewayDevice {
 }
 
 func (self *GatewayDevice) GetWANIPConnectionServiceAction(name string) (*upnp.Action, error) {
-	service, err := self.GetServiceByType(WANIPConnectionServiceType)
+	wanConDev, err := self.GetEmbeddedDeviceByType(WANConnectionDevice)
 	if err != nil {
 		return nil, err
 	}
+
+	service, err := wanConDev.GetServiceByType(WANIPConnectionServiceType)
+	if err != nil {
+		return nil, err
+	}
+
 	return service.GetActionByName(name)
 }
 
