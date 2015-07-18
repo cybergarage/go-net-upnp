@@ -35,8 +35,8 @@ import (
 	"strings"
 	"time"
 
-	"net/upnp"
-	"net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 func printGatewayDevice(n int, dev *GatewayDevice) {
