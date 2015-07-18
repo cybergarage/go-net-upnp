@@ -9,5 +9,4 @@ import (
 )
 
 func TestNewHTTPRequest(t *testing.T) {
-	NewRequest()
 }

@@ -10,7 +10,7 @@ import (
 	gohttp "net/http"
 	"time"
 
-	"../util"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 const (
