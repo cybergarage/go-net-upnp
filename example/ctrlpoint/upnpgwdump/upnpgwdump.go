@@ -45,9 +45,10 @@ func printGatewayDevice(n int, dev *GatewayDevice) {
 	// ExternalIPAddress
 
 	addr, err := dev.GetExternalIPAddress()
-	if err == nil {
-		fmt.Printf("  External IP address = %s\n", addr)
+	if err != nil {
+		addr = err.Error()
 	}
+	fmt.Printf("  External IP address = %s\n", addr)
 }
 
 func main() {
