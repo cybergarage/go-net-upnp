@@ -27,7 +27,7 @@ import (
 	"bufio"
 	"os"
 
-	"net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 func handleInput() {

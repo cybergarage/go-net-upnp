@@ -2,12 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package http
+package upnp
 
-import (
-	"testing"
-)
-
-func TestNewHTTPRequest(t *testing.T) {
-	NewRequest()
+// A Error represents a interface for UPnP error.
+type Error interface {
+	error
+	GetCode() int
+	GetDescription() string
 }

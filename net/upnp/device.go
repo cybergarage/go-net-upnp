@@ -11,10 +11,10 @@ import (
 	"math/rand"
 	"net/url"
 
-	"net/upnp/control"
-	"net/upnp/http"
-	"net/upnp/ssdp"
-	"net/upnp/util"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A DeviceHTTPListener represents a listener for HTTP requests.

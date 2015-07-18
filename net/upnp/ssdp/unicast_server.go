@@ -7,7 +7,7 @@ package ssdp
 import (
 	"net"
 
-	"net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 // A UnicastListener represents a listener for UnicastServer.

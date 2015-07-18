@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"net/upnp/control"
-	"net/upnp/http"
-	"net/upnp/log"
-	"net/upnp/util"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 func writeStatusCode(httpRes http.ResponseWriter, code int) error {

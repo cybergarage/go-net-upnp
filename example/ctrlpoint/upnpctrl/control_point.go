@@ -7,10 +7,10 @@ package main
 import (
 	"fmt"
 
-	"net/upnp"
-	"net/upnp/log"
-	"net/upnp/ssdp"
-	"net/upnp/util"
+	"github.com/cybergarage/go-net-upnp/net/upnp"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A ControlPoint represents a ControlPoint.

@@ -9,9 +9,10 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"net/upnp/http"
 	"strconv"
 	"strings"
+
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
 )
 
 const (

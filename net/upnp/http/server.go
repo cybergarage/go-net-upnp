@@ -8,8 +8,9 @@ import (
 	"fmt"
 	"net"
 	gohttp "net/http"
-	"net/upnp/util"
 	"time"
+
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 const (
