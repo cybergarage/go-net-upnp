@@ -9,5 +9,4 @@ import (
 )
 
 func TestNewHTTPResponse(t *testing.T) {
-	NewResponse()
 }

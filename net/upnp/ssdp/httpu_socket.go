@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"net"
 
-	"../util"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A HTTPUSocket represents a socket of HTTPU.
