@@ -5,7 +5,7 @@
 package ssdp
 
 import (
-	"../util"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A UnicastServerList represents a packet of SSDP.

@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"./control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
 )
 
 const (

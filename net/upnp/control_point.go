@@ -9,9 +9,9 @@ import (
 	"math/rand"
 	"sync"
 
-	"./log"
-	"./ssdp"
-	"./util"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A ControlPointListener represents a listener for ControlPoint.
