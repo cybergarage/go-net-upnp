@@ -127,7 +127,7 @@ func outputString(outputLevel int, msg string) int {
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute(), t.Second())
 
-	headerString := fmt.Sprintf("[%s]", GetLevelString(logLevel))
+	headerString := fmt.Sprintf("[%s]", GetLevelString(outputLevel))
 	logMsg := fmt.Sprintf(Format, logDate, headerString, msg)
 	logMsgLen := len(logMsg)
 
