@@ -96,7 +96,7 @@ func main() {
 	// Print basic descriptions of found devices
 
 	if len(ctrlPoint.GetRootDevices()) == 0 {
-		fmt.Printf("UPnP device is not found !!")
+		fmt.Printf("UPnP device is not found !!\n")
 		os.Exit(0)
 	}
 

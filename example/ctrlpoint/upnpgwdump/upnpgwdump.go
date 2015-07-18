@@ -39,22 +39,15 @@ import (
 	"net/upnp/log"
 )
 
-const (
-	InternetGatewayDevice = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
-)
-
 func printGatewayDevice(n int, dev *GatewayDevice) {
-	devURL := dev.LocationURL
+	fmt.Printf("[%d] %s (%s)\n", n, dev.FriendlyName, dev.LocationURL)
 
-	presentationURL := dev.PresentationURL
-	if 0 < len(presentationURL) {
-		url, err := dev.GetAbsoluteURL(presentationURL)
-		if err == nil {
-			devURL = url.String()
-		}
+	// ExternalIPAddress
+
+	addr, err := dev.GetExternalIPAddress()
+	if err == nil {
+		fmt.Printf("  External IP address = %s\n", addr)
 	}
-
-	fmt.Printf("[%d] '%s', '%s', %s\n", n, dev.FriendlyName, dev.DeviceType, devURL)
 }
 
 func main() {
@@ -99,9 +92,9 @@ func main() {
 
 	// Print basic descriptions of found devices
 
-	gwDevs := ctrlPoint.GetRootDevicesByType(InternetGatewayDevice)
+	gwDevs := ctrlPoint.GetRootDevicesByType(InternetGatewayDeviceType)
 	if len(gwDevs) == 0 {
-		fmt.Printf("Internet gateway device is not found !!")
+		fmt.Printf("Internet gateway device is not found !!\n")
 		os.Exit(0)
 	}
 
