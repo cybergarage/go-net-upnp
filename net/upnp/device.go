@@ -194,25 +194,21 @@ func (self *Device) DescriptionString() (string, error) {
 
 // LoadServiceDescriptions loads service descriptions.
 func (self *Device) LoadServiceDescriptions() error {
+	var lastErr error
+
 	for n := 0; n < len(self.ServiceList.Services); n++ {
 		service := &self.ServiceList.Services[n]
-		err := service.LoadDescriptionFromSCPDURL()
-		if err != nil {
-			return err
-		}
+		lastErr = service.LoadDescriptionFromSCPDURL()
 	}
 
 	// Embedded devices
 
 	for n := 0; n < len(self.DeviceList.Devices); n++ {
 		dev := &self.DeviceList.Devices[n]
-		err := dev.LoadServiceDescriptions()
-		if err != nil {
-			return err
-		}
+		lastErr = dev.LoadServiceDescriptions()
 	}
 
-	return nil
+	return lastErr
 }
 
 // SetUDN sets a the specified UUID with a prefix.
