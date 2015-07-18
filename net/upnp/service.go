@@ -88,6 +88,11 @@ func (self *Service) LoadDescriptionBytes(descBytes []byte) error {
 
 // LoadDescriptinString loads a device description string.
 func (self *Service) LoadDescriptionFromSCPDURL() error {
+	// Some services has no SCPDURL such as Panasonic AiSEG001
+	if len(self.SCPDURL) <= 0 {
+		return nil
+	}
+
 	scpdURL, err := self.GetAbsoluteSCPDURL()
 	if err != nil {
 		return err
