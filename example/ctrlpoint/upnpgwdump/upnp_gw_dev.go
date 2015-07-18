@@ -5,7 +5,7 @@
 package main
 
 import (
-	"net/upnp"
+	"github.com/cybergarage/go-net-upnp/net/upnp"
 )
 
 const (
