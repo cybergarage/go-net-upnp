@@ -45,6 +45,7 @@ type Device struct {
 	SpecVersion SpecVersion `xml:"-"`
 	URLBase     string      `xml:"-"`
 
+	ParentDevice   *Device              `xml:"-"`
 	Port           int                  `xml:"-"`
 	HTTPListener   DeviceHTTPListener   `xml:"-"`
 	SSDPListener   DeviceSSDPListener   `xml:"-"`
@@ -58,6 +59,7 @@ type Device struct {
 
 const (
 	errorDeviceServiceNotFound          = "service (%s) is not found"
+	errorDeviceEmbeddedDeviceNotFound   = "embedded device (%s) is not found"
 	errorDeviceBadLocationURL           = "location url is invalid (%s)"
 	errorDeviceBadUrlBaseAndLocationURL = "URLBase and location url are invalid ('%s', '%s'). Couldn't get an absolute URL ('%s')"
 	errorDeviceBadDescriptionURL        = "DescriptionURL (%s) is bad response (%d)"
@@ -144,7 +146,7 @@ func (self *Device) SetLocationURL(url string) error {
 	return nil
 }
 
-// CreateLocationURL return a location URL for SSDP packet.
+// CreateLocationURL returns a location URL for SSDP packet.
 func (self *Device) createLocationURLForAddress(addr string) (*url.URL, error) {
 	locationBase := fmt.Sprintf("%s://%s:%d", DeviceProtocol, addr, self.Port)
 	url, err := util.GetAbsoluteURLFromBaseAndPath(locationBase, self.DescriptionURL)
@@ -152,6 +154,15 @@ func (self *Device) createLocationURLForAddress(addr string) (*url.URL, error) {
 		return nil, err
 	}
 	return url, nil
+}
+
+// GetRootDevice returns the root device.
+func (self *Device) GetRootDevice() *Device {
+	rootDev := self
+	for rootDev.ParentDevice != nil {
+		rootDev = rootDev.ParentDevice
+	}
+	return rootDev
 }
 
 // LoadDescriptionBytes loads a device description string.
@@ -191,6 +202,16 @@ func (self *Device) LoadServiceDescriptions() error {
 		}
 	}
 
+	// Embedded devices
+
+	for n := 0; n < len(self.DeviceList.Devices); n++ {
+		dev := &self.DeviceList.Devices[n]
+		err := dev.LoadServiceDescriptions()
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -198,6 +219,28 @@ func (self *Device) LoadServiceDescriptions() error {
 func (self *Device) SetUDN(uuid string) error {
 	self.UDN = fmt.Sprintf("%s%s", DeviceUUIDPrefix, uuid)
 	return nil
+}
+
+// GetEmbeddedDevices returns all embedded devices
+func (self *Device) GetEmbeddedDevices() []*Device {
+	devCnt := len(self.DeviceList.Devices)
+	devs := make([]*Device, devCnt)
+	for n := 0; n < devCnt; n++ {
+		devs[n] = &self.DeviceList.Devices[n]
+	}
+	return devs
+}
+
+// GetEmbeddedDeviceByType returns a embedded device by the specified deviceType
+func (self *Device) GetEmbeddedDeviceByType(deviceType string) (*Device, error) {
+	devCnt := len(self.DeviceList.Devices)
+	for n := 0; n < devCnt; n++ {
+		dev := &self.DeviceList.Devices[n]
+		if dev.DeviceType == deviceType {
+			return dev, nil
+		}
+	}
+	return nil, fmt.Errorf(errorDeviceEmbeddedDeviceNotFound, deviceType)
 }
 
 // GetServices returns all services
@@ -265,9 +308,18 @@ func (self *Device) reviseParentObject() error {
 		service.reviseParentObject()
 	}
 
+	// Embedded devices
+
+	for n := 0; n < len(self.DeviceList.Devices); n++ {
+		dev := &self.DeviceList.Devices[n]
+		dev.ParentDevice = self
+		dev.reviseParentObject()
+	}
+
 	return nil
 }
 
+// TODO : Support embedded devices
 func (self *Device) reviseDescription() error {
 	// check descriptionURL
 	if len(self.DescriptionURL) <= 0 {
@@ -305,17 +357,19 @@ func (self *Device) selectAvailableInterfaceForAddr(fromAddr string) (string, er
 
 // GetAbsoluteURL return a absoulte URL of the specified path using URLBase or LocationURL.
 func (self *Device) GetAbsoluteURL(path string) (*url.URL, error) {
-	if 0 < len(self.URLBase) {
-		url, err := util.GetAbsoluteURLFromBaseAndPath(self.URLBase, path)
+	rootDev := self.GetRootDevice()
+
+	if 0 < len(rootDev.URLBase) {
+		url, err := util.GetAbsoluteURLFromBaseAndPath(rootDev.URLBase, path)
 		if err == nil {
 			return url, err
 		}
 	}
 
-	if 0 < len(self.LocationURL) {
-		locationUrl, err := url.Parse(self.LocationURL)
+	if 0 < len(rootDev.LocationURL) {
+		locationUrl, err := url.Parse(rootDev.LocationURL)
 		if err != nil {
-			return nil, fmt.Errorf(errorDeviceBadLocationURL, self.LocationURL)
+			return nil, fmt.Errorf(errorDeviceBadLocationURL, rootDev.LocationURL)
 		}
 		baseLocation := locationUrl.Scheme + "://" + locationUrl.Host
 		url, err := util.GetAbsoluteURLFromBaseAndPath(baseLocation, path)
@@ -326,7 +380,7 @@ func (self *Device) GetAbsoluteURL(path string) (*url.URL, error) {
 
 	url, err := util.GetAbsoluteURLFromBaseAndPath("", path)
 	if err != nil {
-		return nil, fmt.Errorf(errorDeviceBadUrlBaseAndLocationURL, self.URLBase, self.LocationURL, path)
+		return nil, fmt.Errorf(errorDeviceBadUrlBaseAndLocationURL, rootDev.URLBase, rootDev.LocationURL, path)
 	}
 
 	return url, nil
