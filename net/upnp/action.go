@@ -233,7 +233,7 @@ func (self *Action) Post() error {
 		if err != nil {
 			return err
 		}
-		return upnpErrRes.Envelope.Body.Fault.Detail.UPnPError
+		return &upnpErrRes.Envelope.Body.Fault.Detail.UPnPError
 	}
 
 	return nil

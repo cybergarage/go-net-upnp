@@ -75,7 +75,15 @@ func NewUPnPErrorFromCode(code int) *UPnPError {
 	return err
 }
 
-func (self UPnPError) Error() string {
+func (self *UPnPError) GetCode() int {
+	return self.Code
+}
+
+func (self *UPnPError) GetDescription() string {
+	return self.Description
+}
+
+func (self *UPnPError) Error() string {
 	return fmt.Sprintf(upnpErrorFormat, self.Code, self.Description)
 }
 
