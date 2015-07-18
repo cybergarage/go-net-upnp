@@ -55,6 +55,14 @@ var sharedLogStrings = map[int]string{
 	LoggerLevelFatal: "FATAL",
 }
 
+func GetLevelString(level int) string {
+	logString, hasString := sharedLogStrings[level]
+	if !hasString {
+		return loggerLevelUnknownString
+	}
+	return logString
+}
+
 func (logger *Logger) GetLevel() int {
 	return logger.Level
 }
@@ -119,7 +127,7 @@ func outputString(outputLevel int, msg string) int {
 		t.Year(), t.Month(), t.Day(),
 		t.Hour(), t.Minute(), t.Second())
 
-	headerString := fmt.Sprintf("[%s]", sharedLogger.GetLevelString())
+	headerString := fmt.Sprintf("[%s]", GetLevelString(logLevel))
 	logMsg := fmt.Sprintf(Format, logDate, headerString, msg)
 	logMsgLen := len(logMsg)
 
