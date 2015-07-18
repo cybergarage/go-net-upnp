@@ -17,7 +17,8 @@ USRAGNT_GO="./net/upnp/util/user_agent.go"
 GITHUB=github.com/cybergarage/go-net-upnp
 
 UPNPDUMP=${PREFIX}/bin/upnpdump
-UPNPGWDUMP=${PREFIX}/bin/upnpgwdump
+UPNPSEARCH=${PREFIX}/bin/upnpsearch
+UPNPGWLIST=${PREFIX}/bin/upnpgwdump
 LIGHTDEV=${PREFIX}/bin/lightdev
 UPNPCTRL=${PREFIX}/bin/upnpctrl
 
@@ -45,8 +46,11 @@ package: format $(shell find . -type f -name '*.go')
 ${UPNPDUMP}: package $(shell find ./example/ctrlpoint/upnpdump -type f -name '*.go')
 	go build -o $@ ./example/ctrlpoint/upnpdump
 
-${UPNPGWDUMP}: package $(shell find ./example/ctrlpoint/upnpgwdump -type f -name '*.go')
-	go build -o $@ ./example/ctrlpoint/upnpgwdump
+${UPNPSEARCH}: package $(shell find ./example/ctrlpoint/upnpsearch -type f -name '*.go')
+	go build -o $@ ./example/ctrlpoint/upnpsearch
+
+${UPNPGWLIST}: package $(shell find ./example/ctrlpoint/upnpgwlist -type f -name '*.go')
+	go build -o $@ ./example/ctrlpoint/upnpgwlist
 
 ${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
 	go build -o $@ ./example/device/light
@@ -54,7 +58,7 @@ ${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
 ${UPNPCTRL}: package $(shell find ./example/ctrlpoint/upnpctrl -type f -name '*.go')
 	go build -o $@ ./example/ctrlpoint/upnpctrl
 
-build: ${UPNPDUMP} ${UPNPGWDUMP} ${LIGHTDEV} ${UPNPCTRL}
+build: ${UPNPDUMP} ${UPNPSEARCH} ${UPNPGWLIST} ${LIGHTDEV} ${UPNPCTRL}
 
 test: package
 	go test -v -cover ${PACKAGES}
