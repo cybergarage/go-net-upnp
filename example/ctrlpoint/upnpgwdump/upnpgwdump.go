@@ -39,6 +39,24 @@ import (
 	"net/upnp/log"
 )
 
+const (
+	InternetGatewayDevice = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
+)
+
+func printGatewayDevice(n int, dev *GatewayDevice) {
+	devURL := dev.LocationURL
+
+	presentationURL := dev.PresentationURL
+	if 0 < len(presentationURL) {
+		url, err := dev.GetAbsoluteURL(presentationURL)
+		if err == nil {
+			devURL = url.String()
+		}
+	}
+
+	fmt.Printf("[%d] '%s', '%s', %s\n", n, dev.FriendlyName, dev.DeviceType, devURL)
+}
+
 func main() {
 	// Set command line options
 
@@ -81,23 +99,15 @@ func main() {
 
 	// Print basic descriptions of found devices
 
-	if len(ctrlPoint.GetRootDevices()) == 0 {
-		fmt.Printf("Device not found !!")
+	gwDevs := ctrlPoint.GetRootDevicesByType(InternetGatewayDevice)
+	if len(gwDevs) == 0 {
+		fmt.Printf("Internet gateway device is not found !!")
 		os.Exit(0)
 	}
 
-	for n, dev := range ctrlPoint.GetRootDevices() {
-		devURL := dev.LocationURL
-
-		presentationURL := dev.PresentationURL
-		if 0 < len(presentationURL) {
-			url, err := dev.GetAbsoluteURL(presentationURL)
-			if err == nil {
-				devURL = url.String()
-			}
-		}
-
-		fmt.Printf("[%d] '%s', '%s', %s\n", n, dev.FriendlyName, dev.DeviceType, devURL)
+	for n, dev := range gwDevs {
+		gwDev := NewGatewayDevice(dev)
+		printGatewayDevice(n, gwDev)
 	}
 
 	os.Exit(0)
