@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"strconv"
 	"strings"
 
 	"net/upnp/control"
@@ -114,6 +115,20 @@ func (self *Action) GetArgumentString(name string) (string, error) {
 		return "", err
 	}
 	return arg.GetString()
+}
+
+// SetArgumentInt sets a value into the specified argument
+func (self *Action) SetArgumentInt(name string, value int) error {
+	return self.SetArgumentString(name, strconv.Itoa(value))
+}
+
+// GetArgumentInt return a value into the specified argument
+func (self *Action) GetArgumentInt(name string) (int, error) {
+	value, err := self.GetArgumentString(name)
+	if err != nil {
+		return 0, err
+	}
+	return strconv.Atoi(value)
 }
 
 // setArgumentsByActionControl sets control arguments into the specified argument
