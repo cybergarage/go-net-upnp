@@ -19,7 +19,7 @@ UPNPGWDUMP=${PREFIX}/bin/upnpgwdump
 LIGHTDEV=${PREFIX}/bin/lightdev
 UPNPCTRL=${PREFIX}/bin/upnpctrl
 
-packages = ./net/upnp ./net/upnp/log ./net/upnp/ssdp ./net/upnp/util ./net/upnp/control
+packages = net/upnp net/upnp/log net/upnp/ssdp net/upnp/util net/upnp/http net/upnp/control
 	
 # .PHONY: .//net/upnp/version.go .//net/upnp/util/user_agent.go
 

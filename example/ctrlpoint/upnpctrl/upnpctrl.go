@@ -35,7 +35,7 @@ import (
 	"os"
 	"strings"
 
-	"net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 const (
