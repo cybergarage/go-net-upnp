@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"strings"
 
-	"net/upnp/http"
+	"./http"
 )
 
 const (

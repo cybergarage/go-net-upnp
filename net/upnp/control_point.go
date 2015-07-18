@@ -9,9 +9,9 @@ import (
 	"math/rand"
 	"sync"
 
-	"net/upnp/log"
-	"net/upnp/ssdp"
-	"net/upnp/util"
+	"./log"
+	"./ssdp"
+	"./util"
 )
 
 // A ControlPointListener represents a listener for ControlPoint.

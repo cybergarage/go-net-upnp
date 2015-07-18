@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"net/upnp/control"
+	"./control"
 )
 
 const (

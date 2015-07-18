@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"strings"
 
-	"net/upnp/control"
-	"net/upnp/http"
-	"net/upnp/log"
+	"./control"
+	"./http"
+	"./log"
 )
 
 const (

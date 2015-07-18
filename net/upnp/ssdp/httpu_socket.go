@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"net"
 
-	"net/upnp/util"
+	"../util"
 )
 
 // A HTTPUSocket represents a socket of HTTPU.

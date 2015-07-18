@@ -5,7 +5,7 @@
 package ssdp
 
 import (
-	"net/upnp/util"
+	"../util"
 )
 
 // A MulticastServerList represents a packet of SSDP.

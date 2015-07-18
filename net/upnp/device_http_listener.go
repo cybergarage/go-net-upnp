@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"net/upnp/control"
-	"net/upnp/http"
-	"net/upnp/log"
-	"net/upnp/util"
+	"./control"
+	"./http"
+	"./log"
+	"./util"
 )
 
 func writeStatusCode(httpRes http.ResponseWriter, code int) error {

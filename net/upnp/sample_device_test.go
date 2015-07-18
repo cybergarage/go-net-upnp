@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"net/upnp/control"
+	"./control"
 )
 
 const (

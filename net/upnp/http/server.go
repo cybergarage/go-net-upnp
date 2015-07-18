@@ -8,8 +8,9 @@ import (
 	"fmt"
 	"net"
 	gohttp "net/http"
-	"net/upnp/util"
 	"time"
+
+	"../util"
 )
 
 const (

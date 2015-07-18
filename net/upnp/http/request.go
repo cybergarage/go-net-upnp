@@ -11,7 +11,7 @@ import (
 
 	gohttp "net/http"
 
-	"net/upnp/util"
+	"../util"
 )
 
 // A Request represents a Request.
