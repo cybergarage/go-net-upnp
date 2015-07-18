@@ -52,8 +52,8 @@ ${UPNPSEARCH}: package $(shell find ./example/ctrlpoint/upnpsearch -type f -name
 ${UPNPGWLIST}: package $(shell find ./example/ctrlpoint/upnpgwlist -type f -name '*.go')
 	go build -o $@ ./example/ctrlpoint/upnpgwlist
 
-${LIGHTDEV}: package $(shell find ./example/device/light -type f -name '*.go')
-	go build -o $@ ./example/device/light
+${LIGHTDEV}: package $(shell find ./example/dev/lightdev -type f -name '*.go')
+	go build -o $@ ./example/dev/lightdev
 
 ${UPNPCTRL}: package $(shell find ./example/ctrlpoint/upnpctrl -type f -name '*.go')
 	go build -o $@ ./example/ctrlpoint/upnpctrl
