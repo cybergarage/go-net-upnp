@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"strings"
 
-	"./control"
-	"./http"
-	"./log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 const (

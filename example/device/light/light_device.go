@@ -6,7 +6,8 @@ package main
 
 import (
 	"encoding/xml"
-	"net/upnp"
+
+	"github.com/cybergarage/go-net-upnp/net/upnp"
 )
 
 type LightDevice struct {

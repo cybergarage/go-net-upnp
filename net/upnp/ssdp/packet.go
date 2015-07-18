@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"../http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
 )
 
 const (

@@ -5,8 +5,8 @@
 package upnp
 
 import (
-	"./control"
-	"./ssdp"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
 )
 
 const (
