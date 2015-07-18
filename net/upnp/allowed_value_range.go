@@ -9,11 +9,13 @@ import (
 )
 
 // A AllowedValueRange represents a icon.
+// NOTE : Minimum, Maximum and Step uses string type instead float64
+//        because some devices sets a blank into the fields.
 type AllowedValueRange struct {
 	XMLName xml.Name `xml:"allowedValueRange"`
-	Minimum float64  `xml:"minimum"`
-	Maximum float64  `xml:"maximum"`
-	Step    float64  `xml:"step"`
+	Minimum string   `xml:"minimum"`
+	Maximum string   `xml:"maximum"`
+	Step    string   `xml:"step"`
 }
 
 // NewAllowedValueRange returns a new AllowedValueRange.
