@@ -127,18 +127,18 @@ func (self *ControlPoint) FindDeviceByTypeAndUDN(deviceType string, udn string) 
 }
 
 // AddDevice adds a specified device.
-func (self *ControlPoint) addDevice(dev *Device) bool {
+func (self *ControlPoint) addDevice(dev *Device) (bool, error) {
 	self.Lock()
 	defer self.Unlock()
 
 	if self.rootDeviceMap.HasDevice(dev) {
 		log.Trace(fmt.Sprintf("device (%s, %s) is already added", dev.DeviceType, dev.UDN))
-		return false
+		return false, nil
 	}
 
 	err := dev.LoadServiceDescriptions()
 	if err != nil {
-		return false
+		return false, err
 	}
 
 	ok := self.rootDeviceMap.AddDevice(dev)
@@ -147,7 +147,7 @@ func (self *ControlPoint) addDevice(dev *Device) bool {
 		log.Trace(fmt.Sprintf("device (%s, %s) is added", dev.DeviceType, dev.UDN))
 	}
 
-	return ok
+	return ok, nil
 }
 
 func getFromToMessageFromSSDPPacket(req *ssdp.Packet) string {
@@ -168,7 +168,10 @@ func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	if ssdpReq.IsRootDevice() {
 		newDev, err := NewDeviceFromSSDPRequest(ssdpReq)
 		if err == nil {
-			self.addDevice(newDev)
+			_, err := self.addDevice(newDev)
+			if err != nil {
+				log.Warn(err)
+			}
 		} else {
 			log.Warn(err)
 		}
