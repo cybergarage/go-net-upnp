@@ -7,7 +7,7 @@ package ssdp
 import (
 	"time"
 
-	"net/upnp/http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
 )
 
 type Response struct {

@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"strings"
 
-	"net/upnp/control"
-	"net/upnp/http"
-	"net/upnp/log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 const (
@@ -233,7 +233,7 @@ func (self *Action) Post() error {
 		if err != nil {
 			return err
 		}
-		return upnpErrRes.Envelope.Body.Fault.Detail.UPnPError
+		return &upnpErrRes.Envelope.Body.Fault.Detail.UPnPError
 	}
 
 	return nil

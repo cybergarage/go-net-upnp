@@ -4,16 +4,9 @@
 
 package upnp
 
-import (
-	"os"
-	"testing"
-
-	"net/upnp/log"
-)
-
-func TestMain(m *testing.M) {
-	logger := log.NewStdoutLogger(log.LoggerLevelTrace)
-	log.SetSharedLogger(logger)
-
-	os.Exit(m.Run())
+// A Error represents a interface for UPnP error.
+type Error interface {
+	error
+	GetCode() int
+	GetDescription() string
 }

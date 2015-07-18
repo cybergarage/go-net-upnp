@@ -5,7 +5,7 @@
 package upnp
 
 import (
-	"net/upnp/ssdp"
+	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
 )
 
 func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {

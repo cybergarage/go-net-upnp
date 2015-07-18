@@ -11,7 +11,7 @@ import (
 
 	gohttp "net/http"
 
-	"net/upnp/util"
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A Request represents a Request.

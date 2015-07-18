@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"net/upnp/control"
+	"./control"
 )
 
 const (
@@ -161,14 +161,14 @@ func TestControlPointSearchDevice(t *testing.T) {
 		t.Errorf(errorPostActionSuccess, foundOptAction.Name)
 	}
 
-	upnpErr, ok := err.(control.UPnPError)
+	upnpErr, ok := err.(Error)
 	if !ok {
 		t.Errorf(errorPostActionInvalidErrorType, err)
 	}
 
 	expectErrorCode := control.ErrorOptionalActionNotImplemented
-	if upnpErr.Code != expectErrorCode {
-		t.Errorf(errorPostActionInvalidErrorCode, foundOptAction.Name, upnpErr.Code, expectErrorCode)
+	if upnpErr.GetCode() != expectErrorCode {
+		t.Errorf(errorPostActionInvalidErrorCode, foundOptAction.Name, upnpErr.GetCode(), expectErrorCode)
 	}
 
 	// stop control point

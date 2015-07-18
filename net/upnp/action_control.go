@@ -5,7 +5,7 @@
 package upnp
 
 import (
-	"net/upnp/control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
 )
 
 // NewActionRequestFromAction returns a new Request.

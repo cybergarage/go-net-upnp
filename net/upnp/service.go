@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"strings"
 
-	"net/upnp/http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
 )
 
 const (
