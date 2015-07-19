@@ -68,7 +68,7 @@ func inputNo(msg string) (int, error) {
 
 const (
 	H_KEY  = 'h'
-	H_DESC = "print this (H)elp message"
+	H_DESC = "print this (h)elp message"
 )
 
 func HelpAction(cp *ControlPoint) bool {
@@ -84,7 +84,7 @@ func HelpAction(cp *ControlPoint) bool {
 
 const (
 	Q_KEY  = 'q'
-	Q_DESC = "(Q)uit"
+	Q_DESC = "(q)uit"
 )
 
 func QuitAction(cp *ControlPoint) bool {
@@ -97,7 +97,7 @@ func QuitAction(cp *ControlPoint) bool {
 
 const (
 	S_KEY  = 's'
-	S_DESC = "(S)earch root devices"
+	S_DESC = "(s)earch root devices"
 )
 
 func SearchAction(cp *ControlPoint) bool {
@@ -114,7 +114,7 @@ func SearchAction(cp *ControlPoint) bool {
 
 const (
 	A_KEY  = 'a'
-	A_DESC = "post (A)ction"
+	A_DESC = "post (a)ction"
 )
 
 func PostAction(cp *ControlPoint) bool {
@@ -214,7 +214,7 @@ func PostAction(cp *ControlPoint) bool {
 
 const (
 	P_KEY  = 'p'
-	P_DESC = "(P)rint found devices"
+	P_DESC = "(p)rint found devices"
 )
 
 func printRootDevices(cp *ControlPoint) {
