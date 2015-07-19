@@ -11,7 +11,6 @@ import (
 	"math/rand"
 	"net/url"
 
-	"github.com/cybergarage/go-net-upnp/net/upnp/control"
 	"github.com/cybergarage/go-net-upnp/net/upnp/http"
 	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
 	"github.com/cybergarage/go-net-upnp/net/upnp/util"
@@ -29,7 +28,7 @@ type DeviceSSDPListener interface {
 
 // A DeviceActionListener represents a listener for action request.
 type DeviceActionListener interface {
-	ActionRequestReceived(*Action) *control.UPnPError
+	ActionRequestReceived(*Action) Error
 }
 
 // A DeviceListener represents a listener for all requests.

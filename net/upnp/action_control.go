@@ -62,3 +62,13 @@ func NewArgumentFromArgument(arg *Argument) *control.Argument {
 
 	return newArg
 }
+
+// NewErrorResponseFromError returns a new error response.
+func NewErrorResponseFromError(upnpError Error) *control.ErrorResponse {
+	res := control.NewErrorResponse()
+
+	res.Envelope.Body.Fault.Detail.UPnPError.Code = upnpError.GetCode()
+	res.Envelope.Body.Fault.Detail.UPnPError.Description = upnpError.GetDescription()
+
+	return res
+}

@@ -39,7 +39,7 @@ func TestNullDevice(t *testing.T) {
 }
 
 func TestSampleDevice(t *testing.T) {
-	dev, err := NewSampleDevice()
+	dev, err := NewTestDevice()
 
 	if err != nil {
 		t.Error(err)
