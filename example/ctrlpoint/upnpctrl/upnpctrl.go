@@ -74,7 +74,7 @@ func handleInput(ctrlPoint *ControlPoint) {
 	for {
 		key, err := ReadKeyboardKey()
 		if err != nil {
-			continue
+			key = H_KEY
 		}
 		if !ctrlPoint.DoAction(int(key)) {
 			return

@@ -6,13 +6,13 @@
 upnpdump dumps prints all devices in the local network.
 
         NAME
-        upnpgwdump
+        upnpdump
 
         SYNOPSIS
         upnpdump [OPTIONS]
 
         DESCRIPTION
-        upnpgwdump is a utility to dump SSDP messages.
+        upnpdump is a utility to dump SSDP messages.
 
 
         OPTIONS
@@ -23,7 +23,7 @@ upnpdump dumps prints all devices in the local network.
 
         EXAMPLES
           The following is how to enable the verbose output
-            upnpgwdump -v 1
+            upnpdump -v 1
 */
 
 package main
@@ -39,16 +39,18 @@ import (
 	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
-func printGatewayDevice(n int, dev *GatewayDevice) {
-	fmt.Printf("[%d] %s (%s)\n", n, dev.FriendlyName, dev.LocationURL)
+func printDevice(n int, dev *upnp.Device) {
+	devURL := dev.LocationURL
 
-	// ExternalIPAddress
-
-	addr, err := dev.GetExternalIPAddress()
-	if err != nil {
-		addr = err.Error()
+	presentationURL := dev.PresentationURL
+	if 0 < len(presentationURL) {
+		url, err := dev.GetAbsoluteURL(presentationURL)
+		if err == nil {
+			devURL = url.String()
+		}
 	}
-	fmt.Printf("  External IP address = %s\n", addr)
+
+	fmt.Printf("[%d] '%s', '%s', %s\n", n, dev.FriendlyName, dev.DeviceType, devURL)
 }
 
 func main() {
@@ -93,15 +95,13 @@ func main() {
 
 	// Print basic descriptions of found devices
 
-	gwDevs := ctrlPoint.GetRootDevicesByType(InternetGatewayDeviceType)
-	if len(gwDevs) == 0 {
-		fmt.Printf("Internet gateway device is not found !!\n")
+	if len(ctrlPoint.GetRootDevices()) == 0 {
+		fmt.Printf("UPnP device is not found !!\n")
 		os.Exit(0)
 	}
 
-	for n, dev := range gwDevs {
-		gwDev := NewGatewayDevice(dev)
-		printGatewayDevice(n, gwDev)
+	for n, dev := range ctrlPoint.GetRootDevices() {
+		printDevice(n, dev)
 	}
 
 	os.Exit(0)

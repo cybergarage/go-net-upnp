@@ -23,9 +23,10 @@ const (
 	errorSelectActionInvalid = "action number (%d) is invalid"
 	actionIsSelected         = "[%d] '%s' is selected"
 
-	headerDeviceList  = "==== Select a target device (%d) ===="
-	headerServiceList = "==== Select a target service (%d) ===="
-	headerActionList  = "==== Select a target action (%d) ===="
+	headerFoundDeviceList   = "==== Found root devices (%d) ===="
+	headerSelectDeviceList  = "==== Select a target device (%d) ===="
+	headerSelectServiceList = "==== Select a target service (%d) ===="
+	headerSelectActionList  = "==== Select a target action (%d) ===="
 
 	selectDeviceMsg  = "Input device number"
 	selectServiceMsg = "Input service number"
@@ -83,7 +84,7 @@ func HelpAction(cp *ControlPoint) bool {
 
 const (
 	Q_KEY  = 'q'
-	Q_DESC = "(!)uit"
+	Q_DESC = "(Q)uit"
 )
 
 func QuitAction(cp *ControlPoint) bool {
@@ -141,7 +142,7 @@ func PostAction(cp *ControlPoint) bool {
 	services := dev.GetServices()
 	serviceCnt := len(services)
 
-	printMsg(fmt.Sprintf(headerServiceList, serviceCnt))
+	printMsg(fmt.Sprintf(headerSelectServiceList, serviceCnt))
 	for n, service := range services {
 		printMsg(fmt.Sprintf("[%d] '%s'", n, service.ServiceType))
 	}
@@ -165,7 +166,7 @@ func PostAction(cp *ControlPoint) bool {
 	actions := service.GetActions()
 	actionCnt := len(actions)
 
-	printMsg(fmt.Sprintf(headerActionList, actionCnt))
+	printMsg(fmt.Sprintf(headerSelectActionList, actionCnt))
 	for n, action := range actions {
 		printMsg(fmt.Sprintf("[%d] '%s'", n, action.Name))
 	}
@@ -218,7 +219,7 @@ const (
 
 func printRootDevices(cp *ControlPoint) {
 	rootDevs := cp.GetRootDevices()
-	printMsg(fmt.Sprintf(headerDeviceList, len(rootDevs)))
+	printMsg(fmt.Sprintf(headerFoundDeviceList, len(rootDevs)))
 	for n, dev := range rootDevs {
 		printMsg(fmt.Sprintf("[%d] '%s', '%s'", n, dev.FriendlyName, dev.DeviceType))
 	}
