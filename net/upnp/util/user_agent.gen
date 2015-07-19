@@ -22,8 +22,8 @@ func GetUserAgent() string {
 	return fmt.Sprintf("%s/%s UPnP/%s %s/%s",
 		runtime.GOOS,
 		runtime.GOARCH,
-		$(grep SupportVersion src/net/upnp/const.go | head -n 1 | awk '{print $3}'),
-		$(grep ProductName src/net/upnp/const.go | head -n 1 | awk '{print $3}'),
+		$(grep SupportVersion net/upnp/const.go | head -n 1 | awk '{print $3}'),
+		$(grep ProductName net/upnp/const.go | head -n 1 | awk '{print $3}'),
 		"$version")
 }
 

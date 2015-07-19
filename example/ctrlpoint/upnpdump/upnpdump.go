@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-upnpdump dumps prints all devices in the local network.
+upnpdump prints SSDP packets in the local network.
 
         NAME
         upnpdump
@@ -14,7 +14,6 @@ upnpdump dumps prints all devices in the local network.
         DESCRIPTION
         upnpdump is a utility to dump SSDP messages.
 
-
         OPTIONS
         -v [0 | 1] : Enable verbose output.
 
@@ -23,34 +22,44 @@ upnpdump dumps prints all devices in the local network.
 
         EXAMPLES
           The following is how to enable the verbose output
-            upnpdump -v 1
+            upntctrl -v 1
 */
 
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
-	"github.com/cybergarage/go-net-upnp/net/upnp"
 	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
-func printDevice(n int, dev *upnp.Device) {
-	devURL := dev.LocationURL
+func printHelp() {
+	fmt.Printf("s : (S)earch root devices\n")
+	fmt.Printf("q : (Q)uit\n")
+}
 
-	presentationURL := dev.PresentationURL
-	if 0 < len(presentationURL) {
-		url, err := dev.GetAbsoluteURL(presentationURL)
-		if err == nil {
-			devURL = url.String()
+func handleInput(ctrlPoint *ControlPoint) {
+	kb := bufio.NewReader(os.Stdin)
+
+	for {
+		keys, _, _ := kb.ReadLine()
+		if len(keys) <= 0 {
+			printHelp()
+			continue
+		}
+		switch keys[0] {
+		case 'q':
+			return
+		case 's':
+			ctrlPoint.SearchRootDevice()
+		default:
+			printHelp()
 		}
 	}
-
-	fmt.Printf("[%d] '%s', '%s', %s\n", n, dev.FriendlyName, dev.DeviceType, devURL)
 }
 
 func main() {
@@ -71,9 +80,8 @@ func main() {
 		log.SetSharedLogger(logger)
 	}
 
-	// Start a control point
+	ctrlPoint := NewControlPoint()
 
-	ctrlPoint := upnp.NewControlPoint()
 	err := ctrlPoint.Start()
 	if err != nil {
 		log.Error(err)
@@ -81,28 +89,13 @@ func main() {
 	}
 	defer ctrlPoint.Stop()
 
-	// Search root devices
-
 	err = ctrlPoint.SearchRootDevice()
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
 
-	// Sleep until all search responses are received
-
-	time.Sleep(time.Duration(ctrlPoint.SearchMX) * time.Second)
-
-	// Print basic descriptions of found devices
-
-	if len(ctrlPoint.GetRootDevices()) == 0 {
-		fmt.Printf("UPnP device is not found !!\n")
-		os.Exit(0)
-	}
-
-	for n, dev := range ctrlPoint.GetRootDevices() {
-		printDevice(n, dev)
-	}
+	handleInput(ctrlPoint)
 
 	os.Exit(0)
 }
