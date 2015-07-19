@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"strconv"
 	"strings"
 
 	"github.com/cybergarage/go-net-upnp/net/upnp/control"
@@ -99,7 +98,7 @@ func (self *Action) GetArgumentByName(name string) (*Argument, error) {
 	return nil, errors.New(fmt.Sprintf(errorActionArgumentNotFound, name))
 }
 
-// SetArgumentString sets a value into the specified argument
+// SetArgumentString sets a string value into the specified argument
 func (self *Action) SetArgumentString(name string, value string) error {
 	arg, err := self.GetArgumentByName(name)
 	if err != nil {
@@ -108,7 +107,7 @@ func (self *Action) SetArgumentString(name string, value string) error {
 	return arg.SetString(value)
 }
 
-// GetArgumentString return a value into the specified argument
+// GetArgumentString return a string value into the specified argument
 func (self *Action) GetArgumentString(name string) (string, error) {
 	arg, err := self.GetArgumentByName(name)
 	if err != nil {
@@ -117,18 +116,40 @@ func (self *Action) GetArgumentString(name string) (string, error) {
 	return arg.GetString()
 }
 
-// SetArgumentInt sets a value into the specified argument
+// SetArgumentInt sets a integer value into the specified argument
 func (self *Action) SetArgumentInt(name string, value int) error {
-	return self.SetArgumentString(name, strconv.Itoa(value))
+	arg, err := self.GetArgumentByName(name)
+	if err != nil {
+		return err
+	}
+	return arg.SetInt(value)
 }
 
-// GetArgumentInt return a value into the specified argument
+// GetArgumentInt return a integer value into the specified argument
 func (self *Action) GetArgumentInt(name string) (int, error) {
-	value, err := self.GetArgumentString(name)
+	arg, err := self.GetArgumentByName(name)
 	if err != nil {
 		return 0, err
 	}
-	return strconv.Atoi(value)
+	return arg.GetInt()
+}
+
+// SetArgumentBool sets a boolean value into the specified argument
+func (self *Action) SetArgumentBool(name string, value bool) error {
+	arg, err := self.GetArgumentByName(name)
+	if err != nil {
+		return err
+	}
+	return arg.SetBool(value)
+}
+
+// GetArgumentBool return a boolean value into the specified argument
+func (self *Action) GetArgumentBool(name string) (bool, error) {
+	arg, err := self.GetArgumentByName(name)
+	if err != nil {
+		return false, err
+	}
+	return arg.GetBool()
 }
 
 // setArgumentsByActionControl sets control arguments into the specified argument
