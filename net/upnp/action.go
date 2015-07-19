@@ -134,6 +134,24 @@ func (self *Action) GetArgumentInt(name string) (int, error) {
 	return arg.GetInt()
 }
 
+// SetArgumentFloat sets a integer value into the specified argument
+func (self *Action) SetArgumentFloat(name string, value float64) error {
+	arg, err := self.GetArgumentByName(name)
+	if err != nil {
+		return err
+	}
+	return arg.SetFloat(value)
+}
+
+// GetArgumentFloat return a integer value into the specified argument
+func (self *Action) GetArgumentFloat(name string) (float64, error) {
+	arg, err := self.GetArgumentByName(name)
+	if err != nil {
+		return 0, err
+	}
+	return arg.GetFloat()
+}
+
 // SetArgumentBool sets a boolean value into the specified argument
 func (self *Action) SetArgumentBool(name string, value bool) error {
 	arg, err := self.GetArgumentByName(name)
