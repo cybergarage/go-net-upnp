@@ -6,6 +6,7 @@ package upnp
 
 import (
 	"encoding/xml"
+	"fmt"
 	"strconv"
 )
 
@@ -57,11 +58,29 @@ func (self *Argument) GetInt() (int, error) {
 	return strconv.Atoi(value)
 }
 
+// SetFloat sets a integer value into the specified argument
+func (self *Argument) SetFloat(value float64) error {
+	return self.SetString(fmt.Sprint("%f", value))
+}
+
+// GetFloat return a integer value into the specified argument
+func (self *Argument) GetFloat() (float64, error) {
+	value, err := self.GetString()
+	if err != nil {
+		return 0, err
+	}
+	f, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		return 0, err
+	}
+	return f, nil
+}
+
 // SetBool sets a boolean value into the specified argument
 func (self *Argument) SetBool(value bool) error {
 	ivalue := 0
 	if value {
-		ivalue = 1	
+		ivalue = 1
 	}
 	return self.SetInt(ivalue)
 }
