@@ -49,7 +49,7 @@ func TestNewControlPoint(t *testing.T) {
 func TestControlPointSearchDevice(t *testing.T) {
 	// start device
 
-	dev, err := NewSampleDevice()
+	dev, err := NewTestDevice()
 	if err != nil {
 		t.Error(err)
 	}

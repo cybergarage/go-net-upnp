@@ -58,8 +58,8 @@ func responseSuccessXMLContent(httpRes http.ResponseWriter, content string) erro
 	return responseXMLContent(httpRes, http.StatusOK, content)
 }
 
-func responseUPnPError(httpRes http.ResponseWriter, upnpErr *control.UPnPError) error {
-	errRes := control.NewErrorResponseFromUPnPError(upnpErr)
+func responseUPnPError(httpRes http.ResponseWriter, upnpErr Error) error {
+	errRes := NewErrorResponseFromError(upnpErr)
 	errStr, _ := errRes.SOAPContentString()
 	return responseXMLContent(httpRes, http.StatusInternalServerError, errStr)
 }

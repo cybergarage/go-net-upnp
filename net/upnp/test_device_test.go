@@ -30,12 +30,12 @@ const (
 	RetTargetValue = "RetTargetValue"
 )
 
-type sampleDevice struct {
+type TestDevice struct {
 	*Device
 	Target string
 }
 
-func NewSampleDevice() (*sampleDevice, error) {
+func NewTestDevice() (*TestDevice, error) {
 	dev, err := NewDeviceFromDescription(binaryLightDeviceDescription)
 	if err != nil {
 		return nil, err
@@ -51,17 +51,17 @@ func NewSampleDevice() (*sampleDevice, error) {
 		return nil, err
 	}
 
-	sampleDev := &sampleDevice{Device: dev}
-	sampleDev.ActionListener = sampleDev
+	testDev := &TestDevice{Device: dev}
+	testDev.ActionListener = testDev
 
-	return sampleDev, nil
+	return testDev, nil
 }
 
-func (self *sampleDevice) GetSwitchPowerService() (*Service, error) {
+func (self *TestDevice) GetSwitchPowerService() (*Service, error) {
 	return self.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
 }
 
-func (self *sampleDevice) GetSwitchPowerSetTargetAction() (*Action, error) {
+func (self *TestDevice) GetSwitchPowerSetTargetAction() (*Action, error) {
 	service, err := self.GetSwitchPowerService()
 	if err != nil {
 		return nil, err
@@ -69,7 +69,7 @@ func (self *sampleDevice) GetSwitchPowerSetTargetAction() (*Action, error) {
 	return service.GetActionByName(SetTarget)
 }
 
-func (self *sampleDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
+func (self *TestDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
 	service, err := self.GetSwitchPowerService()
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func (self *sampleDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
 	return service.GetActionByName(GetTarget)
 }
 
-func (self *sampleDevice) GetOptionalAction() (*Action, error) {
+func (self *TestDevice) GetOptionalAction() (*Action, error) {
 	service, err := self.GetSwitchPowerService()
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func (self *sampleDevice) GetOptionalAction() (*Action, error) {
 	return service.GetActionByName(GetStatus)
 }
 
-func (self *sampleDevice) ActionRequestReceived(action *Action) *control.UPnPError {
+func (self *TestDevice) ActionRequestReceived(action *Action) Error {
 	switch action.Name {
 	case SetTarget:
 		arg, err := action.GetArgumentByName(NewTargetValue)
@@ -104,8 +104,8 @@ func (self *sampleDevice) ActionRequestReceived(action *Action) *control.UPnPErr
 	return control.NewUPnPErrorFromCode(control.ErrorOptionalActionNotImplemented)
 }
 
-func TestSampleDeviceDescription(t *testing.T) {
-	dev, err := NewSampleDevice()
+func TestTestDeviceDescription(t *testing.T) {
+	dev, err := NewTestDevice()
 
 	if err != nil {
 		t.Error(err)
@@ -195,7 +195,7 @@ func TestSampleDeviceDescription(t *testing.T) {
 
 	// check service
 
-	checkServiceURLs := func(dev *sampleDevice, serviceType string, urls []string) {
+	checkServiceURLs := func(dev *TestDevice, serviceType string, urls []string) {
 		service, err := dev.GetServiceByType(serviceType)
 		if err != nil {
 			t.Error(err)
