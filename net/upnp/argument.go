@@ -6,6 +6,7 @@ package upnp
 
 import (
 	"encoding/xml"
+	"strconv"
 )
 
 // A Argument represents a UPnP argument.
@@ -31,15 +32,51 @@ func NewArgument() *Argument {
 	return arg
 }
 
-// SetString sets a value into the specified argument
+// SetString sets a string value into the specified argument
 func (self *Argument) SetString(value string) error {
 	self.Value = value
 	return nil
 }
 
-// GetString returns a value into the specified argument
+// GetString returns a string value into the specified argument
 func (self *Argument) GetString() (string, error) {
 	return self.Value, nil
+}
+
+// SetInt sets a integer value into the specified argument
+func (self *Argument) SetInt(value int) error {
+	return self.SetString(strconv.Itoa(value))
+}
+
+// GetInt return a integer value into the specified argument
+func (self *Argument) GetInt() (int, error) {
+	value, err := self.GetString()
+	if err != nil {
+		return 0, err
+	}
+	return strconv.Atoi(value)
+}
+
+// SetBool sets a boolean value into the specified argument
+func (self *Argument) SetBool(value bool) error {
+	ivalue := 0
+	if value {
+		ivalue = 1	
+	}
+	return self.SetInt(ivalue)
+}
+
+// GetBool return a boolean value into the specified argument
+func (self *Argument) GetBool() (bool, error) {
+	value, err := self.GetString()
+	if err != nil {
+		return false, err
+	}
+	b, err := strconv.ParseBool(value)
+	if err != nil {
+		return false, err
+	}
+	return b, nil
 }
 
 // isDirection returns true when the argument direction equals the specified value, otherwise false.
