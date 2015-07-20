@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-lightdev is a sample implementation for UPnP device.
+lightdev is a sample implementation of UPnP standard device, BinaryLight:1.
 
         NAME
         lightdev
@@ -21,7 +21,7 @@ lightdev is a sample implementation for UPnP device.
           Return EXIT_SUCCESS or EXIT_FAILURE
 */
 
-package main
+package lightdev
 
 import (
 	"bufio"

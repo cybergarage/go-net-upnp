@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-upnpdump dumps prints all devices in the local network.
+upnpgwdump dumps prints all internet gatway devices, InternetGatewayDevice:1, in the local network.
 
         NAME
         upnpgwdump
@@ -25,8 +25,7 @@ upnpdump dumps prints all devices in the local network.
           The following is how to enable the verbose output
             upnpgwdump -v 1
 */
-
-package main
+package upnpgwlist
 
 import (
 	"flag"

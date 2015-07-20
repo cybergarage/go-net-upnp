@@ -3,10 +3,10 @@
 // license that can be found in the LICENSE file.
 
 /*
-upnpdump dumps prints all devices in the local network.
+upntctrl browses UPnP devices in the local network, and post any actions into the found devices.
 
         NAME
-        upnpdump
+        upntctrl
 
         SYNOPSIS
         upnpdump [OPTIONS]
@@ -23,34 +23,62 @@ upnpdump dumps prints all devices in the local network.
 
         EXAMPLES
           The following is how to enable the verbose output
-            upnpdump -v 1
+            upntctrl -v 1
 */
-
-package main
+package upnpctrl
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
-	"github.com/cybergarage/go-net-upnp/net/upnp"
 	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
-func printDevice(n int, dev *upnp.Device) {
-	devURL := dev.LocationURL
+const (
+	errorNoInput = "no input"
+)
 
-	presentationURL := dev.PresentationURL
-	if 0 < len(presentationURL) {
-		url, err := dev.GetAbsoluteURL(presentationURL)
-		if err == nil {
-			devURL = url.String()
-		}
+var gKeyboardReader *bufio.Reader
+
+func GetKeyboardReader() *bufio.Reader {
+	return gKeyboardReader
+}
+
+func ReadKeyboardLine() (string, error) {
+	b, _, err := GetKeyboardReader().ReadLine()
+	if err != nil {
+		return "", err
 	}
 
-	fmt.Printf("[%d] '%s', '%s', %s\n", n, dev.FriendlyName, dev.DeviceType, devURL)
+	return string(b), nil
+}
+
+func ReadKeyboardKey() (byte, error) {
+	b, _, err := GetKeyboardReader().ReadLine()
+	if err != nil {
+		return 0, err
+	}
+
+	if len(b) == 0 {
+		return 0, fmt.Errorf(errorNoInput)
+	}
+
+	return b[0], nil
+}
+
+func handleInput(ctrlPoint *ControlPoint) {
+	for {
+		key, err := ReadKeyboardKey()
+		if err != nil {
+			key = H_KEY
+		}
+		if !ctrlPoint.DoAction(int(key)) {
+			return
+		}
+	}
 }
 
 func main() {
@@ -71,9 +99,7 @@ func main() {
 		log.SetSharedLogger(logger)
 	}
 
-	// Start a control point
-
-	ctrlPoint := upnp.NewControlPoint()
+	ctrlPoint := NewControlPoint()
 	err := ctrlPoint.Start()
 	if err != nil {
 		log.Error(err)
@@ -81,28 +107,14 @@ func main() {
 	}
 	defer ctrlPoint.Stop()
 
-	// Search root devices
-
 	err = ctrlPoint.SearchRootDevice()
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
 
-	// Sleep until all search responses are received
-
-	time.Sleep(time.Duration(ctrlPoint.SearchMX) * time.Second)
-
-	// Print basic descriptions of found devices
-
-	if len(ctrlPoint.GetRootDevices()) == 0 {
-		fmt.Printf("UPnP device is not found !!\n")
-		os.Exit(0)
-	}
-
-	for n, dev := range ctrlPoint.GetRootDevices() {
-		printDevice(n, dev)
-	}
+	gKeyboardReader = bufio.NewReader(os.Stdin)
+	handleInput(ctrlPoint)
 
 	os.Exit(0)
 }

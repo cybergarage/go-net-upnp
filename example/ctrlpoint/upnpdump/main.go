@@ -3,17 +3,16 @@
 // license that can be found in the LICENSE file.
 
 /*
-upntctrl browses UPnP devices in the local network, and post the actions.
+upnpdump prints SSDP packets in the local network.
 
         NAME
-        upntctrl
+        upnpdump
 
         SYNOPSIS
         upnpdump [OPTIONS]
 
         DESCRIPTION
         upnpdump is a utility to dump SSDP messages.
-
 
         OPTIONS
         -v [0 | 1] : Enable verbose output.
@@ -25,8 +24,7 @@ upntctrl browses UPnP devices in the local network, and post the actions.
           The following is how to enable the verbose output
             upntctrl -v 1
 */
-
-package main
+package upnpdump
 
 import (
 	"bufio"
@@ -38,46 +36,27 @@ import (
 	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
-const (
-	errorNoInput = "no input"
-)
-
-var gKeyboardReader *bufio.Reader
-
-func GetKeyboardReader() *bufio.Reader {
-	return gKeyboardReader
-}
-
-func ReadKeyboardLine() (string, error) {
-	b, _, err := GetKeyboardReader().ReadLine()
-	if err != nil {
-		return "", err
-	}
-
-	return string(b), nil
-}
-
-func ReadKeyboardKey() (byte, error) {
-	b, _, err := GetKeyboardReader().ReadLine()
-	if err != nil {
-		return 0, err
-	}
-
-	if len(b) == 0 {
-		return 0, fmt.Errorf(errorNoInput)
-	}
-
-	return b[0], nil
+func printHelp() {
+	fmt.Printf("s : (s)earch root devices\n")
+	fmt.Printf("q : (q)uit\n")
 }
 
 func handleInput(ctrlPoint *ControlPoint) {
+	kb := bufio.NewReader(os.Stdin)
+
 	for {
-		key, err := ReadKeyboardKey()
-		if err != nil {
-			key = H_KEY
+		keys, _, _ := kb.ReadLine()
+		if len(keys) <= 0 {
+			printHelp()
+			continue
 		}
-		if !ctrlPoint.DoAction(int(key)) {
+		switch keys[0] {
+		case 'q':
 			return
+		case 's':
+			ctrlPoint.SearchRootDevice()
+		default:
+			printHelp()
 		}
 	}
 }
@@ -101,6 +80,7 @@ func main() {
 	}
 
 	ctrlPoint := NewControlPoint()
+
 	err := ctrlPoint.Start()
 	if err != nil {
 		log.Error(err)
@@ -114,7 +94,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	gKeyboardReader = bufio.NewReader(os.Stdin)
 	handleInput(ctrlPoint)
 
 	os.Exit(0)
