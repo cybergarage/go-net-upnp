@@ -10,8 +10,8 @@ import (
 
 const (
 	soapActionSpace     = "u"
-	soapActionPrefix    = soapActionSpace + XmlNsDelim
-	soapActionSpaceAttr = XmlNs + XmlNsDelim + soapActionSpace
+	soapActionPrefix    = soapActionSpace + xmlNsDelim
+	soapActionSpaceAttr = xmlNs + xmlNsDelim + soapActionSpace
 )
 
 // A Action represents a SOAP action.

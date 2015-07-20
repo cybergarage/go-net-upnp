@@ -5,7 +5,6 @@
 package upnp
 
 import (
-	"github.com/cybergarage/go-net-upnp/net/upnp/control"
 	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
 )
 
@@ -36,6 +35,6 @@ const (
 	InDirection      = 1
 	OutDirection     = 2
 
-	XmlMarshallIndent = control.XmlMarshallIndent
-	XmlNs             = control.XmlNs
+	xmlMarshallIndent = " "
+	xmlNs             = "xmlns"
 )

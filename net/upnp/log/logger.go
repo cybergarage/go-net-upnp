@@ -23,8 +23,8 @@ type Logger struct {
 }
 
 const (
-	Format           = "%s %s %s"
-	LF               = "\n"
+	format           = "%s %s %s"
+	lf               = "\n"
 	FilePerm         = 0644
 	LoggerLevelTrace = (1 << 5)
 	LoggerLevelInfo  = (1 << 4)
@@ -97,7 +97,7 @@ func NewFileLogger(file string, level int) *Logger {
 }
 
 func outputToFile(file string, level int, msg string) (int, error) {
-	msgBytes := []byte(msg + LF)
+	msgBytes := []byte(msg + lf)
 	fd, err := os.OpenFile(file, (os.O_WRONLY | os.O_CREATE | os.O_APPEND), FilePerm)
 	if err != nil {
 		return 0, err
@@ -128,7 +128,7 @@ func outputString(outputLevel int, msg string) int {
 		t.Hour(), t.Minute(), t.Second())
 
 	headerString := fmt.Sprintf("[%s]", GetLevelString(outputLevel))
-	logMsg := fmt.Sprintf(Format, logDate, headerString, msg)
+	logMsg := fmt.Sprintf(format, logDate, headerString, msg)
 	logMsgLen := len(logMsg)
 
 	if 0 < logMsgLen {

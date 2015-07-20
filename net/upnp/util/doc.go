@@ -2,16 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package control
-
-import (
-	"encoding/xml"
-)
-
-const (
-	xmlMarshallIndent = " "
-	xmlNs             = "xmlns"
-	xmlNsDelim        = ":"
-
-	xmlHeader = xml.Header
-)
+/*
+Package util implements some misc functoins for net-upnp-go.
+*/
+package util

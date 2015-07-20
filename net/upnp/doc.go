@@ -3,9 +3,9 @@
 // license that can be found in the LICENSE file.
 
 /*
-Package upnp privides UPnP control point and device implementations.
+Package upnp provides UPnP control point and device implementations.
 
-The control point can search UPnP devices in the local netowrk, get the device and service descriptions. and post actions in the service:
+go-net-upnp supports UPnP control functions. The control point can search UPnP devices in the local netowrk, get the device and service descriptions. and post actions in the service:
 
 	cp := upnp.NewControlPoint()
 	err := cp.Start()
@@ -28,5 +28,48 @@ The control point can post actions in the service, and get the action response:
 	err = action.Post()
 	...
 	resArg = action.GetArgumentString("xxxx")
+
+In addition to the control point functions, go-net-upnp supports UPnP device functions to implement any UPnP devices using Go.
+
+To implement UPnP devices, prepare the UPnP device and service descriptions as the following:
+
+	type SampleDevice struct {
+		*upnp.Device
+		...
+	}
+
+	func NewSampleDevice() (*SampleDevice, error) {
+		dev, err := upnp.NewDeviceFromDescription(binaryLightDeviceDescription)
+		...
+		service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:xxxxxx:x")
+		...
+		err = service.LoadDescriptionBytes([]byte(switchPowerServiceDescription))
+		...
+		sampleDev := &SampleDevice{
+			Device: dev,
+			...
+		}
+		return sampleDev, nil
+	}
+
+Next, implement the control actions in the service descriptions using upnp.ActionListener as the following:
+
+	sampleDev, err := NewSampleDevice()
+	...
+	sampleDev.ActionListener = sampleDev
+	...
+	func (self *SampleDevice) ActionRequestReceived(action *upnp.Action) upnp.Error {
+		switch action.Name {
+		case SetTarget:
+			xxxx, err := action.GetArgumentString(xxxx)
+			...
+			err := action.SetArgumentBool(...., ....)
+			...
+			return nil
+		case xxxx
+			...
+		}
+		return upnp.NewErrorFromCode(upnp.ErrorOptionalActionNotImplemented)
+	}
 */
 package upnp

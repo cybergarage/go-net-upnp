@@ -35,7 +35,7 @@ func NewActionResponseFromAction(action *Action) (*control.ActionResponse, error
 	res := control.NewActionResponse()
 
 	// Fix 'Action' -> 'ActionResponse'
-	res.Envelope.Body.Action.Name = action.Name + control.Response
+	res.Envelope.Body.Action.Name = action.Name + control.ResponseSuffix
 
 	service := action.ParentService
 	if service != nil {

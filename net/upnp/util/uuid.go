@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	UUIDLength = (8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12)
+	uuidLength = (8 + 1 + 4 + 1 + 4 + 1 + 4 + 1 + 12)
 )
 
 type uuid struct {

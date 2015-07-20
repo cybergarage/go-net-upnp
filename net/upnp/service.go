@@ -122,7 +122,7 @@ func (self *Service) LoadDescriptionFromSCPDURL() error {
 
 // DescriptionString returns a descrition string.
 func (self *Service) DescriptionString() (string, error) {
-	descBytes, err := xml.MarshalIndent(self.description, "", XmlMarshallIndent)
+	descBytes, err := xml.MarshalIndent(self.description, "", xmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}
