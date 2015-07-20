@@ -96,4 +96,4 @@ Next, implement the control actions in the service descriptions using upnp.Actio
 	}
 ```
 
-To know the implementations in more deital using go-net-upnp, please check the sample implementations in the `example` directory and the `godoc` documentation 
+To know the implementations in more deital using go-net-upnp, please check the sample implementations in the `example` directory and the `godoc` documentation :-)
