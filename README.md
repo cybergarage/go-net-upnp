@@ -22,6 +22,10 @@ go-net-upnp provides UPnP control point and device frameworks to implement the c
 go-net-upnp supports UPnP control functions. The control point can search UPnP devices in the local netowrk, get the device and service descriptions. and post actions in the service:
 
 ```
+	import (
+		"github.com/cybergarage/go-net-upnp/net/upnp"
+	)
+	
 	cp := upnp.NewControlPoint()
 	err := cp.Start()
 	...
@@ -54,6 +58,10 @@ In addition to the control point functions, go-net-upnp supports UPnP device fun
 To implement UPnP devices, prepare the UPnP device and service descriptions as the following:
 
 ```
+	import (
+		"github.com/cybergarage/go-net-upnp/net/upnp"
+	)
+	
 	type SampleDevice struct {
 		*upnp.Device
 		...
