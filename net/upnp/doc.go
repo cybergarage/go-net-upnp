@@ -39,11 +39,11 @@ To implement UPnP devices, prepare the UPnP device and service descriptions as t
 	}
 
 	func NewSampleDevice() (*SampleDevice, error) {
-		dev, err := upnp.NewDeviceFromDescription(binaryLightDeviceDescription)
+		dev, err := upnp.NewDeviceFromDescription(xxxxDeviceDescription)
 		...
-		service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:xxxxxx:x")
+		service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:xxxx:x")
 		...
-		err = service.LoadDescriptionBytes([]byte(switchPowerServiceDescription))
+		err = service.LoadDescriptionBytes([]byte(xxxxServiceDescription))
 		...
 		sampleDev := &SampleDevice{
 			Device: dev,
