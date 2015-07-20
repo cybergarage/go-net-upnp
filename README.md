@@ -8,39 +8,16 @@ go-net-upnp hansles these protocols automatically to support to create UPnP devi
 
 ## Installation
 
-To use go-net-upnp, run `go get` as the following:
+The project is released on [GitHub](https://github.com/cybergarage/go-net-upnp). To use go-net-upnp in your projct, run `go get` as the following:
 
 ```
 go get -u github.com/cybergarage/go-net-upnp/net/upnp
 ```
 
-## Examples
+## Repositries
+
+To know how to use go-net-upnp,
 
 ```
-example/
-├── ctrlpoint
-│   ├── upnpctrl
-│   │   ├── control_point.go
-│   │   ├── control_point_action.go
-│   │   ├── control_point_action_mgr.go
-│   │   ├── control_point_actions.go
-│   │   └── upnpctrl.go
-│   ├── upnpdump
-│   │   ├── control_point.go
-│   │   └── upnpdump.go
-│   ├── upnpgwlist
-│   │   ├── upnpgwdev.go
-│   │   └── upnpgwlist.go
-│   └── upnpsearch
-│       └── upnpsearch.go
-└── dev
-    └── lightdev
-        ├── lightdev.go
-        ├── lightdev_desc.go
-        └── main.go
+godoc -http=:6060
 ```
-## Repositories
-
-The project is hosted on the following sites. Please check the following sites to know about go-net-upnp in more detail.
-
-- [GitHub](https://github.com/cybergarage/go-net-upnp)
