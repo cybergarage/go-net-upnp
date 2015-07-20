@@ -20,7 +20,6 @@ lightdev is a sample implementation of UPnP standard device, BinaryLight:1.
         RETURN VALUE
           Return EXIT_SUCCESS or EXIT_FAILURE
 */
-
 package lightdev
 
 import (
