@@ -25,7 +25,7 @@ upntctrl browses UPnP devices in the local network, and post the actions.
           The following is how to enable the verbose output
             upntctrl -v 1
 */
-package main
+package lightdev
 
 import (
 	"github.com/cybergarage/go-net-upnp/net/upnp"
