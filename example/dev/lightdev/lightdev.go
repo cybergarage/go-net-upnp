@@ -5,13 +5,25 @@
 package main
 
 import (
-	"encoding/xml"
-
 	"github.com/cybergarage/go-net-upnp/net/upnp"
+)
+
+const (
+	SetTarget      = "SetTarget"
+	NewTargetValue = "newTargetValue"
+	GetTarget      = "GetTarget"
+	RetTargetValue = "RetTargetValue"
+	GetStatus      = "GetStatus"
+	ResultStatus   = "ResultStatus"
+
+	DefaultTarget = "Living"
+	DefaultStatus = true
 )
 
 type LightDevice struct {
 	*upnp.Device
+	Target string
+	Status bool
 }
 
 func NewLightDevice() (*LightDevice, error) {
@@ -20,68 +32,49 @@ func NewLightDevice() (*LightDevice, error) {
 		return nil, err
 	}
 
-	lightDev := &LightDevice{Device: dev}
+	service, err := dev.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
+	if err != nil {
+		return nil, err
+	}
+
+	err = service.LoadDescriptionBytes([]byte(switchPowerServiceDescription))
+	if err != nil {
+		return nil, err
+	}
+
+	lightDev := &LightDevice{
+		Device: dev,
+		Target: DefaultTarget,
+		Status: DefaultStatus,
+	}
+	lightDev.ActionListener = lightDev
 
 	return lightDev, nil
 }
 
-const binaryLightDeviceDescription = xml.Header +
-	"<root>" +
-	"  <device>" +
-	"    <serviceList>" +
-	"      <service>" +
-	"        <serviceType>urn:schemas-upnp-org:service:SwitchPower:1</serviceType>" +
-	"        <serviceId>urn:upnp-org:serviceId:SwitchPower.1</serviceId>" +
-	"      </service>" +
-	"    </serviceList>" +
-	"  </device>" +
-	"</root>"
+func (self *LightDevice) ActionRequestReceived(action *upnp.Action) upnp.Error {
+	switch action.Name {
+	case SetTarget:
+		target, err := action.GetArgumentString(NewTargetValue)
+		if err == nil {
+			self.Target = target
+		} else {
+			return upnp.NewErrorFromCode(upnp.ErrorInvalidArgs)
+		}
+		return nil
+	case GetTarget:
+		err := action.SetArgumentString(RetTargetValue, self.Target)
+		if err != nil {
+			return upnp.NewErrorFromCode(upnp.ErrorInvalidArgs)
+		}
+		return nil
+	case GetStatus:
+		err := action.SetArgumentBool(ResultStatus, self.Status)
+		if err != nil {
+			return upnp.NewErrorFromCode(upnp.ErrorInvalidArgs)
+		}
+		return nil
+	}
 
-const switchPowerServiceDescription = xml.Header +
-	"<scpd>" +
-	"  <serviceStateTable>" +
-	"    <stateVariable>" +
-	"      <name>Target</name>" +
-	"      <sendEventsAttribute>no</sendEventsAttribute> " +
-	"      <dataType>boolean</dataType>" +
-	"      <defaultValue>0</defaultValue>" +
-	"    </stateVariable>" +
-	"    <stateVariable>" +
-	"      <name>Status</name>" +
-	"      <dataType>boolean</dataType>" +
-	"      <defaultValue>0</defaultValue>" +
-	"    </stateVariable>" +
-	"  </serviceStateTable>" +
-	"  <actionList>" +
-	"    <action>" +
-	"    <name>SetTarget</name>" +
-	"      <argumentList>" +
-	"        <argument>" +
-	"          <name>newTargetValue</name>" +
-	"          <direction>in</direction>" +
-	"          <relatedStateVariable>Target</relatedStateVariable>" +
-	"        </argument>" +
-	"      </argumentList>" +
-	"    </action>" +
-	"    <action>" +
-	"    <name>GetTarget</name>" +
-	"      <argumentList>" +
-	"        <argument>" +
-	"          <name>RetTargetValue</name>" +
-	"          <direction>out</direction>" +
-	"          <relatedStateVariable>Target</relatedStateVariable>" +
-	"        </argument>" +
-	"      </argumentList>" +
-	"    </action>" +
-	"    <action>" +
-	"    <name>GetStatus</name>" +
-	"      <argumentList>" +
-	"        <argument>" +
-	"          <name>ResultStatus</name>" +
-	"          <direction>out</direction>" +
-	"          <relatedStateVariable>Status</relatedStateVariable>" +
-	"        </argument>" +
-	"      </argumentList>" +
-	"    </action>" +
-	"  </actionList>" +
-	"</scpd>"
+	return upnp.NewErrorFromCode(upnp.ErrorOptionalActionNotImplemented)
+}
