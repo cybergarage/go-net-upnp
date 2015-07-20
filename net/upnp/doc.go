@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-Package upnp provides UPnP control point and device implementations.
+Package go-net-upnp provides UPnP control point and device frameworks to implement the control point and any devices.
 
 go-net-upnp supports UPnP control functions. The control point can search UPnP devices in the local netowrk, get the device and service descriptions. and post actions in the service:
 
