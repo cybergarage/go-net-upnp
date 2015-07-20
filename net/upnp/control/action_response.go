@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Response = "Response"
+	ResponseSuffix = "Response"
 )
 
 // A ActionResponse represents an action request.
@@ -39,7 +39,7 @@ func NewActionResponseFromSOAPBytes(soapRes []byte) (*ActionResponse, error) {
 	}
 
 	// Fix 'ActionResponse' -> 'Action'
-	res.Envelope.Body.Action.Name = strings.TrimSuffix(res.Envelope.Body.Action.Name, Response)
+	res.Envelope.Body.Action.Name = strings.TrimSuffix(res.Envelope.Body.Action.Name, ResponseSuffix)
 
 	return res, nil
 }

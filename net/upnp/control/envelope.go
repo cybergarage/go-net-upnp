@@ -15,13 +15,13 @@ const (
 	soapEnvelope           = "Envelope"
 	soapEncodingStyle      = "encodingStyle"
 	soapEnvelopeSpace      = "s"
-	soapEnvelopePrefix     = soapEnvelopeSpace + XmlNsDelim
-	soapEnvelopeSpaceAttr  = XmlNs + XmlNsDelim + soapEnvelopeSpace
-	soapEnvelopeEncodeAttr = soapEnvelopeSpace + XmlNsDelim + soapEncodingStyle
+	soapEnvelopePrefix     = soapEnvelopeSpace + xmlNsDelim
+	soapEnvelopeSpaceAttr  = xmlNs + xmlNsDelim + soapEnvelopeSpace
+	soapEnvelopeEncodeAttr = soapEnvelopeSpace + xmlNsDelim + soapEncodingStyle
 
 	soapBody       = "Body"
 	soapBodySpace  = "s"
-	soapSoapPrefix = soapBodySpace + XmlNsDelim
+	soapSoapPrefix = soapBodySpace + xmlNsDelim
 )
 
 // A Envelope represents an Envelope.

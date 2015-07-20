@@ -49,9 +49,9 @@ func (self *ErrorResponse) GetUPnPError() (*UPnPError, error) {
 
 // SOAPContent returns a SOAP content string.
 func (self *ErrorResponse) SOAPContentString() (string, error) {
-	buf, err := xml.MarshalIndent(&self.Envelope, "", XmlMarshallIndent)
+	buf, err := xml.MarshalIndent(&self.Envelope, "", xmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}
-	return XMLHeader + string(buf), nil
+	return xmlHeader + string(buf), nil
 }

@@ -90,7 +90,7 @@ func (self *UPnPError) Error() string {
 func (self *UPnPError) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name.Local = soapUPnPError
 	start.Attr = []xml.Attr{
-		{Name: xml.Name{Local: XmlNs}, Value: soapUPnPErrorNamespace},
+		{Name: xml.Name{Local: xmlNs}, Value: soapUPnPErrorNamespace},
 	}
 
 	e.EncodeToken(start)

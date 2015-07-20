@@ -28,7 +28,7 @@ type ErrorEnvelope struct {
 const (
 	soapFault       = "Fault"
 	soapFaultSpace  = "s"
-	soapFaultPrefix = soapFaultSpace + XmlNsDelim
+	soapFaultPrefix = soapFaultSpace + xmlNsDelim
 
 	soapFaultCode        = "faultcode"
 	soapFaultCodeDefault = "s:Client"
