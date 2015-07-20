@@ -38,8 +38,8 @@ import (
 )
 
 func printHelp() {
-	fmt.Printf("s : (S)earch root devices\n")
-	fmt.Printf("q : (Q)uit\n")
+	fmt.Printf("s : (s)earch root devices\n")
+	fmt.Printf("q : (q)uit\n")
 }
 
 func handleInput(ctrlPoint *ControlPoint) {
