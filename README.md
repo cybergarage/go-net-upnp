@@ -17,8 +17,6 @@ go get -u github.com/cybergarage/go-net-upnp/net/upnp
 
 go-net-upnp provides UPnP control point and device frameworks to implement the control point and any devices.
 
-To know the implementations in more deital using go-net-upnp, please check the sample implementations in the `example` directory and the `godoc` documentation :-)
-
 ### Control Point Implementation
 
 go-net-upnp supports UPnP control functions. The control point can search UPnP devices in the local netowrk, get the device and service descriptions. and post actions in the service:
@@ -97,3 +95,8 @@ Next, implement the control actions in the service descriptions using upnp.Actio
 		return upnp.NewErrorFromCode(upnp.ErrorOptionalActionNotImplemented)
 	}
 ```
+
+## Next Steps
+
+To know how to implement UPnP control point an devices in more deital using go-net-upnp, please check the sample implementations in the `example` directory and the `godoc` documentation :-)
+
