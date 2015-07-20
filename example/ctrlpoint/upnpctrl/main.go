@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-upntctrl browses UPnP devices in the local network, and post the actions.
+upntctrl browses UPnP devices in the local network, and post any actions into the found devices.
 
         NAME
         upntctrl
@@ -25,8 +25,7 @@ upntctrl browses UPnP devices in the local network, and post the actions.
           The following is how to enable the verbose output
             upntctrl -v 1
 */
-
-package main
+package upnpctrl
 
 import (
 	"bufio"

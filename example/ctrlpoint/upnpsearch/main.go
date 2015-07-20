@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-upnpdump dumps prints all devices in the local network.
+upnpsearch dumps prints all devices in the local network.
 
         NAME
         upnpdump
@@ -23,10 +23,9 @@ upnpdump dumps prints all devices in the local network.
 
         EXAMPLES
           The following is how to enable the verbose output
-            upnpdump -v 1
+            upnpsearch -v 1
 */
-
-package main
+package upnpsearch
 
 import (
 	"flag"
