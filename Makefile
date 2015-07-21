@@ -34,8 +34,8 @@ ${USRAGNT_GO}: ./net/upnp/util/user_agent.gen ${VERSION_GO}
 
 version: ${VERSION_GO} ${USRAGNT_GO}
 
-goget:
-	go get -u ${GITHUB}/{net/upnp/log,net/upnp/util,net/upnp/http,net/upnp/ssdp,net/upnp/control,net/upnp}
+setup:
+	go get -u ${GITHUB}/net/upnp
 
 format:
 	gofmt -w src net example
