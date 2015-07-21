@@ -110,7 +110,7 @@ To know how to implement UPnP control point or devices in more deital using go-n
 
 ## Release plan
 
-In the first release version, 0.8, `go-net-upnp` supports major UPnP control point and device functions. However I will implements other functions by the final release version, 1.0.
+In the first release version, 0.8, `go-net-upnp` supports major UPnP control point and device functions. However I will implements other functions by the final release version, 1.0, as the following.
 
 - 0.9 : Support the event subscription function of UPnP and deprecated functions from UPnP v1.1 such as query function.
 - 1.0 : Support UPnP v2.0 specifications more correctly.
