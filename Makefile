@@ -19,8 +19,10 @@ GITHUB=github.com/cybergarage/go-net-upnp
 UPNPDUMP=${PREFIX}/bin/upnpdump
 UPNPSEARCH=${PREFIX}/bin/upnpsearch
 UPNPGWLIST=${PREFIX}/bin/upnpgwdump
-LIGHTDEV=${PREFIX}/bin/lightdev
 UPNPCTRL=${PREFIX}/bin/upnpctrl
+
+LIGHTDEV=${PREFIX}/bin/lightdev
+MEDIASERVER=${PREFIX}/bin/mediaserver
 
 PACKAGES=${GITHUB}/net/upnp ${GITHUB}/net/upnp/ssdp ${GITHUB}/net/upnp/control ${GITHUB}/net/upnp/log ${GITHUB}/net/upnp/http ${GITHUB}/net/upnp/http
 	
@@ -52,13 +54,16 @@ ${UPNPSEARCH}: package $(shell find ./example/ctrlpoint/upnpsearch -type f -name
 ${UPNPGWLIST}: package $(shell find ./example/ctrlpoint/upnpgwlist -type f -name '*.go')
 	go build -o $@ ./example/ctrlpoint/upnpgwlist
 
-${LIGHTDEV}: package $(shell find ./example/dev/lightdev -type f -name '*.go')
-	go build -o $@ ./example/dev/lightdev
-
 ${UPNPCTRL}: package $(shell find ./example/ctrlpoint/upnpctrl -type f -name '*.go')
 	go build -o $@ ./example/ctrlpoint/upnpctrl
 
-build: ${UPNPDUMP} ${UPNPSEARCH} ${UPNPGWLIST} ${LIGHTDEV} ${UPNPCTRL}
+${LIGHTDEV}: package $(shell find ./example/dev/lightdev -type f -name '*.go')
+	go build -o $@ ./example/dev/lightdev
+
+${MEDIASERVER}: package $(shell find ./example/dev/mediaserver -type f -name '*.go')
+	go build -o $@ ./example/dev/mediaserver
+
+build: ${UPNPDUMP} ${UPNPSEARCH} ${UPNPGWLIST} ${LIGHTDEV} ${UPNPCTRL} ${MEDIASERVER}
 
 test: package
 	go test -v -cover ${PACKAGES}
