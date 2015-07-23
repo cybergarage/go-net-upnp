@@ -58,3 +58,15 @@ func (self *Request) IsDiscover() bool {
 func (self *Request) IsRootDevice() bool {
 	return self.IsHeaderString(ST, ROOT_DEVICE)
 }
+
+func (self *Request) IsAlive() bool {
+	return self.IsHeaderString(NTS, NTS_ALIVE)
+}
+
+func (self *Request) IsByeBye() bool {
+	return self.IsHeaderString(NTS, NTS_BYEBYE)
+}
+
+func (self *Request) IsUpdate() bool {
+	return self.IsHeaderString(NTS, NTS_UPDATE)
+}

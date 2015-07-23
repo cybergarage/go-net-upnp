@@ -56,5 +56,6 @@ const (
 	DISCOVER    = "\"ssdp:discover\""
 	NTS_ALIVE   = "ssdp:alive"
 	NTS_BYEBYE  = "ssdp:byebye"
+	NTS_UPDATE  = "ssdp:update"
 	MAX_AGE     = "max-age"
 )
