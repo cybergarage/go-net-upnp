@@ -155,6 +155,23 @@ func (self *Device) createLocationURLForAddress(addr string) (*url.URL, error) {
 	return url, nil
 }
 
+// HasDeviceType returns true if the device or the embedded device type is the specified type, otherwise false.
+func (self *Device) HasDeviceType(deviceType string) bool {
+	if self.DeviceType == deviceType {
+		return true
+	}
+
+	devCnt := len(self.DeviceList.Devices)
+	for n := 0; n < devCnt; n++ {
+		dev := &self.DeviceList.Devices[n]
+		if dev.HasDeviceType(deviceType) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // GetRootDevice returns the root device.
 func (self *Device) GetRootDevice() *Device {
 	rootDev := self
