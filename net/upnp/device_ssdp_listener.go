@@ -42,6 +42,16 @@ func (self *Device) handleDiscoverRequest(ssdpReq *ssdp.Request) {
 		self.postResponseMessge(ssdpReq)
 		return
 	}
+
+	st, err := ssdpReq.GetST()
+	if err != nil {
+		return
+	}
+
+	if self.HasDeviceType(st) || self.HasServiceType(st) {
+		self.postResponseMessge(ssdpReq)
+		return
+	}
 }
 
 func (self *Device) DeviceSearchReceived(ssdpReq *ssdp.Request) {
