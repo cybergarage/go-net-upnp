@@ -161,10 +161,28 @@ func (self *Device) HasDeviceType(deviceType string) bool {
 		return true
 	}
 
-	devCnt := len(self.DeviceList.Devices)
-	for n := 0; n < devCnt; n++ {
+	for n := 0; n < len(self.DeviceList.Devices); n++ {
 		dev := &self.DeviceList.Devices[n]
 		if dev.HasDeviceType(deviceType) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// HasServiceType returns true if the device or the embedded device has the specified service type, otherwise false.
+func (self *Device) HasServiceType(serviceType string) bool {
+	for n := 0; n < len(self.ServiceList.Services); n++ {
+		service := &self.ServiceList.Services[n]
+		if service.ServiceType == serviceType {
+			return true
+		}
+	}
+
+	for n := 0; n < len(self.DeviceList.Devices); n++ {
+		dev := &self.DeviceList.Devices[n]
+		if dev.HasServiceType(serviceType) {
 			return true
 		}
 	}
