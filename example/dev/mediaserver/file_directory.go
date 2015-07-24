@@ -10,7 +10,7 @@ type FileDirectory struct {
 
 func NewFileDirectory() *FileDirectory {
 	dir := &FileDirectory{
-		Directory: NewDictionary(),
+		Directory: NewDirectory(),
 	}
 	return dir
 }

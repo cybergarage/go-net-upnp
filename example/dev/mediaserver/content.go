@@ -5,5 +5,5 @@
 package media
 
 type Content interface {
-	IsDictionary() bool
+	IsDirectory() bool
 }
