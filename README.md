@@ -1,6 +1,7 @@
 # go-net-upnp
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/cybergarage/go-net-upnp)
+[![Go](https://github.com/cybergarage/go-net-upnp/actions/workflows/make.yml/badge.svg)](https://github.com/cybergarage/go-net-upnp/actions/workflows/make.yml)
 
 go-net-upnp is a new open source framework for Go and UPnP™ developers.
 
