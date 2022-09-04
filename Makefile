@@ -24,14 +24,16 @@ UPNPCTRL=${PREFIX}/bin/upnpctrl
 LIGHTDEV=${PREFIX}/bin/lightdev
 MEDIASERVER=${PREFIX}/bin/mediaserver
 
-PACKAGES=\
-	${GITHUB}/net/upnp \
-	${GITHUB}/net/upnp/ssdp \
-	${GITHUB}/net/upnp/control \
-	${GITHUB}/net/upnp/log \
-	${GITHUB}/net/upnp/http
+PKG_NAME=net/upnp
+PKG_ID=${GITHUB}/${PKG_NAME}
+PKGS=\
+	${PKG_ID} \
+	${PKG_ID}/ssdp \
+	${PKG_ID}/control \
+	${PKG_ID}/log \
+	${PKG_ID}/http
 	
-all: build
+all: test
 
 ${VERSION_GO}: ./net/upnp/version.gen
 	$< > $@
@@ -41,14 +43,17 @@ ${USRAGNT_GO}: ./net/upnp/util/user_agent.gen ${VERSION_GO}
 
 version: ${VERSION_GO} ${USRAGNT_GO}
 
-setup:
-	go get -u ${GITHUB}/net/upnp
-
 format:
-	gofmt -w net example
+	gofmt -s -w net example
+
+vet: format
+	go vet ${PKG_ID}
+
+lint: vet
+	golangci-lint run ${PKG_SRCS} ${BIN_SRCS} ${TEST_PKG_SRCS}
 
 package: format $(shell find . -type f -name '*.go')
-	go build -v ${PACKAGES}
+	go build -v ${PKGS}
 
 ${UPNPDUMP}: package $(shell find ./example/ctrlpoint/upnpdump -type f -name '*.go')
 	go build -o $@ ./example/ctrlpoint/upnpdump
@@ -70,13 +75,13 @@ ${MEDIASERVER}: package $(shell find ./example/dev/mediaserver -type f -name '*.
 
 build: ${UPNPDUMP} ${UPNPSEARCH} ${UPNPGWLIST} ${LIGHTDEV} ${UPNPCTRL} ${MEDIASERVER}
 
-test: package
-	go test -v -cover ${PACKAGES}
+test: package lint
+	go test -v -cover ${PKGS}
 
 install: build
-	go install ${PACKAGES}
+	go install ${PKGS}
 
 clean:
 	rm ${PREFIX}/bin/*
 	rm -rf _obj
-	go clean -i ${PACKAGES}
+	go clean -i ${PKGS}
