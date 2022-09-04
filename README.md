@@ -1,5 +1,7 @@
 # go-net-upnp
 
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/cybergarage/go-net-upnp)
+
 go-net-upnp is a new open source framework for Go and UPnP™ developers.
 
 UPnP™ is a standard protocol for IoT, it consist of other standard protocols, such as GENA, SSDP, SOAP, HTTPU and HTTP. Therefore UPnP developers have to understand and implement these protocols to create UPnP™ applications.
