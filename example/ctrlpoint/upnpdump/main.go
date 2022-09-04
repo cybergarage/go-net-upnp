@@ -5,24 +5,24 @@
 /*
 upnpdump prints SSDP packets in the local network.
 
-        NAME
-        upnpdump
+	NAME
+	upnpdump
 
-        SYNOPSIS
-        upnpdump [OPTIONS]
+	SYNOPSIS
+	upnpdump [OPTIONS]
 
-        DESCRIPTION
-        upnpdump is a utility to dump SSDP messages.
+	DESCRIPTION
+	upnpdump is a utility to dump SSDP messages.
 
-        OPTIONS
-        -v [0 | 1] : Enable verbose output.
+	OPTIONS
+	-v [0 | 1] : Enable verbose output.
 
-        EXIT STATUS
-          Return EXIT_SUCCESS or EXIT_FAILURE
+	EXIT STATUS
+	  Return EXIT_SUCCESS or EXIT_FAILURE
 
-        EXAMPLES
-          The following is how to enable the verbose output
-            upntctrl -v 1
+	EXAMPLES
+	  The following is how to enable the verbose output
+	    upntctrl -v 1
 */
 package upnpdump
 

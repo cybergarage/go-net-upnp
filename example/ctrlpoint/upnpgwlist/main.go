@@ -5,25 +5,25 @@
 /*
 upnpgwdump dumps prints all internet gatway devices, InternetGatewayDevice:1, in the local network.
 
-        NAME
-        upnpgwdump
+	NAME
+	upnpgwdump
 
-        SYNOPSIS
-        upnpdump [OPTIONS]
+	SYNOPSIS
+	upnpdump [OPTIONS]
 
-        DESCRIPTION
-        upnpgwdump is a utility to dump SSDP messages.
+	DESCRIPTION
+	upnpgwdump is a utility to dump SSDP messages.
 
 
-        OPTIONS
-        -v [0 | 1] : Enable verbose output.
+	OPTIONS
+	-v [0 | 1] : Enable verbose output.
 
-        EXIT STATUS
-          Return EXIT_SUCCESS or EXIT_FAILURE
+	EXIT STATUS
+	  Return EXIT_SUCCESS or EXIT_FAILURE
 
-        EXAMPLES
-          The following is how to enable the verbose output
-            upnpgwdump -v 1
+	EXAMPLES
+	  The following is how to enable the verbose output
+	    upnpgwdump -v 1
 */
 package upnpgwlist
 

@@ -5,25 +5,25 @@
 /*
 upntctrl browses UPnP devices in the local network, and post any actions into the found devices.
 
-        NAME
-        upntctrl
+	NAME
+	upntctrl
 
-        SYNOPSIS
-        upnpdump [OPTIONS]
+	SYNOPSIS
+	upnpdump [OPTIONS]
 
-        DESCRIPTION
-        upnpdump is a utility to dump SSDP messages.
+	DESCRIPTION
+	upnpdump is a utility to dump SSDP messages.
 
 
-        OPTIONS
-        -v [0 | 1] : Enable verbose output.
+	OPTIONS
+	-v [0 | 1] : Enable verbose output.
 
-        EXIT STATUS
-          Return EXIT_SUCCESS or EXIT_FAILURE
+	EXIT STATUS
+	  Return EXIT_SUCCESS or EXIT_FAILURE
 
-        EXAMPLES
-          The following is how to enable the verbose output
-            upntctrl -v 1
+	EXAMPLES
+	  The following is how to enable the verbose output
+	    upntctrl -v 1
 */
 package upnpctrl
 
