@@ -75,7 +75,7 @@ ${MEDIASERVER}: package $(shell find ./example/dev/mediaserver -type f -name '*.
 
 build: ${UPNPDUMP} ${UPNPSEARCH} ${UPNPGWLIST} ${LIGHTDEV} ${UPNPCTRL} ${MEDIASERVER}
 
-test: package lint
+test: package
 	go test -v -cover ${PKGS}
 
 install: build
