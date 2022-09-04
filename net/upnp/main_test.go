@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"./log"
+	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 func TestMain(m *testing.M) {

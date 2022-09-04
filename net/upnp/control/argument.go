@@ -4,8 +4,6 @@
 
 package control
 
-import ()
-
 // A Argument represents arguments in as SOAP action.
 type Argument struct {
 	Name  string

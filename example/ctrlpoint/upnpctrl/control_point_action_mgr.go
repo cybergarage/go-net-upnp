@@ -4,8 +4,6 @@
 
 package upnpctrl
 
-import ()
-
 // A ControlPoint represents a ControlPoint.
 type ControlPointActionManager struct {
 	Commands map[int]*ControlPointAction

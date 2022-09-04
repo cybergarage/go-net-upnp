@@ -4,8 +4,6 @@
 
 package ssdp
 
-import ()
-
 // A MulticastSocket represents a socket of SSDP.
 type MulticastSocket struct {
 	*HTTPMUSocket

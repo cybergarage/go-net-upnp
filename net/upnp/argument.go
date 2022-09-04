@@ -60,7 +60,7 @@ func (self *Argument) GetInt() (int, error) {
 
 // SetFloat sets a integer value into the specified argument
 func (self *Argument) SetFloat(value float64) error {
-	return self.SetString(fmt.Sprint("%f", value))
+	return self.SetString(fmt.Sprintf("%f", value))
 }
 
 // GetFloat return a integer value into the specified argument

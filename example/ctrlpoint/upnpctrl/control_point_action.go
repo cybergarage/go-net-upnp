@@ -4,8 +4,6 @@
 
 package upnpctrl
 
-import ()
-
 type ContolPointActionFunc func(*ControlPoint) bool
 
 // A ControlPoint represents a ControlPoint.

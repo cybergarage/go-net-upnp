@@ -131,12 +131,7 @@ func NewDeviceFromDescription(devDesc string) (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	rootDev := &root.Device
-	rootDev.SpecVersion = rootDev.SpecVersion
-	rootDev.URLBase = rootDev.URLBase
-
-	return rootDev, nil
+	return &root.Device, nil
 }
 
 // SetLocationURL set a location URL of SSDP packet.
@@ -205,9 +200,6 @@ func (self *Device) LoadDescriptionBytes(descBytes []byte) error {
 	if err != nil {
 		return err
 	}
-
-	self.DeviceDescription = self.DeviceDescription
-
 	return nil
 }
 
