@@ -31,3 +31,6 @@ linters:
     - exhaustruct
     - nilerr
     - dupl
+    - nosnakecase
+    - ifshort
+    - exhaustivestruct
