@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"./control"
+	"github.com/cybergarage/go-net-upnp/net/upnp/control"
 )
 
 const (

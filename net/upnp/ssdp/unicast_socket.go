@@ -4,8 +4,6 @@
 
 package ssdp
 
-import ()
-
 // A UnicastSocket represents a packet of SSDP.
 type UnicastSocket struct {
 	*HTTPUSocket
