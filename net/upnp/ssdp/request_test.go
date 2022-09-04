@@ -5,6 +5,7 @@
 package ssdp
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -77,7 +78,7 @@ func checkSSDPSearchRequest(t *testing.T, req *Request) {
 	headerInt, _ = req.GetMX()
 	expectInt = 3
 	if headerInt != expectInt {
-		t.Errorf(testErrorMsgBadHeader, MX, headerInt, expectInt)
+		t.Errorf(testErrorMsgBadHeader, MX, strconv.Itoa(headerInt), strconv.Itoa(expectInt))
 	}
 
 	headerValue, _ = req.GetST()

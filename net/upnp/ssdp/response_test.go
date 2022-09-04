@@ -7,7 +7,7 @@ package ssdp
 import (
 	"testing"
 
-	"../http"
+	"github.com/cybergarage/go-net-upnp/net/upnp/http"
 )
 
 func TestNewResponse(t *testing.T) {
