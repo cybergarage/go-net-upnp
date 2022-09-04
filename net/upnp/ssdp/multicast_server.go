@@ -55,7 +55,9 @@ func handleMulticastConnection(self *MulticastServer) {
 	for {
 		ssdpPkt, err := self.Socket.Read()
 		if err != nil {
-			log.Error(err)
+			if _, ok := err.(*net.OpError); !ok {
+				log.Error(err)
+			}
 			break
 		}
 
