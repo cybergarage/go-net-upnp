@@ -10,7 +10,8 @@ import (
 
 // A AllowedValueRange represents a icon.
 // NOTE : Minimum, Maximum and Step uses string type instead float64
-//        because some devices sets a blank into the fields such as BUFFALO WZR-900DHP
+//
+//	because some devices sets a blank into the fields such as BUFFALO WZR-900DHP
 type AllowedValueRange struct {
 	XMLName xml.Name `xml:"allowedValueRange"`
 	Minimum string   `xml:"minimum"`

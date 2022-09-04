@@ -5,20 +5,20 @@
 /*
 mediaserver is a sample implementation of UPnP standard device, MediaServer:1.
 
-        NAME
-        mediaserver
+	NAME
+	mediaserver
 
-        SYNOPSIS
-        mediaserver [OPTIONS]
+	SYNOPSIS
+	mediaserver [OPTIONS]
 
-        DESCRIPTION
-        mediaserver is a sample implmentation of UPnP Standardized DCP, MediaServer:1
+	DESCRIPTION
+	mediaserver is a sample implmentation of UPnP Standardized DCP, MediaServer:1
 
-        OPTIONS
-        -v : *level* Enable verbose output.
+	OPTIONS
+	-v : *level* Enable verbose output.
 
-        RETURN VALUE
-          Return EXIT_SUCCESS or EXIT_FAILURE
+	RETURN VALUE
+	  Return EXIT_SUCCESS or EXIT_FAILURE
 */
 package media
 

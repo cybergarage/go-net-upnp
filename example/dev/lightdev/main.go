@@ -5,20 +5,20 @@
 /*
 lightdev is a sample implementation of UPnP standard device, BinaryLight:1.
 
-        NAME
-        lightdev
+	NAME
+	lightdev
 
-        SYNOPSIS
-        lightdev [OPTIONS]
+	SYNOPSIS
+	lightdev [OPTIONS]
 
-        DESCRIPTION
-        lightdev is a sample implmentation of UPnP Standardized DCP, BinaryLight:1
+	DESCRIPTION
+	lightdev is a sample implmentation of UPnP Standardized DCP, BinaryLight:1
 
-        OPTIONS
-        -v : *level* Enable verbose output.
+	OPTIONS
+	-v : *level* Enable verbose output.
 
-        RETURN VALUE
-          Return EXIT_SUCCESS or EXIT_FAILURE
+	RETURN VALUE
+	  Return EXIT_SUCCESS or EXIT_FAILURE
 */
 package lightdev
 
