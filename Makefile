@@ -24,7 +24,12 @@ UPNPCTRL=${PREFIX}/bin/upnpctrl
 LIGHTDEV=${PREFIX}/bin/lightdev
 MEDIASERVER=${PREFIX}/bin/mediaserver
 
-PACKAGES=${GITHUB}/net/upnp ${GITHUB}/net/upnp/ssdp ${GITHUB}/net/upnp/control ${GITHUB}/net/upnp/log ${GITHUB}/net/upnp/http ${GITHUB}/net/upnp/http
+PACKAGES=\
+	${GITHUB}/net/upnp \
+	${GITHUB}/net/upnp/ssdp \
+	${GITHUB}/net/upnp/control \
+	${GITHUB}/net/upnp/log \
+	${GITHUB}/net/upnp/http
 	
 all: build
 
@@ -40,7 +45,7 @@ setup:
 	go get -u ${GITHUB}/net/upnp
 
 format:
-	gofmt -w src net example
+	gofmt -w net example
 
 package: format $(shell find . -type f -name '*.go')
 	go build -v ${PACKAGES}
