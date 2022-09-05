@@ -20,12 +20,12 @@ func (self *DeviceMap) AddDevice(dev *Device) bool {
 	}
 
 	devUdn := dev.UDN
-	if len(devUdn) <= 0 {
+	if len(devUdn) == 0 {
 		return false
 	}
 
 	devType := dev.DeviceType
-	if len(devType) <= 0 {
+	if len(devType) == 0 {
 		return false
 	}
 
@@ -82,7 +82,7 @@ func (self *DeviceMap) GetDevicesByType(deviceType string) []*Device {
 
 // FindDeviceByTypeAndUDN find a device of the specified device type and udn.
 func (self *DeviceMap) FindDeviceByTypeAndUDN(deviceType string, udn string) (*Device, bool) {
-	if len(deviceType) <= 0 || len(udn) <= 0 {
+	if len(deviceType) == 0 || len(udn) == 0 {
 		return nil, false
 	}
 

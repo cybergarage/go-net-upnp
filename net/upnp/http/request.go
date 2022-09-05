@@ -56,7 +56,7 @@ func (self *Request) IsSOAPRequest() bool {
 
 func (self *Request) GetSOAPServiceActionName() (string, bool) {
 	soapAction := self.Header.Get(SoapAction)
-	if len(soapAction) <= 0 {
+	if len(soapAction) == 0 {
 		return "", false
 	}
 

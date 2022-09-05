@@ -46,7 +46,7 @@ func handleInput(ctrlPoint *ControlPoint) {
 
 	for {
 		keys, _, _ := kb.ReadLine()
-		if len(keys) <= 0 {
+		if len(keys) == 0 {
 			printHelp()
 			continue
 		}
