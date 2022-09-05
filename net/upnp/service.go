@@ -89,7 +89,7 @@ func (self *Service) LoadDescriptionBytes(descBytes []byte) error {
 // LoadDescriptinString loads a device description string.
 func (self *Service) LoadDescriptionFromSCPDURL() error {
 	// Some services has no SCPDURL such as Panasonic AiSEG001
-	if len(self.SCPDURL) <= 0 {
+	if len(self.SCPDURL) == 0 {
 		return nil
 	}
 
@@ -162,15 +162,15 @@ func (self *Service) reviseDescription() error {
 
 	// check description URLs
 
-	if len(self.SCPDURL) <= 0 {
+	if len(self.SCPDURL) == 0 {
 		self.SCPDURL = fmt.Sprintf(defaultServiceScpdURL, shortServiceId)
 	}
 
-	if len(self.ControlURL) <= 0 {
+	if len(self.ControlURL) == 0 {
 		self.ControlURL = fmt.Sprintf(defaultServiceControlURL, shortServiceId)
 	}
 
-	if len(self.EventSubURL) <= 0 {
+	if len(self.EventSubURL) == 0 {
 		self.EventSubURL = fmt.Sprintf(defaultServiceEventURL, shortServiceId)
 	}
 
@@ -233,7 +233,7 @@ func (self *Service) GetActionByName(name string) (*Action, error) {
 		return nil, fmt.Errorf(errorServiceDescriptionNotFound, name, self.ServiceType)
 	}
 
-	if len(self.ActionList.Actions) <= 0 {
+	if len(self.ActionList.Actions) == 0 {
 		return nil, fmt.Errorf(errorServiceHanNoActions, name, self.ServiceType)
 	}
 

@@ -202,17 +202,17 @@ func TestTestDeviceDescription(t *testing.T) {
 		}
 
 		expectURL := urls[0]
-		if len(service.SCPDURL) <= 0 || service.SCPDURL != expectURL {
+		if len(service.SCPDURL) == 0 || service.SCPDURL != expectURL {
 			t.Errorf(errorTestDeviceInvalidURL, "SCPDURL", service.SCPDURL, expectURL)
 		}
 
 		expectURL = urls[1]
-		if len(service.ControlURL) <= 0 || service.ControlURL != expectURL {
+		if len(service.ControlURL) == 0 || service.ControlURL != expectURL {
 			t.Errorf(errorTestDeviceInvalidURL, "ControlURL", service.ControlURL, expectURL)
 		}
 
 		expectURL = urls[2]
-		if len(service.EventSubURL) <= 0 || service.EventSubURL != expectURL {
+		if len(service.EventSubURL) == 0 || service.EventSubURL != expectURL {
 			t.Errorf(errorTestDeviceInvalidURL, "EventSubURL", service.EventSubURL, expectURL)
 		}
 	}

@@ -46,7 +46,7 @@ func NewPacketFromBytes(bytes []byte) (*Packet, error) {
 }
 
 func (self *Packet) parse(pktBytes []byte) error {
-	if len(pktBytes) <= 0 {
+	if len(pktBytes) == 0 {
 		return errors.New(errorZeroPacket)
 	}
 

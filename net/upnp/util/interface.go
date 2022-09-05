@@ -73,7 +73,7 @@ func GetAvailableInterfaces() ([]net.Interface, error) {
 		useIfs = append(useIfs, localIf)
 	}
 
-	if len(useIfs) <= 0 {
+	if len(useIfs) == 0 {
 		return useIfs, errors.New(errorAvailableInterfaceFound)
 	}
 

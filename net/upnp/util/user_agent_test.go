@@ -10,7 +10,7 @@ import (
 
 func TestUserAgent(t *testing.T) {
 	agent := GetUserAgent()
-	if len(agent) <= 0 {
+	if len(agent) == 0 {
 		t.Errorf("user agent is null")
 	}
 }

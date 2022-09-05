@@ -344,12 +344,12 @@ func (self *Device) reviseParentObject() error {
 // TODO : Support embedded devices
 func (self *Device) reviseDescription() error {
 	// check descriptionURL
-	if len(self.DescriptionURL) <= 0 {
+	if len(self.DescriptionURL) == 0 {
 		self.DescriptionURL = DeviceDefaultDescriptionURL
 	}
 
 	// check UUID
-	if len(self.UDN) <= 0 {
+	if len(self.UDN) == 0 {
 		self.SetUDN(util.CreateUUID())
 	}
 
