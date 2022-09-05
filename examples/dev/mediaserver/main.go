@@ -47,13 +47,13 @@ func main() {
 
 	dev, err := NewMediaServer()
 	if err != nil {
-		log.Errorf(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 
 	err = dev.Start()
 	if err != nil {
-		log.Errorf(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 	defer dev.Stop()

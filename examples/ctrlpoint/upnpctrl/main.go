@@ -101,14 +101,14 @@ func main() {
 	ctrlPoint := NewControlPoint()
 	err := ctrlPoint.Start()
 	if err != nil {
-		log.Errorf(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 	defer ctrlPoint.Stop()
 
 	err = ctrlPoint.SearchRootDevice()
 	if err != nil {
-		log.Errorf(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 
