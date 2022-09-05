@@ -54,5 +54,4 @@ func TestSearchResponse(t *testing.T) {
 	if headerValue != expectValue {
 		t.Errorf(testErrorMsgBadHeader, EXT, headerValue, expectValue)
 	}
-
 }
