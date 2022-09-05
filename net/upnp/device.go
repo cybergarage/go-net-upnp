@@ -377,7 +377,7 @@ func (self *Device) selectAvailableInterfaceForAddr(fromAddr string) (string, er
 	return ifAddr, err
 }
 
-// GetAbsoluteURL return a absoulte URL of the specified path using URLBase or LocationURL.
+// GetAbsoluteURL return a absolute URL of the specified path using URLBase or LocationURL.
 func (self *Device) GetAbsoluteURL(path string) (*url.URL, error) {
 	rootDev := self.GetRootDevice()
 
