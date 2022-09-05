@@ -7,7 +7,7 @@ package upnp
 import (
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"strings"
 
 	"github.com/cybergarage/go-logger/log"
@@ -248,7 +248,7 @@ func (self *Action) Post() error {
 
 	statusCode := httpRes.StatusCode
 	defer httpRes.Body.Close()
-	soapResBytes, err := ioutil.ReadAll(httpRes.Body)
+	soapResBytes, err := io.ReadAll(httpRes.Body)
 	if err != nil {
 		return err
 	}

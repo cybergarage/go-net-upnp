@@ -7,7 +7,7 @@ package upnp
 import (
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net/url"
 
@@ -117,7 +117,7 @@ func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 		return nil, fmt.Errorf(errorDeviceBadDescriptionURL, descURL, res.StatusCode)
 	}
 
-	devDescBytes, err := ioutil.ReadAll(res.Body)
+	devDescBytes, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
