@@ -6,7 +6,6 @@ package upnp
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"testing"
 )
@@ -16,7 +15,7 @@ const (
 )
 
 func newDeviceDesecriptionInvalidFieldError(name, value, expected string) error {
-	return errors.New(fmt.Sprintf(errorDeviceDesecriptionInvalidField, name, value, expected))
+	return fmt.Errorf(errorDeviceDesecriptionInvalidField, name, value, expected)
 }
 
 const testDeviceDesecription = xml.Header +

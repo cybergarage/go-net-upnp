@@ -36,7 +36,7 @@ func (self *HTTPMUSocket) Bind(ifi net.Interface) error {
 
 	self.Conn, err = net.ListenMulticastUDP("udp", &ifi, mcastAddr)
 	if err != nil {
-		return errors.New(fmt.Sprintf("%s (%s)", err.Error(), ifi.Name))
+		return fmt.Errorf("%w (%s)", err, ifi.Name)
 	}
 
 	self.Interface = ifi

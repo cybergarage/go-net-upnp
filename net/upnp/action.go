@@ -6,7 +6,6 @@ package upnp
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -95,7 +94,7 @@ func (self *Action) GetArgumentByName(name string) (*Argument, error) {
 			return arg, nil
 		}
 	}
-	return nil, errors.New(fmt.Sprintf(errorActionArgumentNotFound, name))
+	return nil, fmt.Errorf(errorActionArgumentNotFound, name)
 }
 
 // SetArgumentString sets a string value into the specified argument
@@ -178,7 +177,7 @@ func (self *Action) setArgumentsByActionControl(actionCtrl *control.ActionContro
 	}
 
 	if ctrlAction.Name != self.Name {
-		return errors.New(fmt.Sprintf(errorActionNameIsInvalid, ctrlAction.Name, self.Name))
+		return fmt.Errorf(errorActionNameIsInvalid, ctrlAction.Name, self.Name)
 	}
 
 	for n := 0; n < len(ctrlAction.Arguments); n++ {

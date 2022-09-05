@@ -55,7 +55,7 @@ func (self *Packet) parse(pktBytes []byte) error {
 	pktFirstLineSep := []byte(CRLF)
 	pktFirstLineIdx := bytes.Index(pktBytes, pktFirstLineSep)
 	if pktFirstLineIdx == -1 {
-		return errors.New(fmt.Sprintf(errorPacketFirstLineNotFound, string(pktBytes)))
+		return fmt.Errorf(errorPacketFirstLineNotFound, string(pktBytes))
 	}
 	pktFirstLine := string(pktBytes[0:pktFirstLineIdx])
 	self.FirstLines = strings.Split(pktFirstLine, SP)
@@ -74,7 +74,7 @@ func (self *Packet) parse(pktBytes []byte) error {
 	pktEndIdx := pktBodyIdx - 1
 
 	if (pktBeginIdx < 0) || (pktEndIdx < 0) || (pktEndIdx < pktBeginIdx) || (len(pktBytes)-1) < pktBeginIdx || (len(pktBytes)-1) < pktEndIdx {
-		return errors.New(fmt.Sprintf(errorPacketHeadersNotFound, pktBeginIdx, pktEndIdx, string(pktBytes)))
+		return fmt.Errorf(errorPacketHeadersNotFound, pktBeginIdx, pktEndIdx, string(pktBytes))
 	}
 
 	pktHeaderStrings := string(pktBytes[pktBeginIdx:pktEndIdx])
@@ -141,7 +141,7 @@ func (self *Packet) SetHeaderString(name string, value string) error {
 func (self *Packet) GetHeaderString(name string) (string, error) {
 	value, ok := self.Headers[name]
 	if !ok {
-		return "", errors.New(fmt.Sprintf(errorPacketHeaderNotFound, name))
+		return "", fmt.Errorf(errorPacketHeaderNotFound, name)
 	}
 
 	return value, nil
