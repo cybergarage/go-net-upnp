@@ -7,7 +7,7 @@ package upnp
 import (
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/url"
 	"strings"
 
@@ -107,7 +107,7 @@ func (self *Service) LoadDescriptionFromSCPDURL() error {
 		return fmt.Errorf(errorServiceBadSCPDURL, scpdURL.String(), res.StatusCode)
 	}
 
-	scpdBytes, err := ioutil.ReadAll(res.Body)
+	scpdBytes, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}

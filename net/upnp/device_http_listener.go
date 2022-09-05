@@ -6,7 +6,7 @@ package upnp
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 
 	"github.com/cybergarage/go-logger/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp/control"
@@ -125,7 +125,7 @@ func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes htt
 	// read request
 
 	defer httpReq.Body.Close()
-	soapReqBytes, err := ioutil.ReadAll(httpReq.Body)
+	soapReqBytes, err := io.ReadAll(httpReq.Body)
 
 	if err != nil {
 		upnpErr := control.NewUPnPErrorFromCode(control.ErrorInvalidAction)
