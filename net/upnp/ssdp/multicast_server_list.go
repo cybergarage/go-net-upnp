@@ -34,7 +34,7 @@ func (self *MulticastServerList) Start() error {
 		return err
 	}
 
-	var lastErr error = nil
+	var lastErr error
 
 	self.Servers = make([]*MulticastServer, len(ifis))
 	for n, ifi := range ifis {
@@ -52,7 +52,7 @@ func (self *MulticastServerList) Start() error {
 
 // Stop stops this server.
 func (self *MulticastServerList) Stop() error {
-	var lastErr error = nil
+	var lastErr error
 
 	for _, server := range self.Servers {
 		err := server.Stop()

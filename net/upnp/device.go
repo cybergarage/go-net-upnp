@@ -449,7 +449,7 @@ func (self *Device) Start() error {
 
 // Stop stops this control point.
 func (self *Device) Stop() error {
-	var lastErr error = nil
+	var lastErr error
 
 	err := self.ssdpMcastServerList.Stop()
 	if err != nil {

@@ -34,7 +34,7 @@ func (self *UnicastServerList) Start(port int) error {
 		return err
 	}
 
-	var lastErr error = nil
+	var lastErr error
 
 	self.Servers = make([]*UnicastServer, len(ifis))
 	for n, ifi := range ifis {
@@ -52,7 +52,7 @@ func (self *UnicastServerList) Start(port int) error {
 
 // Stop stops this server.
 func (self *UnicastServerList) Stop() error {
-	var lastErr error = nil
+	var lastErr error
 
 	for _, server := range self.Servers {
 		err := server.Stop()
@@ -68,7 +68,7 @@ func (self *UnicastServerList) Stop() error {
 
 // Search sends a M-SEARCH request of the specified ST.
 func (self *UnicastServerList) Search(st string, mx int) error {
-	var lastErr error = nil
+	var lastErr error
 
 	for _, server := range self.Servers {
 		err := server.Search(st, mx)
