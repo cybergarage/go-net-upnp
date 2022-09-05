@@ -9,7 +9,7 @@ import (
 	"math/rand"
 	"sync"
 
-	"github.com/cybergarage/go-net-upnp/net/upnp/log"
+	"github.com/cybergarage/go-logger/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
 	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
@@ -132,7 +132,7 @@ func (self *ControlPoint) addDevice(dev *Device) (bool, error) {
 	defer self.Unlock()
 
 	if self.rootDeviceMap.HasDevice(dev) {
-		log.Trace(fmt.Sprintf("device (%s, %s) is already added", dev.DeviceType, dev.UDN))
+		log.Tracef(fmt.Sprintf("device (%s, %s) is already added", dev.DeviceType, dev.UDN))
 		return false, nil
 	}
 
@@ -144,7 +144,7 @@ func (self *ControlPoint) addDevice(dev *Device) (bool, error) {
 	ok := self.rootDeviceMap.AddDevice(dev)
 
 	if ok {
-		log.Trace(fmt.Sprintf("device (%s, %s) is added", dev.DeviceType, dev.UDN))
+		log.Tracef(fmt.Sprintf("device (%s, %s) is added", dev.DeviceType, dev.UDN))
 	}
 
 	return ok, nil
@@ -163,7 +163,7 @@ func getFromToMessageFromSSDPPacket(req *ssdp.Packet) string {
 
 func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	usn, _ := ssdpReq.GetUSN()
-	log.Trace(fmt.Sprintf("notiry req : %s %s", usn, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
+	log.Tracef(fmt.Sprintf("notiry req : %s %s", usn, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
 
 	if ssdpReq.IsRootDevice() {
 		newDev, err := NewDeviceFromSSDPRequest(ssdpReq)
@@ -171,7 +171,7 @@ func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 			_, err = self.addDevice(newDev)
 		}
 		if err != nil {
-			log.Warn(err)
+			log.Warnf("%s", err.Error())
 		}
 	}
 
@@ -182,7 +182,7 @@ func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 
 func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 	st, _ := ssdpReq.GetST()
-	log.Trace(fmt.Sprintf("search req : %s %s", st, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
+	log.Tracef(fmt.Sprintf("search req : %s %s", st, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
 
 	if self.Listener != nil {
 		self.Listener.DeviceSearchReceived(ssdpReq)
@@ -191,14 +191,14 @@ func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 
 func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
 	url, _ := ssdpRes.GetLocation()
-	log.Trace(fmt.Sprintf("search res : %s %s", url, getFromToMessageFromSSDPPacket(ssdpRes.Packet)))
+	log.Tracef(fmt.Sprintf("search res : %s %s", url, getFromToMessageFromSSDPPacket(ssdpRes.Packet)))
 
 	newDev, err := NewDeviceFromSSDPResponse(ssdpRes)
 	if err == nil {
 		_, err = self.addDevice(newDev)
 	}
 	if err != nil {
-		log.Warn(err)
+		log.Warnf("%s", err.Error())
 	}
 
 	if self.Listener != nil {

@@ -26,7 +26,7 @@ import (
 	"bufio"
 	"os"
 
-	"github.com/cybergarage/go-net-upnp/net/upnp/log"
+	"github.com/cybergarage/go-logger/log"
 )
 
 func handleInput() {
@@ -43,18 +43,17 @@ func handleInput() {
 }
 
 func main() {
-	logger := log.NewStdoutLogger(log.LoggerLevelTrace)
-	log.SetSharedLogger(logger)
+	log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
 
 	dev, err := NewMediaServer()
 	if err != nil {
-		log.Error(err)
+		log.Errorf(err)
 		os.Exit(1)
 	}
 
 	err = dev.Start()
 	if err != nil {
-		log.Error(err)
+		log.Errorf(err)
 		os.Exit(1)
 	}
 	defer dev.Stop()

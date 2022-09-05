@@ -11,9 +11,9 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/cybergarage/go-logger/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp/control"
 	"github.com/cybergarage/go-net-upnp/net/upnp/http"
-	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 const (
@@ -233,7 +233,7 @@ func (self *Action) Post() error {
 		return err
 	}
 
-	log.Trace(fmt.Sprintf("action req = \n%s", soapReqStr))
+	log.Tracef(fmt.Sprintf("action req = \n%s", soapReqStr))
 
 	httpClient, err := http.NewClient()
 	if err != nil {
@@ -254,7 +254,7 @@ func (self *Action) Post() error {
 		return err
 	}
 
-	log.Trace(fmt.Sprintf("action res [%d] = \n%s", statusCode, string(soapResBytes)))
+	log.Tracef(fmt.Sprintf("action res [%d] = \n%s", statusCode, string(soapResBytes)))
 
 	// parse response
 

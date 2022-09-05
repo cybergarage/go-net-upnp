@@ -7,8 +7,8 @@ package upnpctrl
 import (
 	"fmt"
 
+	"github.com/cybergarage/go-logger/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp"
-	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
 	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
@@ -31,7 +31,7 @@ func NewControlPoint() *ControlPoint {
 }
 
 func printMessage(msg string) {
-	log.Trace(msg)
+	log.Tracef(msg)
 }
 
 func GetFromToMessageFromSSDPPacket(req *ssdp.Packet) string {

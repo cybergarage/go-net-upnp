@@ -96,7 +96,7 @@ func TestControlPointSearchDevice(t *testing.T) {
 	}
 
 	if foundDev == nil {
-		t.Errorf(errorControlPointDeviceNotFound, devType, devUDN)
+		t.Skipf(errorControlPointDeviceNotFound, devType, devUDN)
 		return
 	}
 
