@@ -30,7 +30,6 @@ PKGS=\
 	${PKG_ID} \
 	${PKG_ID}/ssdp \
 	${PKG_ID}/control \
-	${PKG_ID}/log \
 	${PKG_ID}/http
 	
 all: test
