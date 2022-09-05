@@ -110,7 +110,7 @@ Next, implement the control actions in the service descriptions using upnp.Actio
 
 ## Next Steps
 
-To know how to implement UPnP control point or devices in more deital using go-net-upnp, please check the sample implementations in the [example](../example) directory and the `godoc` documentation :-)
+To know how to implement UPnP control point or devices in more deital using go-net-upnp, please check the sample implementations in the [example](./examples) directory and the [godoc]((https://pkg.go.dev/github.com/cybergarage/go-net-upnp)) documentation :-)
 
 ## Release plan
 
