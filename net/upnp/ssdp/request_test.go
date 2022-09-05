@@ -13,7 +13,6 @@ func TestNewRequest(t *testing.T) {
 	NewRequest()
 }
 func TestSSDPSearchRequest(t *testing.T) {
-
 	const SearchRequest = "" +
 		"M-SEARCH * HTTP/1.1\r\n" +
 		"HOST: 239.255.255.250:1900\r\n" +
@@ -31,7 +30,6 @@ func TestSSDPSearchRequest(t *testing.T) {
 }
 
 func TestSSDPUnformalSearchRequest(t *testing.T) {
-
 	const SearchRequest = "" +
 		"M-SEARCH * HTTP/1.1\r\n" +
 		"HOST: 239.255.255.250:1900\r\n" +
@@ -48,7 +46,6 @@ func TestSSDPUnformalSearchRequest(t *testing.T) {
 }
 
 func checkSSDPSearchRequest(t *testing.T, req *Request) {
-
 	// Check Method
 
 	if !req.IsSearchRequest() {
