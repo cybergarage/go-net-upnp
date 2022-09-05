@@ -100,7 +100,7 @@ func (self *Service) LoadDescriptionFromSCPDURL() error {
 
 	res, err := http.Get(scpdURL.String())
 	if err != nil {
-		return fmt.Errorf("%s (%s)", err.Error(), scpdURL)
+		return fmt.Errorf("%w (%s)", err, scpdURL)
 	}
 
 	if res.StatusCode != http.StatusOK {
@@ -114,7 +114,7 @@ func (self *Service) LoadDescriptionFromSCPDURL() error {
 
 	err = self.LoadDescriptionBytes(scpdBytes)
 	if err != nil {
-		return fmt.Errorf("%s (%s)", err.Error(), scpdURL)
+		return fmt.Errorf("%w (%s)", err, scpdURL)
 	}
 
 	return nil
