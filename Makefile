@@ -40,10 +40,19 @@ ${VERSION_GO}: ./net/upnp/version.gen
 ${USRAGNT_GO}: ./net/upnp/util/user_agent.gen ${VERSION_GO}
 	$< > $@
 
+BIN_ROOT=examples
+BINS=\
+	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpdump \
+	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpsearch \
+	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpgwlist \
+	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpctrl \
+	${GITHUB}/${BIN_ROOT}/dev/lightdev \
+	${GITHUB}/${BIN_ROOT}/dev/mediaserver
+
 version: ${VERSION_GO} ${USRAGNT_GO}
 
 format:
-	gofmt -s -w net example
+	gofmt -s -w ${PKG_NAME} ${BIN_ROOT}
 
 vet: format
 	go vet ${PKG_ID}
@@ -51,36 +60,14 @@ vet: format
 lint: vet
 	golangci-lint run ${PKG_SRCS} ${BIN_SRCS} ${TEST_PKG_SRCS}
 
-package: format $(shell find . -type f -name '*.go')
+build:
 	go build -v ${PKGS}
 
-${UPNPDUMP}: package $(shell find ./example/ctrlpoint/upnpdump -type f -name '*.go')
-	go build -o $@ ./example/ctrlpoint/upnpdump
-
-${UPNPSEARCH}: package $(shell find ./example/ctrlpoint/upnpsearch -type f -name '*.go')
-	go build -o $@ ./example/ctrlpoint/upnpsearch
-
-${UPNPGWLIST}: package $(shell find ./example/ctrlpoint/upnpgwlist -type f -name '*.go')
-	go build -o $@ ./example/ctrlpoint/upnpgwlist
-
-${UPNPCTRL}: package $(shell find ./example/ctrlpoint/upnpctrl -type f -name '*.go')
-	go build -o $@ ./example/ctrlpoint/upnpctrl
-
-${LIGHTDEV}: package $(shell find ./example/dev/lightdev -type f -name '*.go')
-	go build -o $@ ./example/dev/lightdev
-
-${MEDIASERVER}: package $(shell find ./example/dev/mediaserver -type f -name '*.go')
-	go build -o $@ ./example/dev/mediaserver
-
-build: ${UPNPDUMP} ${UPNPSEARCH} ${UPNPGWLIST} ${LIGHTDEV} ${UPNPCTRL} ${MEDIASERVER}
-
-test: package
+test: build
 	go test -v -cover ${PKGS}
 
-install: build
-	go install ${PKGS}
+install:
+	go install ${BINS}
 
 clean:
-	rm ${PREFIX}/bin/*
-	rm -rf _obj
 	go clean -i ${PKGS}
