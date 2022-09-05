@@ -34,8 +34,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cybergarage/go-logger/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp"
-	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 )
 
 func printDevice(n int, dev *upnp.Device) {
@@ -66,8 +66,7 @@ func main() {
 	flag.Parse()
 
 	if 0 < *verbose {
-		logger := log.NewStdoutLogger(log.LoggerLevelTrace)
-		log.SetSharedLogger(logger)
+		log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
 	}
 
 	// Start a control point
@@ -75,7 +74,7 @@ func main() {
 	ctrlPoint := upnp.NewControlPoint()
 	err := ctrlPoint.Start()
 	if err != nil {
-		log.Error(err)
+		log.Errorf(err)
 		os.Exit(1)
 	}
 	defer ctrlPoint.Stop()
@@ -84,7 +83,7 @@ func main() {
 
 	err = ctrlPoint.SearchRootDevice()
 	if err != nil {
-		log.Error(err)
+		log.Errorf(err)
 		os.Exit(1)
 	}
 

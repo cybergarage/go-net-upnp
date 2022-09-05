@@ -8,12 +8,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cybergarage/go-net-upnp/net/upnp/log"
+	"github.com/cybergarage/go-logger/log"
 )
 
 func TestMain(m *testing.M) {
-	logger := log.NewStdoutLogger(log.LoggerLevelTrace)
-	log.SetSharedLogger(logger)
-
+	log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
 	os.Exit(m.Run())
 }

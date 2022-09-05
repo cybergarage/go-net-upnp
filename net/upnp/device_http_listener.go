@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/cybergarage/go-logger/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp/control"
 	"github.com/cybergarage/go-net-upnp/net/upnp/http"
-	"github.com/cybergarage/go-net-upnp/net/upnp/log"
 	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
@@ -132,7 +132,7 @@ func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes htt
 		return responseUPnPError(httpRes, upnpErr)
 	}
 
-	log.Trace(fmt.Sprintf("action req = \n%s", string(soapReqBytes)))
+	log.Tracef(fmt.Sprintf("action req = \n%s", string(soapReqBytes)))
 
 	// parse request
 
@@ -196,7 +196,7 @@ func (self *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.
 }
 
 func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
-	log.Info(fmt.Sprintf("%s %s", httpReq.Method, httpReq.URL.Path))
+	log.Infof(fmt.Sprintf("%s %s", httpReq.Method, httpReq.URL.Path))
 
 	switch httpReq.Method {
 	case http.GET:
