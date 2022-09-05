@@ -44,7 +44,7 @@ func TestSearchResponse(t *testing.T) {
 	// Check Headers
 
 	var headerValue, expectValue string
-	//var headerInt, expectInt int
+	// var headerInt, expectInt int
 
 	headerValue, err = res.GetEXT()
 	if err != nil {
