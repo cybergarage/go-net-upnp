@@ -22,7 +22,7 @@ go-net-upnp provides UPnP control point and device frameworks to implement the c
 
 ### Control Point Implementation
 
-go-net-upnp supports UPnP control functions. The control point can search UPnP devices in the local netowrk, get the device and service descriptions. and post actions in the service:
+go-net-upnp supports UPnP control functions. The control point can search UPnP devices in the local network, get the device and service descriptions. and post actions in the service:
 
 ```
 	import (
