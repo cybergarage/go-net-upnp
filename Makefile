@@ -46,8 +46,8 @@ BINS=\
 	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpsearch \
 	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpgwlist \
 	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpctrl \
-	${GITHUB}/${BIN_ROOT}/dev/lightdev \
-	${GITHUB}/${BIN_ROOT}/dev/mediaserver
+	${GITHUB}/${BIN_ROOT}/device/upnplight \
+	${GITHUB}/${BIN_ROOT}/device/upnpavserver
 
 version: ${VERSION_GO} ${USRAGNT_GO}
 
