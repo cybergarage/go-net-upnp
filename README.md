@@ -2,6 +2,7 @@
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/cybergarage/go-net-upnp)
 [![Go](https://github.com/cybergarage/go-net-upnp/actions/workflows/make.yml/badge.svg)](https://github.com/cybergarage/go-net-upnp/actions/workflows/make.yml)
+ [![Go Reference](https://pkg.go.dev/badge/github.com/cybergarage/go-net-upnp.svg)](https://pkg.go.dev/github.com/cybergarage/go-net-upnp)
 
 go-net-upnp is a new open source framework for Go and UPnP™ developers.
 
@@ -14,7 +15,7 @@ go-net-upnp manages these protocols automatically to support to create any UPnP 
 The project is released on [GitHub](https://github.com/cybergarage/go-net-upnp). To use go-net-upnp in your projct, run `go get` as the following:
 
 ```
-go get -u github.com/cybergarage/go-net-upnp/net/upnp
+go get -u github.com/cybergarage/go-net-upnp
 ```
 ## Overview
 
