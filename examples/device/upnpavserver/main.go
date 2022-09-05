@@ -3,16 +3,16 @@
 // license that can be found in the LICENSE file.
 
 /*
-lightdev is a sample implementation of UPnP standard device, BinaryLight:1.
+mediaserver is a sample implementation of UPnP standard device, MediaServer:1.
 
 	NAME
-	lightdev
+	mediaserver
 
 	SYNOPSIS
-	lightdev [OPTIONS]
+	mediaserver [OPTIONS]
 
 	DESCRIPTION
-	lightdev is a sample implmentation of UPnP Standardized DCP, BinaryLight:1
+	mediaserver is a sample implmentation of UPnP Standardized DCP, MediaServer:1
 
 	OPTIONS
 	-v : *level* Enable verbose output.
@@ -20,7 +20,7 @@ lightdev is a sample implementation of UPnP standard device, BinaryLight:1.
 	RETURN VALUE
 	  Return EXIT_SUCCESS or EXIT_FAILURE
 */
-package lightdev
+package main
 
 import (
 	"bufio"
@@ -45,7 +45,7 @@ func handleInput() {
 func main() {
 	log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
 
-	dev, err := NewLightDevice()
+	dev, err := NewMediaServer()
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)

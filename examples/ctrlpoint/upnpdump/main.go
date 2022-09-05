@@ -24,7 +24,7 @@ upnpdump prints SSDP packets in the local network.
 	  The following is how to enable the verbose output
 	    upntctrl -v 1
 */
-package upnpdump
+package main
 
 import (
 	"bufio"

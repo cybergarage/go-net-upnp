@@ -3,16 +3,16 @@
 // license that can be found in the LICENSE file.
 
 /*
-mediaserver is a sample implementation of UPnP standard device, MediaServer:1.
+lightdev is a sample implementation of UPnP standard device, BinaryLight:1.
 
 	NAME
-	mediaserver
+	lightdev
 
 	SYNOPSIS
-	mediaserver [OPTIONS]
+	lightdev [OPTIONS]
 
 	DESCRIPTION
-	mediaserver is a sample implmentation of UPnP Standardized DCP, MediaServer:1
+	lightdev is a sample implmentation of UPnP Standardized DCP, BinaryLight:1
 
 	OPTIONS
 	-v : *level* Enable verbose output.
@@ -20,7 +20,7 @@ mediaserver is a sample implementation of UPnP standard device, MediaServer:1.
 	RETURN VALUE
 	  Return EXIT_SUCCESS or EXIT_FAILURE
 */
-package media
+package main
 
 import (
 	"bufio"
@@ -45,7 +45,7 @@ func handleInput() {
 func main() {
 	log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
 
-	dev, err := NewMediaServer()
+	dev, err := NewLightDevice()
 	if err != nil {
 		log.Error(err)
 		os.Exit(1)

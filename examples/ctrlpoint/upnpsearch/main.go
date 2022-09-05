@@ -25,7 +25,7 @@ upnpsearch dumps prints all devices in the local network.
 	  The following is how to enable the verbose output
 	    upnpsearch -v 1
 */
-package upnpsearch
+package main
 
 import (
 	"flag"

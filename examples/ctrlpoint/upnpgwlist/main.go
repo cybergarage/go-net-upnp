@@ -25,7 +25,7 @@ upnpgwdump dumps prints all internet gatway devices, InternetGatewayDevice:1, in
 	  The following is how to enable the verbose output
 	    upnpgwdump -v 1
 */
-package upnpgwlist
+package main
 
 import (
 	"flag"
