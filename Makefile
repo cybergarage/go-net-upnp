@@ -66,7 +66,7 @@ build:
 test: build
 	go test -v -cover ${PKGS}
 
-install:
+install: test
 	go install ${BINS}
 
 clean:
