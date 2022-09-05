@@ -25,7 +25,7 @@ upntctrl browses UPnP devices in the local network, and post any actions into th
 	  The following is how to enable the verbose output
 	    upntctrl -v 1
 */
-package upnpctrl
+package main
 
 import (
 	"bufio"

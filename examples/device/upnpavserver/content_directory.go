@@ -2,15 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package media
+package main
 
-type FileDirectory struct {
-	*Directory
+type ContentDirectory struct {
 }
 
-func NewFileDirectory() *FileDirectory {
-	dir := &FileDirectory{
-		Directory: NewDirectory(),
-	}
-	return dir
+func NewContentDirectory() *ContentDirectory {
+	conDir := &ContentDirectory{}
+	return conDir
 }
