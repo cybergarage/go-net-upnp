@@ -85,7 +85,7 @@ func main() {
 	ctrlPoint := upnp.NewControlPoint()
 	err := ctrlPoint.Start()
 	if err != nil {
-		log.Errorf(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 	defer ctrlPoint.Stop()
@@ -94,7 +94,7 @@ func main() {
 
 	err = ctrlPoint.SearchRootDevice()
 	if err != nil {
-		log.Errorf(err)
+		log.Error(err)
 		os.Exit(1)
 	}
 
