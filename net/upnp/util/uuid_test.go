@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	UUIDLength       = 36
 	errorInvalidUUID = "invalide uuid = '%s'"
 )
 
