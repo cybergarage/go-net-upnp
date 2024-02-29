@@ -107,7 +107,7 @@ func TestValidBaseAndPathURL(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			expected := re.ReplaceAllString(base + "/" + path, `$1/`)
+			expected := re.ReplaceAllString(base+"/"+path, `$1/`)
 			if expected != absUrl.String() {
 				t.Errorf(errorInvalidUrl, absUrl.String(), expected)
 			}
