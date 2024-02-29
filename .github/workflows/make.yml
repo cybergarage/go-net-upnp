@@ -29,3 +29,4 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: cybergarage/go-net-upnp
+        files: files: puzzledb-cover.out
