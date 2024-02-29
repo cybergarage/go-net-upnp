@@ -24,6 +24,7 @@ func GetAbsoluteURLFromBaseAndPath(base string, path string) (*url.URL, error) {
 
 	if err != nil || !url.IsAbs() {
 		base = strings.TrimSuffix(base, urlDelim)
+		path = strings.TrimPrefix(path, urlDelim)
 		path = strings.TrimSuffix(path, urlDelim)
 
 		urlStr := base + urlDelim + path
