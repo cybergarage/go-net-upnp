@@ -65,10 +65,7 @@ func responseUPnPError(httpRes http.ResponseWriter, upnpErr Error) error {
 }
 
 func (self *Device) isDescriptionUri(path string) bool {
-	if path == self.DescriptionURL {
-		return true
-	}
-	return false
+	return path == self.DescriptionURL
 }
 
 func (self *Device) responseDeviceDescription(httpRes http.ResponseWriter) error {
@@ -180,11 +177,8 @@ func (self *Device) httpSoapRequestReceived(httpReq *http.Request, httpRes http.
 	}
 
 	err = self.httpActionRequestReceived(httpReq, httpRes, action)
-	if err != nil {
-		return false
-	}
 
-	return true
+	return err == nil
 }
 
 func (self *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
