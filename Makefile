@@ -17,14 +17,10 @@ MODULE_ROOT=github.com/cybergarage/go-net-upnp
 
 PKG_NAME=net/upnp
 PKG_VER=$(shell git describe --abbrev=0 --tags)
-PKG_COVER=${PKG_NAME}-cover
+PKG_COVER=net-upnp-cover
 PKG_ID=${MODULE_ROOT}/${PKG_NAME}
 PKG_SRC_DIR=${PKG_NAME}
-PKGS=\
-	${PKG_ID} \
-	${PKG_ID}/ssdp \
-	${PKG_ID}/control \
-	${PKG_ID}/http
+PKG=${MODULE_ROOT}/${PKG_SRC_DIR}
 	
 all: test
 
@@ -63,9 +59,9 @@ lint: vet
 	golangci-lint run ${PKG_SRC_DIR}/... ${BIN_ROOT}/...
 
 build: lint
-	go build -v ${PKGS}
+	go build -v ${PKG}
 
-test: build
+test:
 	go test -v -p 1 -timeout 10m -cover -coverpkg=${PKG}/... -coverprofile=${PKG_COVER}.out ${PKG}/...
 	go tool cover -html=${PKG_COVER}.out -o ${PKG_COVER}.html
 
