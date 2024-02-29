@@ -217,10 +217,6 @@ func (self *Service) GetAbsoluteEventSubURL() (*url.URL, error) {
 	return self.getAbsoluteURL(self.EventSubURL)
 }
 
-func (self *Service) GetAbsoluteEventSubURLL() (*url.URL, error) {
-	return self.GetAbsoluteEventSubURL()
-}
-
 // GetActions returns all actions
 func (self *Service) GetActions() []*Action {
 	actionCnt := len(self.ActionList.Actions)
