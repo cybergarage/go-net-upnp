@@ -1,6 +1,9 @@
+skip-files:
+  - ".*_test\\.go$"
 linters:
   enable-all: true
   disable:
+    - exhaustruct
     - deadcode
     - paralleltest
     - testpackage
