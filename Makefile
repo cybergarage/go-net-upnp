@@ -9,23 +9,17 @@
 ###################################################################
 
 PREFIX?=$(shell pwd)
-GOPATH=$(shell pwd)
 
 VERSION_GO="./net/upnp/version.go"
 USRAGNT_GO="./net/upnp/util/user_agent.go"
 
-GITHUB=github.com/cybergarage/go-net-upnp
-
-UPNPDUMP=${PREFIX}/bin/upnpdump
-UPNPSEARCH=${PREFIX}/bin/upnpsearch
-UPNPGWLIST=${PREFIX}/bin/upnpgwdump
-UPNPCTRL=${PREFIX}/bin/upnpctrl
-
-LIGHTDEV=${PREFIX}/bin/lightdev
-MEDIASERVER=${PREFIX}/bin/mediaserver
+MODULE_ROOT=github.com/cybergarage/go-net-upnp
 
 PKG_NAME=net/upnp
-PKG_ID=${GITHUB}/${PKG_NAME}
+PKG_VER=$(shell git describe --abbrev=0 --tags)
+PKG_COVER=${PKG_NAME}-cover
+PKG_ID=${MODULE_ROOT}/${PKG_NAME}
+PKG_SRC_DIR=${PKG_NAME}
 PKGS=\
 	${PKG_ID} \
 	${PKG_ID}/ssdp \
@@ -41,13 +35,21 @@ ${USRAGNT_GO}: ./net/upnp/util/user_agent.gen ${VERSION_GO}
 	$< > $@
 
 BIN_ROOT=examples
+BIN_ID=${MODULE_ROOT}/${BIN_ROOT_DIR}
+BIN_SRCS=\
+	${BIN_ROOT}/ctrlpoint/upnpdump \
+	${BIN_ROOT}/ctrlpoint/upnpsearch \
+	${BIN_ROOT}/ctrlpoint/upnpgwlist \
+	${BIN_ROOT}/ctrlpoint/upnpctrl \
+	${BIN_ROOT}/device/upnplight \
+	${BIN_ROOT}/device/upnpavserver
 BINS=\
-	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpdump \
-	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpsearch \
-	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpgwlist \
-	${GITHUB}/${BIN_ROOT}/ctrlpoint/upnpctrl \
-	${GITHUB}/${BIN_ROOT}/device/upnplight \
-	${GITHUB}/${BIN_ROOT}/device/upnpavserver
+	${BIN_ID}/ctrlpoint/upnpdump \
+	${BIN_ID}/ctrlpoint/upnpsearch \
+	${BIN_ID}/ctrlpoint/upnpgwlist \
+	${BIN_ID}/ctrlpoint/upnpctrl \
+	${BIN_ID}/device/upnplight \
+	${BIN_ID}/device/upnpavserver
 
 version: ${VERSION_GO} ${USRAGNT_GO}
 
@@ -58,13 +60,14 @@ vet: format
 	go vet ${PKG_ID}
 
 lint: vet
-	golangci-lint run ${PKG_SRCS} ${BIN_SRCS} ${TEST_PKG_SRCS}
+	golangci-lint run ${PKG_SRC_DIR}/... ${BIN_ROOT}/...
 
-build:
+build: lint
 	go build -v ${PKGS}
 
 test: build
-	go test -v -cover ${PKGS}
+	go test -v -p 1 -timeout 10m -cover -coverpkg=${PKG}/... -coverprofile=${PKG_COVER}.out ${PKG}/...
+	go tool cover -html=${PKG_COVER}.out -o ${PKG_COVER}.html
 
 install: test
 	go install ${BINS}
