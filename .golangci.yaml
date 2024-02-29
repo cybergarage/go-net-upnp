@@ -28,9 +28,11 @@ linters:
     - gochecknoglobals
     - scopelint
     - typecheck
-    - exhaustruct
-    - nilerr
     - dupl
-    - nosnakecase
-    - ifshort
-    - exhaustivestruct
+    - exhaustive
+    - forbidigo
+    - maligned
+    - revive
+    - depguard
+    - inamedparam
+    - interfacer
