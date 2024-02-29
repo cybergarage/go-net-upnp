@@ -22,6 +22,9 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Profile
+*.out
 *.html
 
 # Binary
