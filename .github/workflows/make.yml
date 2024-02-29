@@ -29,4 +29,4 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: cybergarage/go-net-upnp
-        files: net-upnp-cover.out
+        files: ./net-upnp-cover.out
