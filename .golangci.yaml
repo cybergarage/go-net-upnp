@@ -36,3 +36,8 @@ linters:
     - depguard
     - inamedparam
     - interfacer
+    - ifshort
+    - structcheck
+    - nosnakecase
+    - exhaustivestruct
+    - golint
