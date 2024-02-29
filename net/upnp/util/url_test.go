@@ -5,6 +5,7 @@
 package util
 
 import (
+	"regexp"
 	"testing"
 )
 
@@ -99,11 +100,16 @@ func TestInvalidBaseAndValidPathURL(t *testing.T) {
 }
 
 func TestValidBaseAndPathURL(t *testing.T) {
+	re := regexp.MustCompile(`([^\:])[\/]{2,}`)
 	for _, base := range okBases() {
 		for _, path := range okPaths() {
-			_, err := GetAbsoluteURLFromBaseAndPath(base, path)
+			absUrl, err := GetAbsoluteURLFromBaseAndPath(base, path)
 			if err != nil {
 				t.Error(err)
+			}
+			expected := re.ReplaceAllString(base + "/" + path, `$1/`)
+			if expected != absUrl.String() {
+				t.Errorf(errorInvalidUrl, absUrl.String(), expected)
 			}
 		}
 	}

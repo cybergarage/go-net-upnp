@@ -213,8 +213,12 @@ func (self *Service) GetAbsoluteControlURL() (*url.URL, error) {
 	return self.getAbsoluteURL(self.ControlURL)
 }
 
-func (self *Service) GetAbsoluteEventSubURLL() (*url.URL, error) {
+func (self *Service) GetAbsoluteEventSubURL() (*url.URL, error) {
 	return self.getAbsoluteURL(self.EventSubURL)
+}
+
+func (self *Service) GetAbsoluteEventSubURLL() (*url.URL, error) {
+	return self.GetAbsoluteEventSubURL()
 }
 
 // GetActions returns all actions
