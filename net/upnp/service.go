@@ -178,24 +178,15 @@ func (self *Service) reviseDescription() error {
 }
 
 func (self *Service) isDescriptionURL(path string) bool {
-	if path == self.SCPDURL {
-		return true
-	}
-	return false
+	return path == self.SCPDURL
 }
 
 func (self *Service) isControlURL(path string) bool {
-	if path == self.ControlURL {
-		return true
-	}
-	return false
+	return path == self.ControlURL
 }
 
 func (self *Service) isEventSubURL(path string) bool {
-	if path == self.EventSubURL {
-		return true
-	}
-	return false
+	return path == self.EventSubURL
 }
 
 func (self *Service) getAbsoluteURL(path string) (*url.URL, error) {
