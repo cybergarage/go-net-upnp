@@ -3,6 +3,8 @@
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/cybergarage/go-net-upnp)
 [![Go](https://github.com/cybergarage/go-net-upnp/actions/workflows/make.yml/badge.svg)](https://github.com/cybergarage/go-net-upnp/actions/workflows/make.yml)
  [![Go Reference](https://pkg.go.dev/badge/github.com/cybergarage/go-net-upnp.svg)](https://pkg.go.dev/github.com/cybergarage/go-net-upnp)
+ [![Go Report Card](https://img.shields.io/badge/go%20report-A%2B-brightgreen)](https://goreportcard.com/report/github.com/cybergarage/go-net-upnp) 
+[![codecov](https://codecov.io/gh/cybergarage/go-net-upnp/graph/badge.svg?token=SS6L6DRNHF)](https://codecov.io/gh/cybergarage/go-net-upnp)
 
 go-net-upnp is a new open source framework for Go and UPnP™ developers.
 
