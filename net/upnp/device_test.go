@@ -28,6 +28,13 @@ func TestNullDevice(t *testing.T) {
 		t.Error(err)
 	}
 
+	defer func() {
+		err := res.Body.Close()
+		if err != nil {
+			t.Error(err)
+		}
+	}()
+
 	if res.StatusCode != http.StatusBadRequest {
 		t.Errorf(errorTestDeviceInvalidStatusCode, url, res.StatusCode, http.StatusInternalServerError)
 	}

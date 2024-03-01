@@ -112,11 +112,17 @@ func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf(errorDeviceBadDescriptionURL, descURL, res.StatusCode)
 	}
 
 	devDescBytes, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	err = res.Body.Close()
 	if err != nil {
 		return nil, err
 	}
