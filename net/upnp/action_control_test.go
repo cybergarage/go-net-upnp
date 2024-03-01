@@ -145,6 +145,8 @@ func TestMarshalActionResponseFromAction(t *testing.T) {
 }
 
 func checkActionResponseParams(t *testing.T, res *control.ActionResponse, actionName string, argCnt int, argNames []string, argValues []string) {
+	t.Helper()
+
 	action, err := res.GetAction()
 	if err != nil {
 		t.Error(err)
