@@ -46,6 +46,8 @@ func TestSSDPUnformalSearchRequest(t *testing.T) {
 }
 
 func checkSSDPSearchRequest(t *testing.T, req *Request) {
+	t.Helper()
+
 	// Check Method
 
 	if !req.IsSearchRequest() {
