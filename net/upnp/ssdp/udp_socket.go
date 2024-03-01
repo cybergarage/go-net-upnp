@@ -28,39 +28,39 @@ func NewUDPSocket() *UDPSocket {
 }
 
 // Close closes the current opened socket.
-func (self *UDPSocket) Close() error {
-	if self.Conn == nil {
+func (socket *UDPSocket) Close() error {
+	if socket.Conn == nil {
 		return nil
 	}
-	err := self.Conn.Close()
+	err := socket.Conn.Close()
 	if err != nil {
 		return err
 	}
 
-	self.Conn = nil
-	self.Interface = net.Interface{}
+	socket.Conn = nil
+	socket.Interface = net.Interface{}
 
 	return nil
 }
 
 // Read reads from the current opend socket.
-func (self *UDPSocket) Read() (*Packet, error) {
-	if self.Conn == nil {
+func (socket *UDPSocket) Read() (*Packet, error) {
+	if socket.Conn == nil {
 		return nil, errors.New(errorSocketIsClosed)
 	}
 
-	n, from, err := self.Conn.ReadFromUDP(self.readBuf)
+	n, from, err := socket.Conn.ReadFromUDP(socket.readBuf)
 	if err != nil {
 		return nil, err
 	}
 
-	ssdpPkt, err := NewPacketFromBytes(self.readBuf[:n])
+	ssdpPkt, err := NewPacketFromBytes(socket.readBuf[:n])
 	if err != nil {
 		return nil, err
 	}
 
 	ssdpPkt.From = *from
-	ssdpPkt.Interface = self.Interface
+	ssdpPkt.Interface = socket.Interface
 
 	return ssdpPkt, nil
 }

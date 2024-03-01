@@ -17,16 +17,16 @@ func NewUnicastSocket() *UnicastSocket {
 }
 
 // WriteRequest sends the specified request.
-func (self *UnicastSocket) WriteRequest(req *Request) (int, error) {
-	return self.HTTPUSocket.Write(ADDRESS, Port, req.Bytes())
+func (socket *UnicastSocket) WriteRequest(req *Request) (int, error) {
+	return socket.HTTPUSocket.Write(ADDRESS, Port, req.Bytes())
 }
 
 // WriteBytes sends the specified bytes.
-func (self *UnicastSocket) WriteBytes(addr string, port int, b []byte) (int, error) {
-	return self.HTTPUSocket.Write(addr, port, b)
+func (socket *UnicastSocket) WriteBytes(addr string, port int, b []byte) (int, error) {
+	return socket.HTTPUSocket.Write(addr, port, b)
 }
 
 // WriteResponse sends the specified responst.
-func (self *UnicastSocket) WriteResponse(addr string, port int, res *Response) (int, error) {
-	return self.HTTPUSocket.Write(addr, port, res.Bytes())
+func (socket *UnicastSocket) WriteResponse(addr string, port int, res *Response) (int, error) {
+	return socket.HTTPUSocket.Write(addr, port, res.Bytes())
 }
