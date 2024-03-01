@@ -17,6 +17,6 @@ func NewMulticastSocket() (*MulticastSocket, error) {
 }
 
 // Write sends the specified bytes.
-func (self *MulticastSocket) Write(req *Request) (int, error) {
-	return self.HTTPMUSocket.Write(req.Bytes())
+func (socket *MulticastSocket) Write(req *Request) (int, error) {
+	return socket.HTTPMUSocket.Write(req.Bytes())
 }
