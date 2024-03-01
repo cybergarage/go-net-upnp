@@ -70,7 +70,7 @@ func (server *Server) Stop() error {
 	return nil
 }
 
-// ServeHTTP is a handler
+// ServeHTTP is a handler.
 func (server *Server) ServeHTTP(res gohttp.ResponseWriter, req *gohttp.Request) {
 	if server.Listener == nil {
 		res.WriteHeader(gohttp.StatusInternalServerError)

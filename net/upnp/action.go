@@ -50,7 +50,7 @@ func (action *Action) reviseParentObject() error {
 	return nil
 }
 
-// GetArguments returns all arguments
+// GetArguments returns all arguments.
 func (action *Action) GetArguments() []*Argument {
 	argCnt := len(action.ArgumentList.Arguments)
 	args := make([]*Argument, argCnt)
@@ -60,7 +60,7 @@ func (action *Action) GetArguments() []*Argument {
 	return args
 }
 
-// GetInputArguments returns all input arguments
+// GetInputArguments returns all input arguments.
 func (action *Action) GetInputArguments() []*Argument {
 	args := make([]*Argument, 0)
 	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
@@ -73,7 +73,7 @@ func (action *Action) GetInputArguments() []*Argument {
 	return args
 }
 
-// GetOutputArguments returns all output arguments
+// GetOutputArguments returns all output arguments.
 func (action *Action) GetOutputArguments() []*Argument {
 	args := make([]*Argument, 0)
 	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
@@ -86,7 +86,7 @@ func (action *Action) GetOutputArguments() []*Argument {
 	return args
 }
 
-// GetArgumentByName returns an argument by the specified name
+// GetArgumentByName returns an argument by the specified name.
 func (action *Action) GetArgumentByName(name string) (*Argument, error) {
 	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
 		arg := &action.ArgumentList.Arguments[n]
@@ -97,7 +97,7 @@ func (action *Action) GetArgumentByName(name string) (*Argument, error) {
 	return nil, fmt.Errorf(errorActionArgumentNotFound, name)
 }
 
-// SetArgumentString sets a string value into the specified argument
+// SetArgumentString sets a string value into the specified argument.
 func (action *Action) SetArgumentString(name string, value string) error {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -106,7 +106,7 @@ func (action *Action) SetArgumentString(name string, value string) error {
 	return arg.SetString(value)
 }
 
-// GetArgumentString return a string value into the specified argument
+// GetArgumentString return a string value into the specified argument.
 func (action *Action) GetArgumentString(name string) (string, error) {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -115,7 +115,7 @@ func (action *Action) GetArgumentString(name string) (string, error) {
 	return arg.GetString()
 }
 
-// SetArgumentInt sets a integer value into the specified argument
+// SetArgumentInt sets a integer value into the specified argument.
 func (action *Action) SetArgumentInt(name string, value int) error {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -124,7 +124,7 @@ func (action *Action) SetArgumentInt(name string, value int) error {
 	return arg.SetInt(value)
 }
 
-// GetArgumentInt return a integer value into the specified argument
+// GetArgumentInt return a integer value into the specified argument.
 func (action *Action) GetArgumentInt(name string) (int, error) {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -133,7 +133,7 @@ func (action *Action) GetArgumentInt(name string) (int, error) {
 	return arg.GetInt()
 }
 
-// SetArgumentFloat sets a integer value into the specified argument
+// SetArgumentFloat sets a integer value into the specified argument.
 func (action *Action) SetArgumentFloat(name string, value float64) error {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -142,7 +142,7 @@ func (action *Action) SetArgumentFloat(name string, value float64) error {
 	return arg.SetFloat(value)
 }
 
-// GetArgumentFloat return a integer value into the specified argument
+// GetArgumentFloat return a integer value into the specified argument.
 func (action *Action) GetArgumentFloat(name string) (float64, error) {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -151,7 +151,7 @@ func (action *Action) GetArgumentFloat(name string) (float64, error) {
 	return arg.GetFloat()
 }
 
-// SetArgumentBool sets a boolean value into the specified argument
+// SetArgumentBool sets a boolean value into the specified argument.
 func (action *Action) SetArgumentBool(name string, value bool) error {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -160,7 +160,7 @@ func (action *Action) SetArgumentBool(name string, value bool) error {
 	return arg.SetBool(value)
 }
 
-// GetArgumentBool return a boolean value into the specified argument
+// GetArgumentBool return a boolean value into the specified argument.
 func (action *Action) GetArgumentBool(name string) (bool, error) {
 	arg, err := action.GetArgumentByName(name)
 	if err != nil {
@@ -169,7 +169,7 @@ func (action *Action) GetArgumentBool(name string) (bool, error) {
 	return arg.GetBool()
 }
 
-// setArgumentsByActionControl sets control arguments into the specified argument
+// setArgumentsByActionControl sets control arguments into the specified argument.
 func (action *Action) setArgumentsByActionControl(actionCtrl *control.ActionControl) error {
 	ctrlAction, err := actionCtrl.GetAction()
 	if err != nil {
@@ -192,12 +192,12 @@ func (action *Action) setArgumentsByActionControl(actionCtrl *control.ActionCont
 	return nil
 }
 
-// SetArgumentsByActionRequest sets request arguments into the specified argument
+// SetArgumentsByActionRequest sets request arguments into the specified argument.
 func (action *Action) SetArgumentsByActionRequest(actionReq *control.ActionRequest) error {
 	return action.setArgumentsByActionControl(actionReq.ActionControl)
 }
 
-// SetArgumentsByActionResponse sets response arguments into the specified argument
+// SetArgumentsByActionResponse sets response arguments into the specified argument.
 func (action *Action) SetArgumentsByActionResponse(actionRes *control.ActionResponse) error {
 	return action.setArgumentsByActionControl(actionRes.ActionControl)
 }

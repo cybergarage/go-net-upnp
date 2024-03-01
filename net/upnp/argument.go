@@ -33,23 +33,23 @@ func NewArgument() *Argument {
 	return arg
 }
 
-// SetString sets a string value into the specified argument
+// SetString sets a string value into the specified argument.
 func (self *Argument) SetString(value string) error {
 	self.Value = value
 	return nil
 }
 
-// GetString returns a string value into the specified argument
+// GetString returns a string value into the specified argument.
 func (self *Argument) GetString() (string, error) {
 	return self.Value, nil
 }
 
-// SetInt sets a integer value into the specified argument
+// SetInt sets a integer value into the specified argument.
 func (self *Argument) SetInt(value int) error {
 	return self.SetString(strconv.Itoa(value))
 }
 
-// GetInt return a integer value into the specified argument
+// GetInt return a integer value into the specified argument.
 func (self *Argument) GetInt() (int, error) {
 	value, err := self.GetString()
 	if err != nil {
@@ -58,12 +58,12 @@ func (self *Argument) GetInt() (int, error) {
 	return strconv.Atoi(value)
 }
 
-// SetFloat sets a integer value into the specified argument
+// SetFloat sets a integer value into the specified argument.
 func (self *Argument) SetFloat(value float64) error {
 	return self.SetString(fmt.Sprintf("%f", value))
 }
 
-// GetFloat return a integer value into the specified argument
+// GetFloat return a integer value into the specified argument.
 func (self *Argument) GetFloat() (float64, error) {
 	value, err := self.GetString()
 	if err != nil {
@@ -76,7 +76,7 @@ func (self *Argument) GetFloat() (float64, error) {
 	return f, nil
 }
 
-// SetBool sets a boolean value into the specified argument
+// SetBool sets a boolean value into the specified argument.
 func (self *Argument) SetBool(value bool) error {
 	ivalue := 0
 	if value {
@@ -85,7 +85,7 @@ func (self *Argument) SetBool(value bool) error {
 	return self.SetInt(ivalue)
 }
 
-// GetBool return a boolean value into the specified argument
+// GetBool return a boolean value into the specified argument.
 func (self *Argument) GetBool() (bool, error) {
 	value, err := self.GetString()
 	if err != nil {

@@ -73,9 +73,8 @@ func NewDevice() *Device {
 	return dev
 }
 
-// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet
+// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet.
 func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
-
 	descURL, err := ssdpReq.GetLocation()
 	if err != nil {
 		return nil, err
@@ -90,7 +89,7 @@ func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
 	return dev, err
 }
 
-// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet
+// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet.
 func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
 	descURL, err := ssdpRes.GetLocation()
 	if err != nil {
@@ -107,7 +106,7 @@ func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
 	return dev, err
 }
 
-// NewDeviceFromDescriptionURL returns a device from the specified URL
+// NewDeviceFromDescriptionURL returns a device from the specified URL.
 func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 	res, err := http.Get(descURL)
 	if err != nil {
@@ -125,7 +124,7 @@ func NewDeviceFromDescriptionURL(descURL string) (*Device, error) {
 	return NewDeviceFromDescription(string(devDescBytes))
 }
 
-// NewDeviceFromDescription returns a device from the specified string
+// NewDeviceFromDescription returns a device from the specified string.
 func NewDeviceFromDescription(devDesc string) (*Device, error) {
 	root, err := NewDeviceDescriptionRootFromString(devDesc)
 	if err != nil {
@@ -243,7 +242,7 @@ func (dev *Device) SetUDN(uuid string) error {
 	return nil
 }
 
-// GetEmbeddedDevices returns all embedded devices
+// GetEmbeddedDevices returns all embedded devices.
 func (dev *Device) GetEmbeddedDevices() []*Device {
 	devCnt := len(dev.DeviceList.Devices)
 	devs := make([]*Device, devCnt)
@@ -253,7 +252,7 @@ func (dev *Device) GetEmbeddedDevices() []*Device {
 	return devs
 }
 
-// GetEmbeddedDeviceByType returns a embedded device by the specified deviceType
+// GetEmbeddedDeviceByType returns a embedded device by the specified deviceType.
 func (dev *Device) GetEmbeddedDeviceByType(deviceType string) (*Device, error) {
 	devCnt := len(dev.DeviceList.Devices)
 	for n := 0; n < devCnt; n++ {
@@ -265,7 +264,7 @@ func (dev *Device) GetEmbeddedDeviceByType(deviceType string) (*Device, error) {
 	return nil, fmt.Errorf(errorDeviceEmbeddedDeviceNotFound, deviceType)
 }
 
-// GetServices returns all services
+// GetServices returns all services.
 func (dev *Device) GetServices() []*Service {
 	servicCnt := len(dev.ServiceList.Services)
 	services := make([]*Service, servicCnt)
@@ -275,7 +274,7 @@ func (dev *Device) GetServices() []*Service {
 	return services
 }
 
-// GetServiceByType returns a service by the specified serviceType
+// GetServiceByType returns a service by the specified serviceType.
 func (dev *Device) GetServiceByType(serviceType string) (*Service, error) {
 	for n := 0; n < len(dev.ServiceList.Services); n++ {
 		service := &dev.ServiceList.Services[n]
@@ -286,7 +285,7 @@ func (dev *Device) GetServiceByType(serviceType string) (*Service, error) {
 	return nil, fmt.Errorf(errorDeviceServiceNotFound, serviceType)
 }
 
-// GetServiceByID returns a service by the specified serviceId
+// GetServiceByID returns a service by the specified serviceId.
 func (dev *Device) GetServiceByID(serviceID string) (*Service, error) {
 	for n := 0; n < len(dev.ServiceList.Services); n++ {
 		service := &dev.ServiceList.Services[n]
@@ -297,7 +296,7 @@ func (dev *Device) GetServiceByID(serviceID string) (*Service, error) {
 	return nil, fmt.Errorf(errorDeviceServiceNotFound, serviceID)
 }
 
-// GetServiceByControlURL returns a service by the specified control URL
+// GetServiceByControlURL returns a service by the specified control URL.
 func (dev *Device) GetServiceByControlURL(ctrlURL string) (*Service, error) {
 	for n := 0; n < len(dev.ServiceList.Services); n++ {
 		service := &dev.ServiceList.Services[n]
@@ -308,7 +307,7 @@ func (dev *Device) GetServiceByControlURL(ctrlURL string) (*Service, error) {
 	return nil, fmt.Errorf(errorDeviceServiceNotFound, ctrlURL)
 }
 
-// GetServiceByEventSubURL returns a service by the specified event subscription URL
+// GetServiceByEventSubURL returns a service by the specified event subscription URL.
 func (dev *Device) GetServiceByEventSubURL(eventURL string) (*Service, error) {
 	for n := 0; n < len(dev.ServiceList.Services); n++ {
 		service := &dev.ServiceList.Services[n]
@@ -341,7 +340,7 @@ func (dev *Device) reviseParentObject() error {
 	return nil
 }
 
-// TODO : Support embedded devices
+// TODO : Support embedded devices.
 func (dev *Device) reviseDescription() error {
 	// check descriptionURL
 	if len(dev.DescriptionURL) == 0 {
