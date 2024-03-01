@@ -103,13 +103,13 @@ func TestValidBaseAndPathURL(t *testing.T) {
 	re := regexp.MustCompile(`([^\:])[\/]{2,}`)
 	for _, base := range okBases() {
 		for _, path := range okPaths() {
-			absUrl, err := GetAbsoluteURLFromBaseAndPath(base, path)
+			absURL, err := GetAbsoluteURLFromBaseAndPath(base, path)
 			if err != nil {
 				t.Error(err)
 			}
 			expected := re.ReplaceAllString(base+"/"+path, `$1/`)
-			if expected != absUrl.String() {
-				t.Errorf(errorInvalidURL, absUrl.String(), expected)
+			if expected != absURL.String() {
+				t.Errorf(errorInvalidURL, absURL.String(), expected)
 			}
 		}
 	}
