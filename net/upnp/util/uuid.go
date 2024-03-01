@@ -27,7 +27,6 @@ type uuid struct {
 // Note : the functions is implemented aboutly to the following specfication.
 // https://www.ietf.org/rfc/rfc4122.txt
 func CreateUUID() string {
-
 	var uuid uuid
 
 	/* UUIDs use time in 100ns ticks since Oct 15, 1582. */
