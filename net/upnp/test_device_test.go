@@ -122,7 +122,7 @@ func TestTestDeviceDescription(t *testing.T) {
 		t.Errorf(errorTestDeviceInvalidParentObject, service, service.ParentDevice, dev.Device)
 	}
 
-	service, err = dev.GetServiceById("urn:upnp-org:serviceId:SwitchPower.1")
+	service, err = dev.GetServiceByID("urn:upnp-org:serviceId:SwitchPower.1")
 	if err != nil {
 		t.Error(err)
 	}

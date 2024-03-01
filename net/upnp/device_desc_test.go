@@ -85,9 +85,9 @@ func TestGenerateDeviceDescription(t *testing.T) {
 		dev.ServiceList.Services[0].ServiceType,
 		dev.ServiceList.Services[1].ServiceType,
 		dev.ServiceList.Services[2].ServiceType,
-		dev.ServiceList.Services[0].ServiceId,
-		dev.ServiceList.Services[1].ServiceId,
-		dev.ServiceList.Services[2].ServiceId,
+		dev.ServiceList.Services[0].ServiceID,
+		dev.ServiceList.Services[1].ServiceID,
+		dev.ServiceList.Services[2].ServiceID,
 	}
 
 	for n, expectValue := range expectValues {
@@ -114,9 +114,9 @@ func TestGenerateDeviceDescription(t *testing.T) {
 		outputDev.ServiceList.Services[0].ServiceType,
 		outputDev.ServiceList.Services[1].ServiceType,
 		outputDev.ServiceList.Services[2].ServiceType,
-		outputDev.ServiceList.Services[0].ServiceId,
-		outputDev.ServiceList.Services[1].ServiceId,
-		outputDev.ServiceList.Services[2].ServiceId,
+		outputDev.ServiceList.Services[0].ServiceID,
+		outputDev.ServiceList.Services[1].ServiceID,
+		outputDev.ServiceList.Services[2].ServiceID,
 	}
 
 	for n, expectValue := range expectValues {

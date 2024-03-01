@@ -39,7 +39,7 @@ const (
 	soapDetail = "detail"
 )
 
-func (self *ErrorEnvelope) MarshalXML(e *xml.Encoder, env xml.StartElement) error {
+func (ev *ErrorEnvelope) MarshalXML(e *xml.Encoder, env xml.StartElement) error {
 	// <Envelope>
 
 	env.Name.Local = soapEnvelopePrefix + soapEnvelope
@@ -60,10 +60,10 @@ func (self *ErrorEnvelope) MarshalXML(e *xml.Encoder, env xml.StartElement) erro
 	e.EncodeToken(fault)
 
 	faultCode := xml.StartElement{Name: xml.Name{Local: soapFaultCode}}
-	e.EncodeElement(self.Body.Fault.FaultCode, faultCode)
+	e.EncodeElement(ev.Body.Fault.FaultCode, faultCode)
 
 	faultStr := xml.StartElement{Name: xml.Name{Local: soapFaultString}}
-	e.EncodeElement(self.Body.Fault.FaultString, faultStr)
+	e.EncodeElement(ev.Body.Fault.FaultString, faultStr)
 
 	// <detail>
 
@@ -72,7 +72,7 @@ func (self *ErrorEnvelope) MarshalXML(e *xml.Encoder, env xml.StartElement) erro
 
 	// <UPnPError>
 
-	upnpErr := &self.Body.Fault.Detail.UPnPError
+	upnpErr := &ev.Body.Fault.Detail.UPnPError
 	upnpErr.MarshalXML(e, xml.StartElement{})
 
 	// </detail>

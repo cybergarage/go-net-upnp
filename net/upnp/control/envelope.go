@@ -34,7 +34,7 @@ type Envelope struct {
 	}
 }
 
-func (self *Envelope) MarshalXML(e *xml.Encoder, env xml.StartElement) error {
+func (ev *Envelope) MarshalXML(e *xml.Encoder, env xml.StartElement) error {
 	// <Envelope>
 
 	env.Name.Local = soapEnvelopePrefix + soapEnvelope
@@ -51,7 +51,7 @@ func (self *Envelope) MarshalXML(e *xml.Encoder, env xml.StartElement) error {
 
 	// <Action>
 
-	action := &self.Body.Action
+	action := &ev.Body.Action
 	action.MarshalXML(e, xml.StartElement{})
 
 	// </Body>

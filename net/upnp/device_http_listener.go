@@ -64,7 +64,7 @@ func responseUPnPError(httpRes http.ResponseWriter, upnpErr Error) error {
 	return responseXMLContent(httpRes, http.StatusInternalServerError, errStr)
 }
 
-func (self *Device) isDescriptionUri(path string) bool {
+func (self *Device) isDescriptionURI(path string) bool {
 	return path == self.DescriptionURL
 }
 
@@ -88,7 +88,7 @@ func (self *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.R
 	path := httpReq.URL.Path
 
 	// Device Description ?
-	if self.isDescriptionUri(path) {
+	if self.isDescriptionURI(path) {
 		err := self.responseDeviceDescription(httpRes)
 		if err != nil {
 			responseInternalServerError(httpRes)

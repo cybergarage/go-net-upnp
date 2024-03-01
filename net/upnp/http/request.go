@@ -44,23 +44,23 @@ func NewSOAPRequest(url *url.URL, soapAction string, body io.Reader) (*Request, 
 	}
 
 	httpReq.Header.Add(ContentType, ContentTypeXML)
-	httpReq.Header.Add(SoapAction, soapAction)
+	httpReq.Header.Add(SOAPAction, soapAction)
 
 	return httpReq, nil
 }
 
-func (self *Request) IsSOAPRequest() bool {
-	_, ok := self.Header[SoapAction]
+func (req *Request) IsSOAPRequest() bool {
+	_, ok := req.Header[SOAPAction]
 	return ok
 }
 
-func (self *Request) GetSOAPServiceActionName() (string, bool) {
-	soapAction := self.Header.Get(SoapAction)
+func (req *Request) GetSOAPServiceActionName() (string, bool) {
+	soapAction := req.Header.Get(SOAPAction)
 	if len(soapAction) == 0 {
 		return "", false
 	}
 
-	actions := strings.Split(soapAction, SoapActionDelim)
+	actions := strings.Split(soapAction, SOAPActionDelim)
 	if len(actions) < 2 {
 		return "", false
 	}

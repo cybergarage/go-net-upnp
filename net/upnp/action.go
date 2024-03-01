@@ -226,7 +226,7 @@ func (self *Action) Post() error {
 		return err
 	}
 
-	soapAction := service.ServiceType + http.SoapActionDelim + self.Name
+	soapAction := service.ServiceType + http.SOAPActionDelim + self.Name
 	httpReq, err := http.NewSOAPRequest(controlAbsURL, soapAction, strings.NewReader(soapReqStr))
 	if err != nil {
 		return err

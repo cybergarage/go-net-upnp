@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	errorAvailableAddressNotFound = "Available address not found"
-	errorAvailableInterfaceFound  = "Available interface not found"
+	errorAvailableAddressNotFound = "available address not found"
+	errorAvailableInterfaceFound  = "available interface not found"
 )
 
 func IsIPv6Address(addr string) bool {

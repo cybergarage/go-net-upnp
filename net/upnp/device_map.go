@@ -14,7 +14,7 @@ func NewDeviceMap() *DeviceMap {
 }
 
 // AddDevice adds a specified device.
-func (self *DeviceMap) AddDevice(dev *Device) bool {
+func (devMap *DeviceMap) AddDevice(dev *Device) bool {
 	if dev == nil {
 		return false
 	}
@@ -29,10 +29,10 @@ func (self *DeviceMap) AddDevice(dev *Device) bool {
 		return false
 	}
 
-	devTypeMap, ok := (*self)[devType]
+	devTypeMap, ok := (*devMap)[devType]
 	if !ok {
 		devTypeMap = make(map[string]*Device)
-		(*self)[devType] = devTypeMap
+		(*devMap)[devType] = devTypeMap
 	}
 
 	devTypeMap[devUdn] = dev
@@ -41,10 +41,10 @@ func (self *DeviceMap) AddDevice(dev *Device) bool {
 }
 
 // Size() returns all device count.
-func (self *DeviceMap) Size() int {
+func (devMap *DeviceMap) Size() int {
 	devCnt := 0
 
-	for _, typeDevs := range *self {
+	for _, typeDevs := range *devMap {
 		devCnt += len(typeDevs)
 	}
 
@@ -52,10 +52,10 @@ func (self *DeviceMap) Size() int {
 }
 
 // GetAllDevices returns all devices.
-func (self *DeviceMap) GetAllDevices() []*Device {
+func (devMap *DeviceMap) GetAllDevices() []*Device {
 	devs := make([]*Device, 0)
 
-	for _, typeDevs := range *self {
+	for _, typeDevs := range *devMap {
 		for _, dev := range typeDevs {
 			devs = append(devs, dev)
 		}
@@ -65,10 +65,10 @@ func (self *DeviceMap) GetAllDevices() []*Device {
 }
 
 // GetDevicesByType returns only devices of the specified device type.
-func (self *DeviceMap) GetDevicesByType(deviceType string) []*Device {
+func (devMap *DeviceMap) GetDevicesByType(deviceType string) []*Device {
 	devs := make([]*Device, 0)
 
-	typeDevs, ok := (*self)[deviceType]
+	typeDevs, ok := (*devMap)[deviceType]
 	if !ok {
 		return devs
 	}
@@ -81,12 +81,12 @@ func (self *DeviceMap) GetDevicesByType(deviceType string) []*Device {
 }
 
 // FindDeviceByTypeAndUDN find a device of the specified device type and udn.
-func (self *DeviceMap) FindDeviceByTypeAndUDN(deviceType string, udn string) (*Device, bool) {
+func (devMap *DeviceMap) FindDeviceByTypeAndUDN(deviceType string, udn string) (*Device, bool) {
 	if len(deviceType) == 0 || len(udn) == 0 {
 		return nil, false
 	}
 
-	devs, ok := (*self)[deviceType]
+	devs, ok := (*devMap)[deviceType]
 	if !ok {
 		return nil, false
 	}
@@ -100,15 +100,15 @@ func (self *DeviceMap) FindDeviceByTypeAndUDN(deviceType string, udn string) (*D
 }
 
 // HasDeviceByTypeAndUDN check whether a device of the specified device type and udn exits.
-func (self *DeviceMap) HasDeviceByTypeAndUDN(deviceType string, udn string) bool {
-	_, ok := self.FindDeviceByTypeAndUDN(deviceType, udn)
+func (devMap *DeviceMap) HasDeviceByTypeAndUDN(deviceType string, udn string) bool {
+	_, ok := devMap.FindDeviceByTypeAndUDN(deviceType, udn)
 	return ok
 }
 
 // HasDevice adds a specified device.
-func (self *DeviceMap) HasDevice(dev *Device) bool {
+func (devMap *DeviceMap) HasDevice(dev *Device) bool {
 	if dev == nil {
 		return false
 	}
-	return self.HasDeviceByTypeAndUDN(dev.DeviceType, dev.UDN)
+	return devMap.HasDeviceByTypeAndUDN(dev.DeviceType, dev.UDN)
 }
