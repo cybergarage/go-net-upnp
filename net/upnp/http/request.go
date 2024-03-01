@@ -6,10 +6,9 @@ package http
 
 import (
 	"io"
+	gohttp "net/http"
 	"net/url"
 	"strings"
-
-	gohttp "net/http"
 
 	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
