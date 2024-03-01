@@ -5,5 +5,5 @@
 package upnp
 
 const (
-	ProductVersion = "0.8"
+	ProductVersion = "0.8.3"
 )
