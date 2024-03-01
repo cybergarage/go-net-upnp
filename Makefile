@@ -47,7 +47,7 @@ BINS=\
 	${BIN_ID}/device/upnplight \
 	${BIN_ID}/device/upnpavserver
 
-GOLANGCILINT_PARAMS=-D perfsprint -D exhaustruct -D gosec
+GOLANGCILINT_PARAMS=-D perfsprint -D exhaustruct -D gosec -D noctx
 
 version: ${VERSION_GO} ${USRAGNT_GO}
 
