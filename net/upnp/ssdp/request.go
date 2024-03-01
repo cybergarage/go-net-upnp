@@ -42,31 +42,31 @@ func NewRequestFromPacket(packet *Packet) (*Request, error) {
 func NewSearchRequest(st string, mx int) (*Request, error) {
 	ssdpReq := NewRequest()
 
-	ssdpReq.SetMethod(M_SEARCH)
-	ssdpReq.SetHost(MULTICAST_ADDRESS)
+	ssdpReq.SetMethod(MSearch)
+	ssdpReq.SetHost(MulticastAddress)
 	ssdpReq.SetST(st)
 	ssdpReq.SetMX(mx)
-	ssdpReq.SetMAN(DISCOVER)
+	ssdpReq.SetMAN(Discover)
 
 	return ssdpReq, nil
 }
 
 func (self *Request) IsDiscover() bool {
-	return self.IsHeaderString(MAN, DISCOVER)
+	return self.IsHeaderString(MAN, Discover)
 }
 
 func (self *Request) IsRootDevice() bool {
-	return self.IsHeaderString(ST, ROOT_DEVICE)
+	return self.IsHeaderString(ST, RootDevice)
 }
 
 func (self *Request) IsAlive() bool {
-	return self.IsHeaderString(NTS, NTS_ALIVE)
+	return self.IsHeaderString(NTS, NTSAlive)
 }
 
 func (self *Request) IsByeBye() bool {
-	return self.IsHeaderString(NTS, NTS_BYEBYE)
+	return self.IsHeaderString(NTS, NTSByeBye)
 }
 
 func (self *Request) IsUpdate() bool {
-	return self.IsHeaderString(NTS, NTS_UPDATE)
+	return self.IsHeaderString(NTS, NTSUpdate)
 }

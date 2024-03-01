@@ -18,7 +18,7 @@ func NewUnicastSocket() *UnicastSocket {
 
 // WriteRequest sends the specified request.
 func (self *UnicastSocket) WriteRequest(req *Request) (int, error) {
-	return self.HTTPUSocket.Write(ADDRESS, PORT, req.Bytes())
+	return self.HTTPUSocket.Write(ADDRESS, Port, req.Bytes())
 }
 
 // WriteBytes sends the specified bytes.

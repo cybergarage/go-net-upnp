@@ -90,7 +90,7 @@ func (self *ControlPoint) Search(st string) error {
 
 // SearchRootDevice sends a M-SEARCH request for root devices.
 func (self *ControlPoint) SearchRootDevice() error {
-	return self.Search(ssdp.ROOT_DEVICE)
+	return self.Search(ssdp.RootDevice)
 }
 
 // GetRootDevices returns found root devices.

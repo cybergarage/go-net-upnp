@@ -49,7 +49,7 @@ func checkSSDPSearchRequest(t *testing.T, req *Request) {
 	// Check Method
 
 	if !req.IsSearchRequest() {
-		t.Errorf(testErrorMsgBadMethod, req.FirstLines[0], M_SEARCH)
+		t.Errorf(testErrorMsgBadMethod, req.FirstLines[0], MSearch)
 	}
 
 	// Check Headers
@@ -60,7 +60,7 @@ func checkSSDPSearchRequest(t *testing.T, req *Request) {
 	headerValue, _ = req.GetHost()
 	expectValue = "239.255.255.250:1900"
 	if headerValue != expectValue {
-		t.Errorf(testErrorMsgBadHeader, HOST, headerValue, expectValue)
+		t.Errorf(testErrorMsgBadHeader, Host, headerValue, expectValue)
 	}
 
 	headerValue, _ = req.GetMAN()
