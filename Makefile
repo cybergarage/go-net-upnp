@@ -56,7 +56,7 @@ vet: format
 	go vet ${PKG_ID}
 
 lint: vet
-	golangci-lint run --skip-files .*_test.go ${PKG_SRC_DIR}/... ${BIN_ROOT}/...
+	golangci-lint run ${PKG_SRC_DIR}/... ${BIN_ROOT}/...
 
 build: lint
 	go build -v ${PKG}
