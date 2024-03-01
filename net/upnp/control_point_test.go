@@ -86,8 +86,8 @@ func TestControlPointSearchDevice(t *testing.T) {
 	var foundDev *Device
 	loopCnt := 10
 	for n := 0; n < loopCnt; n++ {
-		waitMillSec := time.Duration(cp.SearchMX * 1000 / loopCnt)
-		time.Sleep(waitMillSec * time.Millisecond)
+		wait := time.Duration(cp.SearchMX*1000/loopCnt) * time.Millisecond
+		time.Sleep(wait)
 		var ok bool
 		foundDev, ok = cp.FindDeviceByTypeAndUDN(devType, devUDN)
 		if ok {
