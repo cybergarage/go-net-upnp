@@ -366,15 +366,15 @@ func (self *Device) reviseDescription() error {
 func (self *Device) selectAvailableInterfaceForAddr(fromAddr string) (string, error) {
 	ifi, err := util.GetAvailableInterfaceForAddr(fromAddr)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	ifAddr, err := util.GetInterfaceAddress(ifi)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
-	return ifAddr, err
+	return ifAddr, nil
 }
 
 // GetAbsoluteURL return a absolute URL of the specified path using URLBase or LocationURL.
