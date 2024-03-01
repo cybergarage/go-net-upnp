@@ -1,2 +1,4 @@
 github.com/cybergarage/go-logger v1.3.4 h1:UTgYZr/LwQtYVOncS3NJ64We5kCe7ce6L85y/MOYfrM=
 github.com/cybergarage/go-logger v1.3.4/go.mod h1:2iMjinHam5oqyKEGsKIzeQQmmOPxpCgro95LOlEC2ks=
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
