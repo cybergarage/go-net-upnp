@@ -154,7 +154,7 @@ func (dev *Device) httpActionRequestReceived(httpReq *http.Request, httpRes http
 
 	// return listener response
 
-	actionRes, err := NewActionResponseFromAction(action)
+	actionRes, _ := NewActionResponseFromAction(action)
 	errStr, _ := actionRes.SOAPContentString()
 	return responseSuccessXMLContent(httpRes, errStr)
 }
