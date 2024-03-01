@@ -47,6 +47,8 @@ BINS=\
 	${BIN_ID}/device/upnplight \
 	${BIN_ID}/device/upnpavserver
 
+GOLANGCILINT_PARAMS=-D perfsprint -D exhaustruct
+
 version: ${VERSION_GO} ${USRAGNT_GO}
 
 format:
@@ -56,7 +58,7 @@ vet: format
 	go vet ${PKG_ID}
 
 lint: vet
-	golangci-lint run ${PKG_SRC_DIR}/... ${BIN_ROOT}/...
+	golangci-lint run ${GOLANGCILINT_PARAMS} ${PKG_SRC_DIR}/... ${BIN_ROOT}/...
 
 build: lint
 	go build -v ${PKG}
