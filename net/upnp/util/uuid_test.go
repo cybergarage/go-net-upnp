@@ -17,7 +17,7 @@ const (
 func TestCreateUUID(t *testing.T) {
 	uuid := CreateUUID()
 
-	if strings.Index(uuid, " ") != -1 {
+	if strings.Contains(uuid, " ") {
 		t.Errorf(errorInvalidUUID, uuid)
 	}
 
