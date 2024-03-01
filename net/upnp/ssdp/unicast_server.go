@@ -31,19 +31,19 @@ func NewUnicastServer() *UnicastServer {
 }
 
 // Start starts this server.
-func (self *UnicastServer) Start(ifi net.Interface, port int) error {
-	err := self.Socket.Bind(ifi, port)
+func (server *UnicastServer) Start(ifi net.Interface, port int) error {
+	err := server.Socket.Bind(ifi, port)
 	if err != nil {
 		return err
 	}
-	self.Interface = ifi
-	go handleSSDPUnicastConnection(self)
+	server.Interface = ifi
+	go handleSSDPUnicastConnection(server)
 	return nil
 }
 
 // Stop stops this server.
-func (self *UnicastServer) Stop() error {
-	err := self.Socket.Close()
+func (server *UnicastServer) Stop() error {
+	err := server.Socket.Close()
 	if err != nil {
 		return err
 	}
@@ -51,20 +51,20 @@ func (self *UnicastServer) Stop() error {
 }
 
 // Search sends a M-SEARCH request of the specified ST.
-func (self *UnicastServer) Search(st string, mx int) error {
+func (server *UnicastServer) Search(st string, mx int) error {
 	ssdpReq, err := NewSearchRequest(st, mx)
 	if err != nil {
 		return err
 	}
 
-	_, err = self.Socket.WriteRequest(ssdpReq)
+	_, err = server.Socket.WriteRequest(ssdpReq)
 
 	return err
 }
 
-func handleSSDPUnicastConnection(self *UnicastServer) {
+func handleSSDPUnicastConnection(server *UnicastServer) {
 	for {
-		ssdpPkt, err := self.Socket.Read()
+		ssdpPkt, err := server.Socket.Read()
 		if err != nil {
 			if _, ok := err.(*net.OpError); !ok {
 				log.Error(err)
@@ -72,9 +72,9 @@ func handleSSDPUnicastConnection(self *UnicastServer) {
 			break
 		}
 
-		if self.Listener != nil {
+		if server.Listener != nil {
 			ssdpRes, _ := NewResponseFromPacket(ssdpPkt)
-			self.Listener.DeviceResponseReceived(ssdpRes)
+			server.Listener.DeviceResponseReceived(ssdpRes)
 		}
 	}
 }

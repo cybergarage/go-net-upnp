@@ -51,22 +51,22 @@ func NewSearchRequest(st string, mx int) (*Request, error) {
 	return ssdpReq, nil
 }
 
-func (self *Request) IsDiscover() bool {
-	return self.IsHeaderString(MAN, Discover)
+func (req *Request) IsDiscover() bool {
+	return req.IsHeaderString(MAN, Discover)
 }
 
-func (self *Request) IsRootDevice() bool {
-	return self.IsHeaderString(ST, RootDevice)
+func (req *Request) IsRootDevice() bool {
+	return req.IsHeaderString(ST, RootDevice)
 }
 
-func (self *Request) IsAlive() bool {
-	return self.IsHeaderString(NTS, NTSAlive)
+func (req *Request) IsAlive() bool {
+	return req.IsHeaderString(NTS, NTSAlive)
 }
 
-func (self *Request) IsByeBye() bool {
-	return self.IsHeaderString(NTS, NTSByeBye)
+func (req *Request) IsByeBye() bool {
+	return req.IsHeaderString(NTS, NTSByeBye)
 }
 
-func (self *Request) IsUpdate() bool {
-	return self.IsHeaderString(NTS, NTSUpdate)
+func (req *Request) IsUpdate() bool {
+	return req.IsHeaderString(NTS, NTSUpdate)
 }

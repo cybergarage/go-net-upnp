@@ -32,28 +32,28 @@ func NewMulticastServer() *MulticastServer {
 }
 
 // Start starts this server.
-func (self *MulticastServer) Start(ifi net.Interface) error {
-	err := self.Socket.Bind(ifi)
+func (server *MulticastServer) Start(ifi net.Interface) error {
+	err := server.Socket.Bind(ifi)
 	if err != nil {
 		return err
 	}
-	self.Interface = ifi
-	go handleMulticastConnection(self)
+	server.Interface = ifi
+	go handleMulticastConnection(server)
 	return nil
 }
 
 // Stop stops this server.
-func (self *MulticastServer) Stop() error {
-	err := self.Socket.Close()
+func (server *MulticastServer) Stop() error {
+	err := server.Socket.Close()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func handleMulticastConnection(self *MulticastServer) {
+func handleMulticastConnection(server *MulticastServer) {
 	for {
-		ssdpPkt, err := self.Socket.Read()
+		ssdpPkt, err := server.Socket.Read()
 		if err != nil {
 			if _, ok := err.(*net.OpError); !ok {
 				log.Error(err)
@@ -61,13 +61,13 @@ func handleMulticastConnection(self *MulticastServer) {
 			break
 		}
 
-		if self.Listener != nil {
+		if server.Listener != nil {
 			ssdpReq, _ := NewRequestFromPacket(ssdpPkt)
 			switch {
 			case ssdpReq.IsNotifyRequest():
-				self.Listener.DeviceNotifyReceived(ssdpReq)
+				server.Listener.DeviceNotifyReceived(ssdpReq)
 			case ssdpReq.IsSearchRequest():
-				self.Listener.DeviceSearchReceived(ssdpReq)
+				server.Listener.DeviceSearchReceived(ssdpReq)
 			}
 		}
 	}

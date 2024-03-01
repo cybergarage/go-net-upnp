@@ -43,13 +43,13 @@ func NewErrorResponseFromUPnPError(upnpError *UPnPError) *ErrorResponse {
 }
 
 // GetUPnPError returns an UPnP error.
-func (self *ErrorResponse) GetUPnPError() (*UPnPError, error) {
-	return &self.Envelope.Body.Fault.Detail.UPnPError, nil
+func (res *ErrorResponse) GetUPnPError() (*UPnPError, error) {
+	return &res.Envelope.Body.Fault.Detail.UPnPError, nil
 }
 
 // SOAPContent returns a SOAP content string.
-func (self *ErrorResponse) SOAPContentString() (string, error) {
-	buf, err := xml.MarshalIndent(&self.Envelope, "", xmlMarshallIndent)
+func (res *ErrorResponse) SOAPContentString() (string, error) {
+	buf, err := xml.MarshalIndent(&res.Envelope, "", xmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}

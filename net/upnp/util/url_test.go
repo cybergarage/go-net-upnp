@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	errorUrlNotInvalid = "url '%s' is not invalid"
-	errorInvalidUrl    = "invalid url '%s' : expected '%s'"
+	errorURLNotInvalid = "url '%s' is not invalid"
+	errorInvalidURL    = "invalid url '%s' : expected '%s'"
 )
 
 func badBases() []string {
@@ -82,7 +82,7 @@ func TestInvalidBaseAndPathURL(t *testing.T) {
 		for _, path := range badPaths() {
 			url, err := GetAbsoluteURLFromBaseAndPath(base, path)
 			if err == nil {
-				t.Errorf(errorUrlNotInvalid, url.String())
+				t.Errorf(errorURLNotInvalid, url.String())
 			}
 		}
 	}
@@ -93,7 +93,7 @@ func TestInvalidBaseAndValidPathURL(t *testing.T) {
 		for _, path := range okPaths() {
 			url, err := GetAbsoluteURLFromBaseAndPath(base, path)
 			if err == nil {
-				t.Errorf(errorUrlNotInvalid, url.String())
+				t.Errorf(errorURLNotInvalid, url.String())
 			}
 		}
 	}
@@ -109,7 +109,7 @@ func TestValidBaseAndPathURL(t *testing.T) {
 			}
 			expected := re.ReplaceAllString(base+"/"+path, `$1/`)
 			if expected != absUrl.String() {
-				t.Errorf(errorInvalidUrl, absUrl.String(), expected)
+				t.Errorf(errorInvalidURL, absUrl.String(), expected)
 			}
 		}
 	}
@@ -123,7 +123,7 @@ func TestAbaPathURL(t *testing.T) {
 				t.Error(err)
 			}
 			if url.String() != path {
-				t.Errorf(errorInvalidUrl, url.String(), path)
+				t.Errorf(errorInvalidURL, url.String(), path)
 			}
 		}
 	}

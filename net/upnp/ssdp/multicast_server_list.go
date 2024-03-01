@@ -23,8 +23,8 @@ func NewMulticastServerList() *MulticastServerList {
 }
 
 // Start starts this server.
-func (self *MulticastServerList) Start() error {
-	err := self.Stop()
+func (servers *MulticastServerList) Start() error {
+	err := servers.Stop()
 	if err != nil {
 		return err
 	}
@@ -36,32 +36,32 @@ func (self *MulticastServerList) Start() error {
 
 	var lastErr error
 
-	self.Servers = make([]*MulticastServer, len(ifis))
+	servers.Servers = make([]*MulticastServer, len(ifis))
 	for n, ifi := range ifis {
 		server := NewMulticastServer()
-		server.Listener = self.Listener
+		server.Listener = servers.Listener
 		err := server.Start(ifi)
 		if err != nil {
 			lastErr = err
 		}
-		self.Servers[n] = server
+		servers.Servers[n] = server
 	}
 
 	return lastErr
 }
 
 // Stop stops this server.
-func (self *MulticastServerList) Stop() error {
+func (servers *MulticastServerList) Stop() error {
 	var lastErr error
 
-	for _, server := range self.Servers {
+	for _, server := range servers.Servers {
 		err := server.Stop()
 		if err != nil {
 			lastErr = err
 		}
 	}
 
-	self.Servers = make([]*MulticastServer, 0)
+	servers.Servers = make([]*MulticastServer, 0)
 
 	return lastErr
 }

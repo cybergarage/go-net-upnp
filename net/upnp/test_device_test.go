@@ -57,46 +57,46 @@ func NewTestDevice() (*TestDevice, error) {
 	return testDev, nil
 }
 
-func (self *TestDevice) GetSwitchPowerService() (*Service, error) {
-	return self.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
+func (dev *TestDevice) GetSwitchPowerService() (*Service, error) {
+	return dev.GetServiceByType("urn:schemas-upnp-org:service:SwitchPower:1")
 }
 
-func (self *TestDevice) GetSwitchPowerSetTargetAction() (*Action, error) {
-	service, err := self.GetSwitchPowerService()
+func (dev *TestDevice) GetSwitchPowerSetTargetAction() (*Action, error) {
+	service, err := dev.GetSwitchPowerService()
 	if err != nil {
 		return nil, err
 	}
 	return service.GetActionByName(SetTarget)
 }
 
-func (self *TestDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
-	service, err := self.GetSwitchPowerService()
+func (dev *TestDevice) GetSwitchPowerGetTargetAction() (*Action, error) {
+	service, err := dev.GetSwitchPowerService()
 	if err != nil {
 		return nil, err
 	}
 	return service.GetActionByName(GetTarget)
 }
 
-func (self *TestDevice) GetOptionalAction() (*Action, error) {
-	service, err := self.GetSwitchPowerService()
+func (dev *TestDevice) GetOptionalAction() (*Action, error) {
+	service, err := dev.GetSwitchPowerService()
 	if err != nil {
 		return nil, err
 	}
 	return service.GetActionByName(GetStatus)
 }
 
-func (self *TestDevice) ActionRequestReceived(action *Action) Error {
+func (dev *TestDevice) ActionRequestReceived(action *Action) Error {
 	switch action.Name {
 	case SetTarget:
 		arg, err := action.GetArgumentByName(NewTargetValue)
 		if err == nil {
-			self.Target = arg.Value
+			dev.Target = arg.Value
 		}
 		return nil
 	case GetTarget:
 		arg, err := action.GetArgumentByName(RetTargetValue)
 		if err == nil {
-			arg.Value = self.Target
+			arg.Value = dev.Target
 		}
 		return nil
 	}

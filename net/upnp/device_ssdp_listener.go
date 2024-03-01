@@ -8,22 +8,22 @@ import (
 	"github.com/cybergarage/go-net-upnp/net/upnp/ssdp"
 )
 
-func (self *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
-	if self.SSDPListener != nil {
-		self.SSDPListener.DeviceNotifyReceived(ssdpReq)
+func (dev *Device) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
+	if dev.SSDPListener != nil {
+		dev.SSDPListener.DeviceNotifyReceived(ssdpReq)
 	}
 }
 
-func (self *Device) postResponseMessge(ssdpReq *ssdp.Request) error {
+func (dev *Device) postResponseMessge(ssdpReq *ssdp.Request) error {
 	fromAddr := ssdpReq.From.IP.String()
 	fromPort := ssdpReq.From.Port
 
-	ifAddr, err := self.selectAvailableInterfaceForAddr(fromAddr)
+	ifAddr, err := dev.selectAvailableInterfaceForAddr(fromAddr)
 	if err != nil {
 		return err
 	}
 
-	locationURL, err := self.createLocationURLForAddress(ifAddr)
+	locationURL, err := dev.createLocationURLForAddress(ifAddr)
 	if err != nil {
 		return err
 	}
@@ -37,9 +37,9 @@ func (self *Device) postResponseMessge(ssdpReq *ssdp.Request) error {
 	return err
 }
 
-func (self *Device) handleDiscoverRequest(ssdpReq *ssdp.Request) {
+func (dev *Device) handleDiscoverRequest(ssdpReq *ssdp.Request) {
 	if ssdpReq.IsRootDevice() {
-		self.postResponseMessge(ssdpReq)
+		dev.postResponseMessge(ssdpReq)
 		return
 	}
 
@@ -48,18 +48,18 @@ func (self *Device) handleDiscoverRequest(ssdpReq *ssdp.Request) {
 		return
 	}
 
-	if self.HasDeviceType(st) || self.HasServiceType(st) {
-		self.postResponseMessge(ssdpReq)
+	if dev.HasDeviceType(st) || dev.HasServiceType(st) {
+		dev.postResponseMessge(ssdpReq)
 		return
 	}
 }
 
-func (self *Device) DeviceSearchReceived(ssdpReq *ssdp.Request) {
+func (dev *Device) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 	if ssdpReq.IsDiscover() {
-		self.handleDiscoverRequest(ssdpReq)
+		dev.handleDiscoverRequest(ssdpReq)
 	}
 
-	if self.SSDPListener != nil {
-		self.SSDPListener.DeviceSearchReceived(ssdpReq)
+	if dev.SSDPListener != nil {
+		dev.SSDPListener.DeviceSearchReceived(ssdpReq)
 	}
 }
