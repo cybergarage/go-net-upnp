@@ -117,7 +117,7 @@ func (service *Service) LoadDescriptionFromSCPDURL() error {
 		return fmt.Errorf("%w (%s)", err, scpdURL)
 	}
 
-	return nil
+	return res.Body.Close()
 }
 
 // DescriptionString returns a descrition string.
