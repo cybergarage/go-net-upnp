@@ -115,7 +115,7 @@ func (ctrl *ControlPoint) GetRootDevicesByType(deviceType string) []*Device {
 	return devs
 }
 
-// FindDeviceByTypeAndUDN returns a devices of the specified deviceType and UDN
+// FindDeviceByTypeAndUDN returns a devices of the specified deviceType and UDN.
 func (ctrl *ControlPoint) FindDeviceByTypeAndUDN(deviceType string, udn string) (*Device, bool) {
 	ctrl.Lock()
 

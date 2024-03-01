@@ -31,12 +31,12 @@ func NewActionControl() *ActionControl {
 	return ctrl
 }
 
-// decodeEnvelopeXMLString parses an evnelope XML
+// decodeEnvelopeXMLString parses an evnelope XML.
 func (action *ActionControl) decodeEnvelopeXMLBytes(envXML []byte) error {
 	return xml.Unmarshal([]byte(envXML), &action.Envelope)
 }
 
-// decodeBodyInnerXMLBytes parses an innerXML of an action in body
+// decodeBodyInnerXMLBytes parses an innerXML of an action in body.
 func (action *ActionControl) decodeBodyInnerXMLBytes(bodyInnerXML []byte) error {
 	reader := bytes.NewReader(bodyInnerXML)
 	decorder := xml.NewDecoder(reader)
@@ -67,7 +67,7 @@ func (action *ActionControl) decodeBodyInnerXMLBytes(bodyInnerXML []byte) error 
 	return nil
 }
 
-// decodeActionInnerXMLBytes parses an innerXML of arguments in action
+// decodeActionInnerXMLBytes parses an innerXML of arguments in action.
 func (action *ActionControl) decodeActionInnerXMLBytes(actionInnerXML []byte) error {
 	reader := bytes.NewReader(actionInnerXML)
 	decorder := xml.NewDecoder(reader)

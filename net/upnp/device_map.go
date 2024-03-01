@@ -4,7 +4,7 @@
 
 package upnp
 
-// DeviceMap manages devices by UDN
+// DeviceMap manages devices by UDN.
 type DeviceMap map[string]map[string]*Device
 
 // DeviceMap returns a new device map.

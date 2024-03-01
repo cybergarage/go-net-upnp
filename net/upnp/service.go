@@ -54,7 +54,7 @@ func NewService() *Service {
 	return service
 }
 
-// NewServiceFromDescription returns a service from the specified descrition string
+// NewServiceFromDescription returns a service from the specified descrition string.
 func NewServiceFromDescriptionBytes(descBytes []byte) (*Service, error) {
 	service := NewService()
 
@@ -208,7 +208,7 @@ func (service *Service) GetAbsoluteEventSubURL() (*url.URL, error) {
 	return service.getAbsoluteURL(service.EventSubURL)
 }
 
-// GetActions returns all actions
+// GetActions returns all actions.
 func (service *Service) GetActions() []*Action {
 	actionCnt := len(service.ActionList.Actions)
 	actions := make([]*Action, actionCnt)
@@ -218,7 +218,7 @@ func (service *Service) GetActions() []*Action {
 	return actions
 }
 
-// GetActionByName returns an action by the specified name
+// GetActionByName returns an action by the specified name.
 func (service *Service) GetActionByName(name string) (*Action, error) {
 	if service.description == nil {
 		return nil, fmt.Errorf(errorServiceDescriptionNotFound, service.XMLName.Local)
