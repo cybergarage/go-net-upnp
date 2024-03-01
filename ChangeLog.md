@@ -4,7 +4,8 @@
 * 20xx-xx-xx v0.9.0
 	* Support the event subscription function of UPnP and deprecated functions from UPnP v1.1 such as query function
 
-* 2024-03-xx v0.8.3
+* 2024-03-02 v0.8.3
+    * Update UUID generation using github.com/google/uuid package
 	* Fix lint warnings
 
 * 2024-02-29 v0.8.2
