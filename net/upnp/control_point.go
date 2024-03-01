@@ -48,35 +48,35 @@ func NewControlPoint() *ControlPoint {
 }
 
 // Start starts this control point.
-func (self *ControlPoint) StartWithPort(port int) error {
-	self.ssdpMcastServerList.Listener = self
-	err := self.ssdpMcastServerList.Start()
+func (ctrl *ControlPoint) StartWithPort(port int) error {
+	ctrl.ssdpMcastServerList.Listener = ctrl
+	err := ctrl.ssdpMcastServerList.Start()
 	if err != nil {
-		self.Stop()
+		ctrl.Stop()
 		return err
 	}
 
-	self.ssdpUcastServerList.Listener = self
-	err = self.ssdpUcastServerList.Start(port)
+	ctrl.ssdpUcastServerList.Listener = ctrl
+	err = ctrl.ssdpUcastServerList.Start(port)
 	if err != nil {
-		self.Stop()
+		ctrl.Stop()
 		return err
 	}
 
-	self.Port = port
+	ctrl.Port = port
 
 	return nil
 }
 
 // Start starts this control point.
-func (self *ControlPoint) Start() error {
+func (ctrl *ControlPoint) Start() error {
 	port := rand.Intn(ControlPointDefaultPortRange) + ControlPointDefaultPortBase
-	return self.StartWithPort(port)
+	return ctrl.StartWithPort(port)
 }
 
 // Stop stops this control point.
-func (self *ControlPoint) Stop() error {
-	err := self.ssdpMcastServerList.Stop()
+func (ctrl *ControlPoint) Stop() error {
+	err := ctrl.ssdpMcastServerList.Stop()
 	if err != nil {
 		return err
 	}
@@ -84,54 +84,54 @@ func (self *ControlPoint) Stop() error {
 }
 
 // Search sends a M-SEARCH request of the specified ST.
-func (self *ControlPoint) Search(st string) error {
-	return self.ssdpUcastServerList.Search(st, self.SearchMX)
+func (ctrl *ControlPoint) Search(st string) error {
+	return ctrl.ssdpUcastServerList.Search(st, ctrl.SearchMX)
 }
 
 // SearchRootDevice sends a M-SEARCH request for root devices.
-func (self *ControlPoint) SearchRootDevice() error {
-	return self.Search(ssdp.RootDevice)
+func (ctrl *ControlPoint) SearchRootDevice() error {
+	return ctrl.Search(ssdp.RootDevice)
 }
 
 // GetRootDevices returns found root devices.
-func (self *ControlPoint) GetRootDevices() []*Device {
-	self.Lock()
+func (ctrl *ControlPoint) GetRootDevices() []*Device {
+	ctrl.Lock()
 
-	devs := self.rootDeviceMap.GetAllDevices()
+	devs := ctrl.rootDeviceMap.GetAllDevices()
 
-	self.Unlock()
+	ctrl.Unlock()
 
 	return devs
 }
 
 // GetRootDevicesByType returns found root devices of the specified device type.
-func (self *ControlPoint) GetRootDevicesByType(deviceType string) []*Device {
-	self.Lock()
+func (ctrl *ControlPoint) GetRootDevicesByType(deviceType string) []*Device {
+	ctrl.Lock()
 
-	devs := self.rootDeviceMap.GetDevicesByType(deviceType)
+	devs := ctrl.rootDeviceMap.GetDevicesByType(deviceType)
 
-	self.Unlock()
+	ctrl.Unlock()
 
 	return devs
 }
 
 // FindDeviceByTypeAndUDN returns a devices of the specified deviceType and UDN
-func (self *ControlPoint) FindDeviceByTypeAndUDN(deviceType string, udn string) (*Device, bool) {
-	self.Lock()
+func (ctrl *ControlPoint) FindDeviceByTypeAndUDN(deviceType string, udn string) (*Device, bool) {
+	ctrl.Lock()
 
-	dev, ok := self.rootDeviceMap.FindDeviceByTypeAndUDN(deviceType, udn)
+	dev, ok := ctrl.rootDeviceMap.FindDeviceByTypeAndUDN(deviceType, udn)
 
-	self.Unlock()
+	ctrl.Unlock()
 
 	return dev, ok
 }
 
 // AddDevice adds a specified device.
-func (self *ControlPoint) addDevice(dev *Device) (bool, error) {
-	self.Lock()
-	defer self.Unlock()
+func (ctrl *ControlPoint) addDevice(dev *Device) (bool, error) {
+	ctrl.Lock()
+	defer ctrl.Unlock()
 
-	if self.rootDeviceMap.HasDevice(dev) {
+	if ctrl.rootDeviceMap.HasDevice(dev) {
 		log.Tracef(fmt.Sprintf("device (%s, %s) is already added", dev.DeviceType, dev.UDN))
 		return false, nil
 	}
@@ -141,7 +141,7 @@ func (self *ControlPoint) addDevice(dev *Device) (bool, error) {
 		return false, err
 	}
 
-	ok := self.rootDeviceMap.AddDevice(dev)
+	ok := ctrl.rootDeviceMap.AddDevice(dev)
 
 	if ok {
 		log.Tracef(fmt.Sprintf("device (%s, %s) is added", dev.DeviceType, dev.UDN))
@@ -161,47 +161,47 @@ func getFromToMessageFromSSDPPacket(req *ssdp.Packet) string {
 	return fmt.Sprintf("(%s -> %s)", fromAddr, toAddr)
 }
 
-func (self *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
+func (ctrl *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	usn, _ := ssdpReq.GetUSN()
 	log.Tracef(fmt.Sprintf("notiry req : %s %s", usn, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
 
 	if ssdpReq.IsRootDevice() {
 		newDev, err := NewDeviceFromSSDPRequest(ssdpReq)
 		if err == nil {
-			_, err = self.addDevice(newDev)
+			_, err = ctrl.addDevice(newDev)
 		}
 		if err != nil {
 			log.Warnf("%s", err.Error())
 		}
 	}
 
-	if self.Listener != nil {
-		self.Listener.DeviceNotifyReceived(ssdpReq)
+	if ctrl.Listener != nil {
+		ctrl.Listener.DeviceNotifyReceived(ssdpReq)
 	}
 }
 
-func (self *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
+func (ctrl *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 	st, _ := ssdpReq.GetST()
 	log.Tracef(fmt.Sprintf("search req : %s %s", st, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
 
-	if self.Listener != nil {
-		self.Listener.DeviceSearchReceived(ssdpReq)
+	if ctrl.Listener != nil {
+		ctrl.Listener.DeviceSearchReceived(ssdpReq)
 	}
 }
 
-func (self *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
+func (ctrl *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
 	url, _ := ssdpRes.GetLocation()
 	log.Tracef(fmt.Sprintf("search res : %s %s", url, getFromToMessageFromSSDPPacket(ssdpRes.Packet)))
 
 	newDev, err := NewDeviceFromSSDPResponse(ssdpRes)
 	if err == nil {
-		_, err = self.addDevice(newDev)
+		_, err = ctrl.addDevice(newDev)
 	}
 	if err != nil {
 		log.Warnf("%s", err.Error())
 	}
 
-	if self.Listener != nil {
-		self.Listener.DeviceResponseReceived(ssdpRes)
+	if ctrl.Listener != nil {
+		ctrl.Listener.DeviceResponseReceived(ssdpRes)
 	}
 }

@@ -21,15 +21,15 @@ type Action struct {
 	Arguments   []*Argument
 }
 
-func (self *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	start.Name.Local = soapActionPrefix + self.Name
+func (action *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	start.Name.Local = soapActionPrefix + action.Name
 	start.Attr = []xml.Attr{
-		{Name: xml.Name{Local: soapActionSpaceAttr}, Value: self.ServiceType},
+		{Name: xml.Name{Local: soapActionSpaceAttr}, Value: action.ServiceType},
 	}
 
 	e.EncodeToken(start)
-	for n := 0; n < len(self.Arguments); n++ {
-		arg := self.Arguments[n]
+	for n := 0; n < len(action.Arguments); n++ {
+		arg := action.Arguments[n]
 		argElem := xml.StartElement{Name: xml.Name{Local: arg.Name}}
 		e.EncodeElement(arg.Value, argElem)
 	}

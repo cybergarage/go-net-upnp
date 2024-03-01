@@ -75,19 +75,19 @@ func NewUPnPErrorFromCode(code int) *UPnPError {
 	return err
 }
 
-func (self *UPnPError) GetCode() int {
-	return self.Code
+func (ue *UPnPError) GetCode() int {
+	return ue.Code
 }
 
-func (self *UPnPError) GetDescription() string {
-	return self.Description
+func (ue *UPnPError) GetDescription() string {
+	return ue.Description
 }
 
-func (self *UPnPError) Error() string {
-	return fmt.Sprintf(upnpErrorFormat, self.Code, self.Description)
+func (ue *UPnPError) Error() string {
+	return fmt.Sprintf(upnpErrorFormat, ue.Code, ue.Description)
 }
 
-func (self *UPnPError) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (ue *UPnPError) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name.Local = soapUPnPError
 	start.Attr = []xml.Attr{
 		{Name: xml.Name{Local: xmlNs}, Value: soapUPnPErrorNamespace},
@@ -98,12 +98,12 @@ func (self *UPnPError) MarshalXML(e *xml.Encoder, start xml.StartElement) error 
 	// errorCode
 
 	errCode := xml.StartElement{Name: xml.Name{Local: soapUPnPErrorCode}}
-	e.EncodeElement(self.Code, errCode)
+	e.EncodeElement(ue.Code, errCode)
 
 	// errorDescripton
 
 	errDesc := xml.StartElement{Name: xml.Name{Local: soapUPnPErrorDesc}}
-	e.EncodeElement(self.Description, errDesc)
+	e.EncodeElement(ue.Description, errDesc)
 
 	e.EncodeToken(start.End())
 

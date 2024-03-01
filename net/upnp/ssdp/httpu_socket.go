@@ -24,8 +24,8 @@ func NewHTTPUSocket() *HTTPUSocket {
 }
 
 // Bind binds to SSDP multicast address.
-func (self *HTTPUSocket) Bind(ifi net.Interface, port int) error {
-	err := self.Close()
+func (socket *HTTPUSocket) Bind(ifi net.Interface, port int) error {
+	err := socket.Close()
 	if err != nil {
 		return err
 	}
@@ -40,25 +40,25 @@ func (self *HTTPUSocket) Bind(ifi net.Interface, port int) error {
 		return err
 	}
 
-	self.Conn, err = net.ListenUDP("udp", bindAddr)
+	socket.Conn, err = net.ListenUDP("udp", bindAddr)
 	if err != nil {
 		return err
 	}
 
-	self.Interface = ifi
+	socket.Interface = ifi
 
 	return nil
 }
 
 // Write sends the specified bytes.
-func (self *HTTPUSocket) Write(addr string, port int, b []byte) (int, error) {
+func (socket *HTTPUSocket) Write(addr string, port int, b []byte) (int, error) {
 	toAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", addr, port))
 	if err != nil {
 		return 0, err
 	}
 
-	if self.Conn != nil {
-		return self.Conn.WriteToUDP(b, toAddr)
+	if socket.Conn != nil {
+		return socket.Conn.WriteToUDP(b, toAddr)
 	}
 
 	conn, err := net.DialUDP("udp", nil, toAddr)

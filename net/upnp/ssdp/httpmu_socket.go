@@ -23,8 +23,8 @@ func NewHTTPMUSocket() *HTTPMUSocket {
 }
 
 // Bind binds to SSDP multicast address.
-func (self *HTTPMUSocket) Bind(ifi net.Interface) error {
-	err := self.Close()
+func (socket *HTTPMUSocket) Bind(ifi net.Interface) error {
+	err := socket.Close()
 	if err != nil {
 		return err
 	}
@@ -34,19 +34,19 @@ func (self *HTTPMUSocket) Bind(ifi net.Interface) error {
 		return err
 	}
 
-	self.Conn, err = net.ListenMulticastUDP("udp", &ifi, mcastAddr)
+	socket.Conn, err = net.ListenMulticastUDP("udp", &ifi, mcastAddr)
 	if err != nil {
 		return fmt.Errorf("%w (%s)", err, ifi.Name)
 	}
 
-	self.Interface = ifi
+	socket.Interface = ifi
 
 	return nil
 }
 
 // Write sends the specified bytes.
-func (self *HTTPMUSocket) Write(b []byte) (int, error) {
-	if self.Conn == nil {
+func (socket *HTTPMUSocket) Write(b []byte) (int, error) {
+	if socket.Conn == nil {
 		return 0, errors.New(errorSocketIsClosed)
 	}
 

@@ -64,19 +64,19 @@ func responseUPnPError(httpRes http.ResponseWriter, upnpErr Error) error {
 	return responseXMLContent(httpRes, http.StatusInternalServerError, errStr)
 }
 
-func (self *Device) isDescriptionURI(path string) bool {
-	return path == self.DescriptionURL
+func (dev *Device) isDescriptionURI(path string) bool {
+	return path == dev.DescriptionURL
 }
 
-func (self *Device) responseDeviceDescription(httpRes http.ResponseWriter) error {
-	devDesc, err := self.DescriptionString()
+func (dev *Device) responseDeviceDescription(httpRes http.ResponseWriter) error {
+	devDesc, err := dev.DescriptionString()
 	if err != nil {
 		return err
 	}
 	return responseSuccessXMLContent(httpRes, devDesc)
 }
 
-func (self *Device) responseServiceDescription(httpRes http.ResponseWriter, service *Service) error {
+func (dev *Device) responseServiceDescription(httpRes http.ResponseWriter, service *Service) error {
 	srvDesc, err := service.DescriptionString()
 	if err != nil {
 		return err
@@ -84,12 +84,12 @@ func (self *Device) responseServiceDescription(httpRes http.ResponseWriter, serv
 	return responseSuccessXMLContent(httpRes, srvDesc)
 }
 
-func (self *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
+func (dev *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
 	path := httpReq.URL.Path
 
 	// Device Description ?
-	if self.isDescriptionURI(path) {
-		err := self.responseDeviceDescription(httpRes)
+	if dev.isDescriptionURI(path) {
+		err := dev.responseDeviceDescription(httpRes)
 		if err != nil {
 			responseInternalServerError(httpRes)
 		}
@@ -97,10 +97,10 @@ func (self *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.R
 	}
 
 	// Service Description ?
-	for n := 0; n < len(self.ServiceList.Services); n++ {
-		service := &self.ServiceList.Services[n]
+	for n := 0; n < len(dev.ServiceList.Services); n++ {
+		service := &dev.ServiceList.Services[n]
 		if service.isDescriptionURL(path) {
-			err := self.responseServiceDescription(httpRes, service)
+			err := dev.responseServiceDescription(httpRes, service)
 			if err != nil {
 				responseInternalServerError(httpRes)
 			}
@@ -111,10 +111,10 @@ func (self *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.R
 	return false
 }
 
-func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter, action *Action) error {
+func (dev *Device) httpActionRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter, action *Action) error {
 	// has listener ?
 
-	if self.ActionListener == nil {
+	if dev.ActionListener == nil {
 		upnpErr := control.NewUPnPErrorFromCode(control.ErrorOptionalActionNotImplemented)
 		return responseUPnPError(httpRes, upnpErr)
 	}
@@ -147,7 +147,7 @@ func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes htt
 
 	// run listener
 
-	upnpErr := self.ActionListener.ActionRequestReceived(action)
+	upnpErr := dev.ActionListener.ActionRequestReceived(action)
 	if upnpErr != nil {
 		return responseUPnPError(httpRes, upnpErr)
 	}
@@ -159,9 +159,9 @@ func (self *Device) httpActionRequestReceived(httpReq *http.Request, httpRes htt
 	return responseSuccessXMLContent(httpRes, errStr)
 }
 
-func (self *Device) httpSoapRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
+func (dev *Device) httpSoapRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
 	ctrlURL := httpReq.URL.Path
-	service, err := self.GetServiceByControlURL(ctrlURL)
+	service, err := dev.GetServiceByControlURL(ctrlURL)
 	if err != nil {
 		return false
 	}
@@ -176,36 +176,36 @@ func (self *Device) httpSoapRequestReceived(httpReq *http.Request, httpRes http.
 		return false
 	}
 
-	err = self.httpActionRequestReceived(httpReq, httpRes, action)
+	err = dev.httpActionRequestReceived(httpReq, httpRes, action)
 
 	return err == nil
 }
 
-func (self *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
+func (dev *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) bool {
 	if httpReq.IsSOAPRequest() {
-		return self.httpSoapRequestReceived(httpReq, httpRes)
+		return dev.httpSoapRequestReceived(httpReq, httpRes)
 	}
 
-	return self.httpSoapRequestReceived(httpReq, httpRes)
+	return dev.httpSoapRequestReceived(httpReq, httpRes)
 }
 
-func (self *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
+func (dev *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
 	log.Infof(fmt.Sprintf("%s %s", httpReq.Method, httpReq.URL.Path))
 
 	switch httpReq.Method {
 	case http.GET:
-		if self.httpGetRequestReceived(httpReq, httpRes) {
+		if dev.httpGetRequestReceived(httpReq, httpRes) {
 			return
 		}
 
 	case http.POST:
-		if self.httpPostRequestReceived(httpReq, httpRes) {
+		if dev.httpPostRequestReceived(httpReq, httpRes) {
 			return
 		}
 	}
 
-	if self.HTTPListener != nil {
-		self.HTTPListener.HTTPRequestReceived(httpReq, httpRes)
+	if dev.HTTPListener != nil {
+		dev.HTTPListener.HTTPRequestReceived(httpReq, httpRes)
 		return
 	}
 

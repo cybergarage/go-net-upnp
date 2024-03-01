@@ -32,12 +32,12 @@ func NewActionControl() *ActionControl {
 }
 
 // decodeEnvelopeXMLString parses an evnelope XML
-func (self *ActionControl) decodeEnvelopeXMLBytes(envXML []byte) error {
-	return xml.Unmarshal([]byte(envXML), &self.Envelope)
+func (action *ActionControl) decodeEnvelopeXMLBytes(envXML []byte) error {
+	return xml.Unmarshal([]byte(envXML), &action.Envelope)
 }
 
 // decodeBodyInnerXMLBytes parses an innerXML of an action in body
-func (self *ActionControl) decodeBodyInnerXMLBytes(bodyInnerXML []byte) error {
+func (action *ActionControl) decodeBodyInnerXMLBytes(bodyInnerXML []byte) error {
 	reader := bytes.NewReader(bodyInnerXML)
 	decorder := xml.NewDecoder(reader)
 
@@ -52,12 +52,12 @@ func (self *ActionControl) decodeBodyInnerXMLBytes(bodyInnerXML []byte) error {
 		switch elem := token.(type) {
 		case xml.StartElement:
 			actionName := elem.Name.Local
-			self.Envelope.Body.Action.Name = actionName
+			action.Envelope.Body.Action.Name = actionName
 			var actionArgs ActionInnerXML
 			if err := decorder.DecodeElement(&actionArgs, &elem); err != nil {
 				return err
 			}
-			err := self.decodeActionInnerXMLBytes([]byte(actionArgs.Innerxml))
+			err := action.decodeActionInnerXMLBytes([]byte(actionArgs.Innerxml))
 			if err != nil {
 				return err
 			}
@@ -68,7 +68,7 @@ func (self *ActionControl) decodeBodyInnerXMLBytes(bodyInnerXML []byte) error {
 }
 
 // decodeActionInnerXMLBytes parses an innerXML of arguments in action
-func (self *ActionControl) decodeActionInnerXMLBytes(actionInnerXML []byte) error {
+func (action *ActionControl) decodeActionInnerXMLBytes(actionInnerXML []byte) error {
 	reader := bytes.NewReader(actionInnerXML)
 	decorder := xml.NewDecoder(reader)
 
@@ -88,7 +88,7 @@ func (self *ActionControl) decodeActionInnerXMLBytes(actionInnerXML []byte) erro
 				return err
 			}
 			arg := &Argument{Name: argName, Value: argValue}
-			self.Envelope.Body.Action.Arguments = append(self.Envelope.Body.Action.Arguments, arg)
+			action.Envelope.Body.Action.Arguments = append(action.Envelope.Body.Action.Arguments, arg)
 		}
 	}
 
@@ -96,13 +96,13 @@ func (self *ActionControl) decodeActionInnerXMLBytes(actionInnerXML []byte) erro
 }
 
 // GetAction returns an actions in the SOAP Control.
-func (self *ActionControl) GetAction() (*Action, error) {
-	return &self.Envelope.Body.Action, nil
+func (action *ActionControl) GetAction() (*Action, error) {
+	return &action.Envelope.Body.Action, nil
 }
 
 // SOAPContent returns a SOAP content string.
-func (self *ActionControl) SOAPContentString() (string, error) {
-	buf, err := xml.MarshalIndent(&self.Envelope, "", xmlMarshallIndent)
+func (action *ActionControl) SOAPContentString() (string, error) {
+	buf, err := xml.MarshalIndent(&action.Envelope, "", xmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}

@@ -23,8 +23,8 @@ func NewUnicastServerList() *UnicastServerList {
 }
 
 // Start starts this server.
-func (self *UnicastServerList) Start(port int) error {
-	err := self.Stop()
+func (servers *UnicastServerList) Start(port int) error {
+	err := servers.Stop()
 	if err != nil {
 		return err
 	}
@@ -36,41 +36,41 @@ func (self *UnicastServerList) Start(port int) error {
 
 	var lastErr error
 
-	self.Servers = make([]*UnicastServer, len(ifis))
+	servers.Servers = make([]*UnicastServer, len(ifis))
 	for n, ifi := range ifis {
 		server := NewUnicastServer()
-		server.Listener = self.Listener
+		server.Listener = servers.Listener
 		err := server.Start(ifi, port)
 		if err != nil {
 			lastErr = err
 		}
-		self.Servers[n] = server
+		servers.Servers[n] = server
 	}
 
 	return lastErr
 }
 
 // Stop stops this server.
-func (self *UnicastServerList) Stop() error {
+func (servers *UnicastServerList) Stop() error {
 	var lastErr error
 
-	for _, server := range self.Servers {
+	for _, server := range servers.Servers {
 		err := server.Stop()
 		if err != nil {
 			lastErr = err
 		}
 	}
 
-	self.Servers = make([]*UnicastServer, 0)
+	servers.Servers = make([]*UnicastServer, 0)
 
 	return lastErr
 }
 
 // Search sends a M-SEARCH request of the specified ST.
-func (self *UnicastServerList) Search(st string, mx int) error {
+func (servers *UnicastServerList) Search(st string, mx int) error {
 	var lastErr error
 
-	for _, server := range self.Servers {
+	for _, server := range servers.Servers {
 		err := server.Search(st, mx)
 		if err != nil {
 			lastErr = err

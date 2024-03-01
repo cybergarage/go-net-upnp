@@ -41,30 +41,30 @@ func NewAction() *Action {
 	return action
 }
 
-func (self *Action) reviseParentObject() error {
-	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
-		arg := &self.ArgumentList.Arguments[n]
-		arg.ParentAction = self
+func (action *Action) reviseParentObject() error {
+	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+		arg := &action.ArgumentList.Arguments[n]
+		arg.ParentAction = action
 	}
 
 	return nil
 }
 
 // GetArguments returns all arguments
-func (self *Action) GetArguments() []*Argument {
-	argCnt := len(self.ArgumentList.Arguments)
+func (action *Action) GetArguments() []*Argument {
+	argCnt := len(action.ArgumentList.Arguments)
 	args := make([]*Argument, argCnt)
 	for n := 0; n < argCnt; n++ {
-		args[n] = &self.ArgumentList.Arguments[n]
+		args[n] = &action.ArgumentList.Arguments[n]
 	}
 	return args
 }
 
 // GetInputArguments returns all input arguments
-func (self *Action) GetInputArguments() []*Argument {
+func (action *Action) GetInputArguments() []*Argument {
 	args := make([]*Argument, 0)
-	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
-		arg := &self.ArgumentList.Arguments[n]
+	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+		arg := &action.ArgumentList.Arguments[n]
 		if !arg.IsInDirection() {
 			continue
 		}
@@ -74,10 +74,10 @@ func (self *Action) GetInputArguments() []*Argument {
 }
 
 // GetOutputArguments returns all output arguments
-func (self *Action) GetOutputArguments() []*Argument {
+func (action *Action) GetOutputArguments() []*Argument {
 	args := make([]*Argument, 0)
-	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
-		arg := &self.ArgumentList.Arguments[n]
+	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+		arg := &action.ArgumentList.Arguments[n]
 		if !arg.IsOutDirection() {
 			continue
 		}
@@ -87,9 +87,9 @@ func (self *Action) GetOutputArguments() []*Argument {
 }
 
 // GetArgumentByName returns an argument by the specified name
-func (self *Action) GetArgumentByName(name string) (*Argument, error) {
-	for n := 0; n < len(self.ArgumentList.Arguments); n++ {
-		arg := &self.ArgumentList.Arguments[n]
+func (action *Action) GetArgumentByName(name string) (*Argument, error) {
+	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+		arg := &action.ArgumentList.Arguments[n]
 		if arg.Name == name {
 			return arg, nil
 		}
@@ -98,8 +98,8 @@ func (self *Action) GetArgumentByName(name string) (*Argument, error) {
 }
 
 // SetArgumentString sets a string value into the specified argument
-func (self *Action) SetArgumentString(name string, value string) error {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) SetArgumentString(name string, value string) error {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return err
 	}
@@ -107,8 +107,8 @@ func (self *Action) SetArgumentString(name string, value string) error {
 }
 
 // GetArgumentString return a string value into the specified argument
-func (self *Action) GetArgumentString(name string) (string, error) {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) GetArgumentString(name string) (string, error) {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return "", err
 	}
@@ -116,8 +116,8 @@ func (self *Action) GetArgumentString(name string) (string, error) {
 }
 
 // SetArgumentInt sets a integer value into the specified argument
-func (self *Action) SetArgumentInt(name string, value int) error {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) SetArgumentInt(name string, value int) error {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return err
 	}
@@ -125,8 +125,8 @@ func (self *Action) SetArgumentInt(name string, value int) error {
 }
 
 // GetArgumentInt return a integer value into the specified argument
-func (self *Action) GetArgumentInt(name string) (int, error) {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) GetArgumentInt(name string) (int, error) {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return 0, err
 	}
@@ -134,8 +134,8 @@ func (self *Action) GetArgumentInt(name string) (int, error) {
 }
 
 // SetArgumentFloat sets a integer value into the specified argument
-func (self *Action) SetArgumentFloat(name string, value float64) error {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) SetArgumentFloat(name string, value float64) error {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return err
 	}
@@ -143,8 +143,8 @@ func (self *Action) SetArgumentFloat(name string, value float64) error {
 }
 
 // GetArgumentFloat return a integer value into the specified argument
-func (self *Action) GetArgumentFloat(name string) (float64, error) {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) GetArgumentFloat(name string) (float64, error) {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return 0, err
 	}
@@ -152,8 +152,8 @@ func (self *Action) GetArgumentFloat(name string) (float64, error) {
 }
 
 // SetArgumentBool sets a boolean value into the specified argument
-func (self *Action) SetArgumentBool(name string, value bool) error {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) SetArgumentBool(name string, value bool) error {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return err
 	}
@@ -161,8 +161,8 @@ func (self *Action) SetArgumentBool(name string, value bool) error {
 }
 
 // GetArgumentBool return a boolean value into the specified argument
-func (self *Action) GetArgumentBool(name string) (bool, error) {
-	arg, err := self.GetArgumentByName(name)
+func (action *Action) GetArgumentBool(name string) (bool, error) {
+	arg, err := action.GetArgumentByName(name)
 	if err != nil {
 		return false, err
 	}
@@ -170,43 +170,43 @@ func (self *Action) GetArgumentBool(name string) (bool, error) {
 }
 
 // setArgumentsByActionControl sets control arguments into the specified argument
-func (self *Action) setArgumentsByActionControl(actionCtrl *control.ActionControl) error {
+func (action *Action) setArgumentsByActionControl(actionCtrl *control.ActionControl) error {
 	ctrlAction, err := actionCtrl.GetAction()
 	if err != nil {
 		return err
 	}
 
-	if ctrlAction.Name != self.Name {
-		return fmt.Errorf(errorActionNameIsInvalid, ctrlAction.Name, self.Name)
+	if ctrlAction.Name != action.Name {
+		return fmt.Errorf(errorActionNameIsInvalid, ctrlAction.Name, action.Name)
 	}
 
 	for n := 0; n < len(ctrlAction.Arguments); n++ {
 		ctrlArg := ctrlAction.Arguments[n]
-		selfArg, err := self.GetArgumentByName(ctrlArg.Name)
+		actionArg, err := action.GetArgumentByName(ctrlArg.Name)
 		if err != nil {
 			continue
 		}
-		selfArg.Value = ctrlArg.Value
+		actionArg.Value = ctrlArg.Value
 	}
 
 	return nil
 }
 
 // SetArgumentsByActionRequest sets request arguments into the specified argument
-func (self *Action) SetArgumentsByActionRequest(actionReq *control.ActionRequest) error {
-	return self.setArgumentsByActionControl(actionReq.ActionControl)
+func (action *Action) SetArgumentsByActionRequest(actionReq *control.ActionRequest) error {
+	return action.setArgumentsByActionControl(actionReq.ActionControl)
 }
 
 // SetArgumentsByActionResponse sets response arguments into the specified argument
-func (self *Action) SetArgumentsByActionResponse(actionRes *control.ActionResponse) error {
-	return self.setArgumentsByActionControl(actionRes.ActionControl)
+func (action *Action) SetArgumentsByActionResponse(actionRes *control.ActionResponse) error {
+	return action.setArgumentsByActionControl(actionRes.ActionControl)
 }
 
 // Post sends the specified arguments into the deveice.
-func (self *Action) Post() error {
+func (action *Action) Post() error {
 	// post response
 
-	req, err := NewActionRequestFromAction(self)
+	req, err := NewActionRequestFromAction(action)
 	if err != nil {
 		return err
 	}
@@ -216,9 +216,9 @@ func (self *Action) Post() error {
 		return err
 	}
 
-	service := self.ParentService
+	service := action.ParentService
 	if service == nil {
-		return fmt.Errorf(errorActionHasNoParentService, self.Name)
+		return fmt.Errorf(errorActionHasNoParentService, action.Name)
 	}
 
 	controlAbsURL, err := service.GetAbsoluteControlURL()
@@ -226,7 +226,7 @@ func (self *Action) Post() error {
 		return err
 	}
 
-	soapAction := service.ServiceType + http.SOAPActionDelim + self.Name
+	soapAction := service.ServiceType + http.SOAPActionDelim + action.Name
 	httpReq, err := http.NewSOAPRequest(controlAbsURL, soapAction, strings.NewReader(soapReqStr))
 	if err != nil {
 		return err
@@ -262,7 +262,7 @@ func (self *Action) Post() error {
 		if err != nil {
 			return err
 		}
-		err = self.SetArgumentsByActionResponse(actionRes)
+		err = action.SetArgumentsByActionResponse(actionRes)
 		if err != nil {
 			return err
 		}
