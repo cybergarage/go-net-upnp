@@ -8,7 +8,7 @@ import (
 	gohttp "net/http"
 )
 
-func Get(url string) (resp *Response, err error) {
+func Get(url string) (*Response, error) {
 	res, err := gohttp.Get(url)
 	if err != nil {
 		return nil, err
