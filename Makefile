@@ -47,7 +47,7 @@ BINS=\
 	${BIN_ID}/device/upnplight \
 	${BIN_ID}/device/upnpavserver
 
-GOLANGCILINT_PARAMS=-D perfsprint -D exhaustruct -D gosec -D noctx -D errorlint
+GOLANGCILINT_PARAMS=-D perfsprint -D exhaustruct -D gosec -D noctx -D errorlint -D forcetypeassert -D bodyclose
 
 version: ${VERSION_GO} ${USRAGNT_GO}
 
@@ -63,7 +63,7 @@ lint: vet
 build: lint
 	go build -v ${PKG}
 
-test:
+test: lint
 	go test -v -p 1 -timeout 10m -cover -coverpkg=${PKG}/... -coverprofile=${PKG_COVER}.out ${PKG}/...
 	go tool cover -html=${PKG_COVER}.out -o ${PKG_COVER}.html
 
