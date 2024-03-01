@@ -74,6 +74,11 @@ func TestSampleDevice(t *testing.T) {
 		t.Errorf(errorTestDeviceInvalidStatusCode, devDescURL, res.StatusCode, http.StatusOK)
 	}
 
+	err = res.Body.Close()
+	if err != nil {
+		t.Error(err)
+	}
+
 	// stop device
 	err = dev.Stop()
 	if err != nil {
