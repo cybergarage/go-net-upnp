@@ -21,8 +21,8 @@ const (
 )
 
 const (
-	errorServiceDescriptionNotFound = "action (%s) is not found. service (%s) description is null."
-	errorServiceHanNoActions        = "action (%s) is not found. service (%s) has no actions."
+	errorServiceDescriptionNotFound = "service (%s) description is not found"
+	errorServiceHasNoActions        = "service (%s) has no actions"
 	errorServiceActionNotFound      = "action (%s) is not found in the service (%s)"
 	errorServiceHasNoParentDevice   = "service (%s) has no parent device"
 	errorServiceBadSCPDURL          = "SCPDURL (%s) is bad response (%d)"
@@ -32,7 +32,7 @@ const (
 type Service struct {
 	XMLName     xml.Name `xml:"service"`
 	ServiceType string   `xml:"serviceType"`
-	ServiceId   string   `xml:"serviceId"`
+	ServiceID   string   `xml:"serviceId"`
 	SCPDURL     string   `xml:"SCPDURL"`
 	ControlURL  string   `xml:"controlURL"`
 	EventSubURL string   `xml:"eventSubURL"`
@@ -67,18 +67,18 @@ func NewServiceFromDescriptionBytes(descBytes []byte) (*Service, error) {
 }
 
 // LoadDescriptionBytes loads a device description string.
-func (self *Service) LoadDescriptionBytes(descBytes []byte) error {
-	self.description = &ServiceDescription{}
+func (service *Service) LoadDescriptionBytes(descBytes []byte) error {
+	service.description = &ServiceDescription{}
 
-	err := xml.Unmarshal(descBytes, self.description)
+	err := xml.Unmarshal(descBytes, service.description)
 	if err != nil {
 		return err
 	}
 
-	self.ServiceStateTable = &self.description.ServiceStateTable
-	self.ActionList = &self.description.ActionList
+	service.ServiceStateTable = &service.description.ServiceStateTable
+	service.ActionList = &service.description.ActionList
 
-	err = self.reviseParentObject()
+	err = service.reviseParentObject()
 	if err != nil {
 		return err
 	}
@@ -87,13 +87,13 @@ func (self *Service) LoadDescriptionBytes(descBytes []byte) error {
 }
 
 // LoadDescriptinString loads a device description string.
-func (self *Service) LoadDescriptionFromSCPDURL() error {
+func (service *Service) LoadDescriptionFromSCPDURL() error {
 	// Some services has no SCPDURL such as Panasonic AiSEG001
-	if len(self.SCPDURL) == 0 {
+	if len(service.SCPDURL) == 0 {
 		return nil
 	}
 
-	scpdURL, err := self.GetAbsoluteSCPDURL()
+	scpdURL, err := service.GetAbsoluteSCPDURL()
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,7 @@ func (self *Service) LoadDescriptionFromSCPDURL() error {
 		return err
 	}
 
-	err = self.LoadDescriptionBytes(scpdBytes)
+	err = service.LoadDescriptionBytes(scpdBytes)
 	if err != nil {
 		return fmt.Errorf("%w (%s)", err, scpdURL)
 	}
@@ -121,8 +121,8 @@ func (self *Service) LoadDescriptionFromSCPDURL() error {
 }
 
 // DescriptionString returns a descrition string.
-func (self *Service) DescriptionString() (string, error) {
-	descBytes, err := xml.MarshalIndent(self.description, "", xmlMarshallIndent)
+func (service *Service) DescriptionString() (string, error) {
+	descBytes, err := xml.MarshalIndent(service.description, "", xmlMarshallIndent)
 	if err != nil {
 		return "", err
 	}
@@ -130,110 +130,110 @@ func (self *Service) DescriptionString() (string, error) {
 	return string(descBytes), nil
 }
 
-func (self *Service) getShortServiceType() string {
-	serviceTypes := strings.Split(self.ServiceType, ":")
+func (service *Service) getShortServiceType() string {
+	serviceTypes := strings.Split(service.ServiceType, ":")
 	if len(serviceTypes) <= 1 {
-		return self.ServiceId
+		return service.ServiceID
 	}
 	return serviceTypes[len(serviceTypes)-2]
 }
 
-func (self *Service) reviseParentObject() error {
-	if self.ActionList != nil {
-		for n := 0; n < len(self.ActionList.Actions); n++ {
-			action := &self.ActionList.Actions[n]
-			action.ParentService = self
+func (service *Service) reviseParentObject() error {
+	if service.ActionList != nil {
+		for n := 0; n < len(service.ActionList.Actions); n++ {
+			action := &service.ActionList.Actions[n]
+			action.ParentService = service
 			action.reviseParentObject()
 		}
 	}
 
-	if self.ServiceStateTable != nil {
-		for n := 0; n < len(self.ServiceStateTable.StateVariables); n++ {
-			statVar := &self.ServiceStateTable.StateVariables[n]
-			statVar.ParentService = self
+	if service.ServiceStateTable != nil {
+		for n := 0; n < len(service.ServiceStateTable.StateVariables); n++ {
+			statVar := &service.ServiceStateTable.StateVariables[n]
+			statVar.ParentService = service
 		}
 	}
 
 	return nil
 }
 
-func (self *Service) reviseDescription() error {
-	shortServiceId := self.getShortServiceType()
+func (service *Service) reviseDescription() error {
+	shortServiceID := service.getShortServiceType()
 
 	// check description URLs
 
-	if len(self.SCPDURL) == 0 {
-		self.SCPDURL = fmt.Sprintf(defaultServiceScpdURL, shortServiceId)
+	if len(service.SCPDURL) == 0 {
+		service.SCPDURL = fmt.Sprintf(defaultServiceScpdURL, shortServiceID)
 	}
 
-	if len(self.ControlURL) == 0 {
-		self.ControlURL = fmt.Sprintf(defaultServiceControlURL, shortServiceId)
+	if len(service.ControlURL) == 0 {
+		service.ControlURL = fmt.Sprintf(defaultServiceControlURL, shortServiceID)
 	}
 
-	if len(self.EventSubURL) == 0 {
-		self.EventSubURL = fmt.Sprintf(defaultServiceEventURL, shortServiceId)
+	if len(service.EventSubURL) == 0 {
+		service.EventSubURL = fmt.Sprintf(defaultServiceEventURL, shortServiceID)
 	}
 
 	return nil
 }
 
-func (self *Service) isDescriptionURL(path string) bool {
-	return path == self.SCPDURL
+func (service *Service) isDescriptionURL(path string) bool {
+	return path == service.SCPDURL
 }
 
-func (self *Service) isControlURL(path string) bool {
-	return path == self.ControlURL
+func (service *Service) isControlURL(path string) bool {
+	return path == service.ControlURL
 }
 
-func (self *Service) isEventSubURL(path string) bool {
-	return path == self.EventSubURL
+func (service *Service) isEventSubURL(path string) bool {
+	return path == service.EventSubURL
 }
 
-func (self *Service) getAbsoluteURL(path string) (*url.URL, error) {
-	if self.ParentDevice == nil {
-		return nil, fmt.Errorf(errorServiceHasNoParentDevice, self.ServiceType)
+func (service *Service) getAbsoluteURL(path string) (*url.URL, error) {
+	if service.ParentDevice == nil {
+		return nil, fmt.Errorf(errorServiceHasNoParentDevice, service.ServiceType)
 	}
-	return self.ParentDevice.GetAbsoluteURL(path)
+	return service.ParentDevice.GetAbsoluteURL(path)
 }
 
-func (self *Service) GetAbsoluteSCPDURL() (*url.URL, error) {
-	return self.getAbsoluteURL(self.SCPDURL)
+func (service *Service) GetAbsoluteSCPDURL() (*url.URL, error) {
+	return service.getAbsoluteURL(service.SCPDURL)
 }
 
-func (self *Service) GetAbsoluteControlURL() (*url.URL, error) {
-	return self.getAbsoluteURL(self.ControlURL)
+func (service *Service) GetAbsoluteControlURL() (*url.URL, error) {
+	return service.getAbsoluteURL(service.ControlURL)
 }
 
-func (self *Service) GetAbsoluteEventSubURL() (*url.URL, error) {
-	return self.getAbsoluteURL(self.EventSubURL)
+func (service *Service) GetAbsoluteEventSubURL() (*url.URL, error) {
+	return service.getAbsoluteURL(service.EventSubURL)
 }
 
 // GetActions returns all actions
-func (self *Service) GetActions() []*Action {
-	actionCnt := len(self.ActionList.Actions)
+func (service *Service) GetActions() []*Action {
+	actionCnt := len(service.ActionList.Actions)
 	actions := make([]*Action, actionCnt)
 	for n := 0; n < actionCnt; n++ {
-		actions[n] = &self.ActionList.Actions[n]
+		actions[n] = &service.ActionList.Actions[n]
 	}
 	return actions
 }
 
 // GetActionByName returns an action by the specified name
-func (self *Service) GetActionByName(name string) (*Action, error) {
-	if self.description == nil {
-		return nil, fmt.Errorf(errorServiceDescriptionNotFound, name, self.ServiceType)
+func (service *Service) GetActionByName(name string) (*Action, error) {
+	if service.description == nil {
+		return nil, fmt.Errorf(errorServiceDescriptionNotFound, service.XMLName.Local)
 	}
 
-	if len(self.ActionList.Actions) == 0 {
-		return nil, fmt.Errorf(errorServiceHanNoActions, name, self.ServiceType)
+	if len(service.ActionList.Actions) == 0 {
+		return nil, fmt.Errorf(errorServiceHasNoActions, service.XMLName.Local)
 	}
 
-	for n := 0; n < len(self.ActionList.Actions); n++ {
-		action := &self.ActionList.Actions[n]
+	for n := 0; n < len(service.ActionList.Actions); n++ {
+		action := &service.ActionList.Actions[n]
 		if action.Name == name {
 			return action, nil
 		}
 	}
 
-	return nil, fmt.Errorf(errorServiceActionNotFound, name, self.ServiceType)
+	return nil, fmt.Errorf(errorServiceActionNotFound, name, service.ServiceType)
 }

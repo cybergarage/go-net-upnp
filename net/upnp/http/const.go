@@ -14,8 +14,8 @@ const (
 	ContentType  = "Content-Type"
 	ServerHeader = "Server"
 
-	SoapAction      = "SOAPACTION"
-	SoapActionDelim = "#"
+	SOAPAction      = "SOAPACTION"
+	SOAPActionDelim = "#"
 
 	ContentTypeXML = "text/xml; charset=\"utf-8\""
 )

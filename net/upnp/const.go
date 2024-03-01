@@ -18,7 +18,7 @@ const (
 	ControlPointDefaultPortBase  = 5004
 	ControlPointDefaultPortRange = 1024
 	ControlPointDefaultPortMax   = ControlPointDefaultPortBase + ControlPointDefaultPortRange
-	ControlPointDefaultSearchMX  = ssdp.DEFAULT_MSEARCH_MX
+	ControlPointDefaultSearchMX  = ssdp.DefaultMSearchMX
 
 	DeviceDefaultPortBase  = 6004
 	DeviceDefaultPortRange = 1024

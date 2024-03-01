@@ -15,7 +15,7 @@ type Icon struct {
 	Width    string   `xml:"width"`
 	Height   string   `xml:"height"`
 	Depth    string   `xml:"depth"`
-	Url      string   `xml:"url"`
+	URL      string   `xml:"url"`
 }
 
 // A IconList represents a UPnP iconList.

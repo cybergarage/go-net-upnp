@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	errorSocketIsClosed = "Socket is closed"
+	errorSocketIsClosed = "socket is closed"
 )
 
 // A UDPSocket represents a socket for UDP.

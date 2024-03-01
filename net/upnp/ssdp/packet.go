@@ -45,7 +45,7 @@ func NewPacketFromBytes(bytes []byte) (*Packet, error) {
 	return ssdpPkt, nil
 }
 
-func (self *Packet) parse(pktBytes []byte) error {
+func (pkt *Packet) parse(pktBytes []byte) error {
 	if len(pktBytes) == 0 {
 		return errors.New(errorZeroPacket)
 	}
@@ -58,7 +58,7 @@ func (self *Packet) parse(pktBytes []byte) error {
 		return fmt.Errorf(errorPacketFirstLineNotFound, string(pktBytes))
 	}
 	pktFirstLine := string(pktBytes[0:pktFirstLineIdx])
-	self.FirstLines = strings.Split(pktFirstLine, SP)
+	pkt.FirstLines = strings.Split(pktFirstLine, SP)
 
 	// Read Headers
 
@@ -85,61 +85,61 @@ func (self *Packet) parse(pktBytes []byte) error {
 		}
 		key := strings.ToUpper(headerStrings[0])
 		value := headerStrings[1]
-		self.Headers[key] = value
+		pkt.Headers[key] = value
 	}
 
 	return nil
 }
 
-func (self *Packet) isMethod(name string) bool {
-	if len(self.FirstLines) < 1 {
+func (pkt *Packet) isMethod(name string) bool {
+	if len(pkt.FirstLines) < 1 {
 		return false
 	}
-	return (self.FirstLines[0] == name)
+	return (pkt.FirstLines[0] == name)
 }
 
-func (self *Packet) IsNotifyRequest() bool {
-	return self.isMethod(Notify)
+func (pkt *Packet) IsNotifyRequest() bool {
+	return pkt.isMethod(Notify)
 }
 
-func (self *Packet) IsSearchRequest() bool {
-	return self.isMethod(MSearch)
+func (pkt *Packet) IsSearchRequest() bool {
+	return pkt.isMethod(MSearch)
 }
 
-func (self *Packet) SetMethod(method string) error {
-	self.FirstLines = make([]string, 3)
-	self.FirstLines[0] = method
-	self.FirstLines[1] = HTTPPath
-	self.FirstLines[2] = fmt.Sprintf("HTTP/%s", HTTPVersion)
+func (pkt *Packet) SetMethod(method string) error {
+	pkt.FirstLines = make([]string, 3)
+	pkt.FirstLines[0] = method
+	pkt.FirstLines[1] = HTTPPath
+	pkt.FirstLines[2] = fmt.Sprintf("HTTP/%s", HTTPVersion)
 	return nil
 }
 
-func (self *Packet) SetStatusCode(code int) error {
-	self.FirstLines = make([]string, 3)
-	self.FirstLines[0] = fmt.Sprintf("HTTP/%s", HTTPVersion)
-	self.FirstLines[1] = fmt.Sprintf("%d", code)
-	self.FirstLines[2] = http.StatusCodeToString(code)
+func (pkt *Packet) SetStatusCode(code int) error {
+	pkt.FirstLines = make([]string, 3)
+	pkt.FirstLines[0] = fmt.Sprintf("HTTP/%s", HTTPVersion)
+	pkt.FirstLines[1] = fmt.Sprintf("%d", code)
+	pkt.FirstLines[2] = http.StatusCodeToString(code)
 	return nil
 }
 
-func (self *Packet) GetStatusCode() int {
-	if len(self.FirstLines) < 2 {
+func (pkt *Packet) GetStatusCode() int {
+	if len(pkt.FirstLines) < 2 {
 		return 0
 	}
-	code, err := strconv.Atoi(self.FirstLines[1])
+	code, err := strconv.Atoi(pkt.FirstLines[1])
 	if err != nil {
 		return 0
 	}
 	return code
 }
 
-func (self *Packet) SetHeaderString(name string, value string) error {
-	self.Headers[name] = value
+func (pkt *Packet) SetHeaderString(name string, value string) error {
+	pkt.Headers[name] = value
 	return nil
 }
 
-func (self *Packet) GetHeaderString(name string) (string, error) {
-	value, ok := self.Headers[name]
+func (pkt *Packet) GetHeaderString(name string) (string, error) {
+	value, ok := pkt.Headers[name]
 	if !ok {
 		return "", fmt.Errorf(errorPacketHeaderNotFound, name)
 	}
@@ -147,20 +147,20 @@ func (self *Packet) GetHeaderString(name string) (string, error) {
 	return value, nil
 }
 
-func (self *Packet) IsHeaderString(name string, value string) bool {
-	headerValue, err := self.GetHeaderString(name)
+func (pkt *Packet) IsHeaderString(name string, value string) bool {
+	headerValue, err := pkt.GetHeaderString(name)
 	if err != nil {
 		return false
 	}
 	return (headerValue == value)
 }
 
-func (self *Packet) SetHeaderInt(name string, value int) error {
-	return self.SetHeaderString(name, strconv.Itoa(value))
+func (pkt *Packet) SetHeaderInt(name string, value int) error {
+	return pkt.SetHeaderString(name, strconv.Itoa(value))
 }
 
-func (self *Packet) GetHeaderInt(name string) (int, error) {
-	svalue, err := self.GetHeaderString(name)
+func (pkt *Packet) GetHeaderInt(name string) (int, error) {
+	svalue, err := pkt.GetHeaderString(name)
 	if err != nil {
 		return 0, err
 	}
@@ -171,154 +171,154 @@ func (self *Packet) GetHeaderInt(name string) (int, error) {
 	return ivalue, nil
 }
 
-func (self *Packet) SetHost(value string) error {
-	return self.SetHeaderString(Host, value)
+func (pkt *Packet) SetHost(value string) error {
+	return pkt.SetHeaderString(Host, value)
 }
 
-func (self *Packet) GetHost() (string, error) {
-	return self.GetHeaderString(Host)
+func (pkt *Packet) GetHost() (string, error) {
+	return pkt.GetHeaderString(Host)
 }
 
-func (self *Packet) SetDate(value string) error {
-	return self.SetHeaderString(Date, value)
+func (pkt *Packet) SetDate(value string) error {
+	return pkt.SetHeaderString(Date, value)
 }
 
-func (self *Packet) GetDate() (string, error) {
-	return self.GetHeaderString(Date)
+func (pkt *Packet) GetDate() (string, error) {
+	return pkt.GetHeaderString(Date)
 }
 
-func (self *Packet) SetLocation(value string) error {
-	return self.SetHeaderString(Location, value)
+func (pkt *Packet) SetLocation(value string) error {
+	return pkt.SetHeaderString(Location, value)
 }
 
-func (self *Packet) GetLocation() (string, error) {
-	return self.GetHeaderString(Location)
+func (pkt *Packet) GetLocation() (string, error) {
+	return pkt.GetHeaderString(Location)
 }
 
-func (self *Packet) SetCacheControl(value string) error {
-	return self.SetHeaderString(CacheControl, value)
+func (pkt *Packet) SetCacheControl(value string) error {
+	return pkt.SetHeaderString(CacheControl, value)
 }
 
-func (self *Packet) GetCacheControl() (string, error) {
-	return self.GetHeaderString(CacheControl)
+func (pkt *Packet) GetCacheControl() (string, error) {
+	return pkt.GetHeaderString(CacheControl)
 }
 
-func (self *Packet) SetST(value string) error {
-	return self.SetHeaderString(ST, value)
+func (pkt *Packet) SetST(value string) error {
+	return pkt.SetHeaderString(ST, value)
 }
 
-func (self *Packet) GetST() (string, error) {
-	return self.GetHeaderString(ST)
+func (pkt *Packet) GetST() (string, error) {
+	return pkt.GetHeaderString(ST)
 }
 
-func (self *Packet) SetMX(value int) error {
-	return self.SetHeaderInt(MX, value)
+func (pkt *Packet) SetMX(value int) error {
+	return pkt.SetHeaderInt(MX, value)
 }
 
-func (self *Packet) GetMX() (int, error) {
-	return self.GetHeaderInt(MX)
+func (pkt *Packet) GetMX() (int, error) {
+	return pkt.GetHeaderInt(MX)
 }
 
-func (self *Packet) SetMAN(value string) error {
-	return self.SetHeaderString(MAN, value)
+func (pkt *Packet) SetMAN(value string) error {
+	return pkt.SetHeaderString(MAN, value)
 }
 
-func (self *Packet) GetMAN() (string, error) {
-	return self.GetHeaderString(MAN)
+func (pkt *Packet) GetMAN() (string, error) {
+	return pkt.GetHeaderString(MAN)
 }
 
-func (self *Packet) SetNT(value string) error {
-	return self.SetHeaderString(NT, value)
+func (pkt *Packet) SetNT(value string) error {
+	return pkt.SetHeaderString(NT, value)
 }
 
-func (self *Packet) GetNT() (string, error) {
-	return self.GetHeaderString(NT)
+func (pkt *Packet) GetNT() (string, error) {
+	return pkt.GetHeaderString(NT)
 }
 
-func (self *Packet) SetNTS(value string) error {
-	return self.SetHeaderString(NTS, value)
+func (pkt *Packet) SetNTS(value string) error {
+	return pkt.SetHeaderString(NTS, value)
 }
 
-func (self *Packet) GetNTS() (string, error) {
-	return self.GetHeaderString(NTS)
+func (pkt *Packet) GetNTS() (string, error) {
+	return pkt.GetHeaderString(NTS)
 }
 
-func (self *Packet) SetUSN(value string) error {
-	return self.SetHeaderString(USN, value)
+func (pkt *Packet) SetUSN(value string) error {
+	return pkt.SetHeaderString(USN, value)
 }
 
-func (self *Packet) GetUSN() (string, error) {
-	return self.GetHeaderString(USN)
+func (pkt *Packet) GetUSN() (string, error) {
+	return pkt.GetHeaderString(USN)
 }
 
-func (self *Packet) SetEXT(value string) error {
-	return self.SetHeaderString(EXT, value)
+func (pkt *Packet) SetEXT(value string) error {
+	return pkt.SetHeaderString(EXT, value)
 }
 
-func (self *Packet) GetEXT() (string, error) {
-	return self.GetHeaderString(EXT)
+func (pkt *Packet) GetEXT() (string, error) {
+	return pkt.GetHeaderString(EXT)
 }
 
-func (self *Packet) SetSID(value string) error {
-	return self.SetHeaderString(SID, value)
+func (pkt *Packet) SetSID(value string) error {
+	return pkt.SetHeaderString(SID, value)
 }
 
-func (self *Packet) GetSID() (string, error) {
-	return self.GetHeaderString(SID)
+func (pkt *Packet) GetSID() (string, error) {
+	return pkt.GetHeaderString(SID)
 }
 
-func (self *Packet) SetSEQ(value string) error {
-	return self.SetHeaderString(SEQ, value)
+func (pkt *Packet) SetSEQ(value string) error {
+	return pkt.SetHeaderString(SEQ, value)
 }
 
-func (self *Packet) GetSEQ() (string, error) {
-	return self.GetHeaderString(SEQ)
+func (pkt *Packet) GetSEQ() (string, error) {
+	return pkt.GetHeaderString(SEQ)
 }
 
-func (self *Packet) SetCallback(value string) error {
-	return self.SetHeaderString(Callback, value)
+func (pkt *Packet) SetCallback(value string) error {
+	return pkt.SetHeaderString(Callback, value)
 }
 
-func (self *Packet) GetCallback() (string, error) {
-	return self.GetHeaderString(Callback)
+func (pkt *Packet) GetCallback() (string, error) {
+	return pkt.GetHeaderString(Callback)
 }
 
-func (self *Packet) SetDefaultTimeout(value string) error {
-	return self.SetHeaderString(DefaultTimeout, value)
+func (pkt *Packet) SetDefaultTimeout(value string) error {
+	return pkt.SetHeaderString(DefaultTimeout, value)
 }
 
-func (self *Packet) GetDefaultTimeout() (string, error) {
-	return self.GetHeaderString(DefaultTimeout)
+func (pkt *Packet) GetDefaultTimeout() (string, error) {
+	return pkt.GetHeaderString(DefaultTimeout)
 }
 
-func (self *Packet) SetServer(value string) error {
-	return self.SetHeaderString(Server, value)
+func (pkt *Packet) SetServer(value string) error {
+	return pkt.SetHeaderString(Server, value)
 }
 
-func (self *Packet) GetServer() (string, error) {
-	return self.GetHeaderString(Server)
+func (pkt *Packet) GetServer() (string, error) {
+	return pkt.GetHeaderString(Server)
 }
 
-func (self *Packet) SetBOOTID_UPNP_ORG(value string) error {
-	return self.SetHeaderString(BOOTIDUPnPOrg, value)
+func (pkt *Packet) SetBootIDUPnPOrg(value string) error {
+	return pkt.SetHeaderString(BOOTIDUPnPOrg, value)
 }
 
-func (self *Packet) GetBOOTID_UPNP_ORG() (string, error) {
-	return self.GetHeaderString(BOOTIDUPnPOrg)
+func (pkt *Packet) GetBootIDUPnPOrg() (string, error) {
+	return pkt.GetHeaderString(BOOTIDUPnPOrg)
 }
 
-func (self *Packet) String() string {
+func (pkt *Packet) String() string {
 	var pktBuf bytes.Buffer
 
 	// Write First line
 
-	firstLine := strings.Join(self.FirstLines, SP)
+	firstLine := strings.Join(pkt.FirstLines, SP)
 	pktBuf.WriteString(firstLine)
 	pktBuf.WriteString(CRLF)
 
 	// Write Headers
 
-	for name, value := range self.Headers {
+	for name, value := range pkt.Headers {
 		pktBuf.WriteString(fmt.Sprintf("%s: %s%s", name, value, CRLF))
 	}
 
@@ -327,6 +327,6 @@ func (self *Packet) String() string {
 	return pktBuf.String()
 }
 
-func (self *Packet) Bytes() []byte {
-	return []byte(self.String())
+func (pkt *Packet) Bytes() []byte {
+	return []byte(pkt.String())
 }

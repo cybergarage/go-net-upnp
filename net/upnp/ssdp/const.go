@@ -18,8 +18,8 @@ const (
 	IPv6SiteLocalAddress      = "FF05::C"
 	IPv6GlobalAddress         = "FF0E::C"
 
-	DEFAULT_MSEARCH_MX     = 3
-	DEFAULT_ANNOUNCE_COUNT = 3
+	DefaultMSearchMX     = 3
+	DefaultAnnounceCount = 3
 
 	MaxPacketSize     = 8192
 	HeaderLineMaxSize = 128

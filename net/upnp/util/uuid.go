@@ -32,13 +32,13 @@ func CreateUUID() string {
 
 	/* UUIDs use time in 100ns ticks since Oct 15, 1582. */
 	uuidStartTime := time.Date(1582, 8, 25, 0, 0, 0, 0, time.Local)
-	uuidTs := time.Since(uuidStartTime).Nanoseconds() / 100
+	uuidTimestamp := time.Since(uuidStartTime).Nanoseconds() / 100
 	now := time.Now()
 	clockSeq := now.Nanosecond() // a random sequence number
 
-	uuid.TimeLow = uint32(uuidTs & 0xFFFFFFFF)
-	uuid.TimeMid = uint16((uuidTs >> 32) & 0xFFFF)
-	uuid.TimeHiVer = uint16((uuidTs >> 48) & 0x0FFF)
+	uuid.TimeLow = uint32(uuidTimestamp & 0xFFFFFFFF)
+	uuid.TimeMid = uint16((uuidTimestamp >> 32) & 0xFFFF)
+	uuid.TimeHiVer = uint16((uuidTimestamp >> 48) & 0x0FFF)
 	uuid.TimeHiVer |= (1 << 12)
 	uuid.ClockSeqLow = byte(clockSeq & 0xFF)
 	uuid.ClockSeqHiRes = byte((clockSeq & 0x3F00) >> 8)
