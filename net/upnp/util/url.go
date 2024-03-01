@@ -15,8 +15,8 @@ const (
 )
 
 const (
-	errorUrlNotAbsolute   = "url (%s) is not absolute"
-	errorUrlUnknownScheme = "url scheme (%s) is unknown"
+	errorURLNotAbsolute   = "url (%s) is not absolute"
+	errorURLUnknownScheme = "url scheme (%s) is unknown"
 )
 
 func GetAbsoluteURLFromBaseAndPath(base string, path string) (*url.URL, error) {
@@ -35,11 +35,11 @@ func GetAbsoluteURLFromBaseAndPath(base string, path string) (*url.URL, error) {
 	}
 
 	if !url.IsAbs() {
-		return nil, fmt.Errorf(errorUrlNotAbsolute, url.String())
+		return nil, fmt.Errorf(errorURLNotAbsolute, url.String())
 	}
 
 	if (url.Scheme != "http") && (url.Scheme != "https") {
-		return nil, fmt.Errorf(errorUrlUnknownScheme, url.Scheme)
+		return nil, fmt.Errorf(errorURLUnknownScheme, url.Scheme)
 	}
 
 	return url, nil

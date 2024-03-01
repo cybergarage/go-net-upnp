@@ -29,7 +29,7 @@ func (self *HTTPMUSocket) Bind(ifi net.Interface) error {
 		return err
 	}
 
-	mcastAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
+	mcastAddr, err := net.ResolveUDPAddr("udp", MulticastAddress)
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (self *HTTPMUSocket) Write(b []byte) (int, error) {
 		return 0, errors.New(errorSocketIsClosed)
 	}
 
-	ssdpAddr, err := net.ResolveUDPAddr("udp", MULTICAST_ADDRESS)
+	ssdpAddr, err := net.ResolveUDPAddr("udp", MulticastAddress)
 	if err != nil {
 		return 0, err
 	}

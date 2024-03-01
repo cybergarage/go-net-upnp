@@ -23,7 +23,7 @@ type UDPSocket struct {
 // NewUDPSocket returns a new UDPSocket.
 func NewUDPSocket() *UDPSocket {
 	uppSock := &UDPSocket{}
-	uppSock.readBuf = make([]byte, MAX_PACKET_SIZE)
+	uppSock.readBuf = make([]byte, MaxPacketSize)
 	return uppSock
 }
 

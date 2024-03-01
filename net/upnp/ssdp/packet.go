@@ -99,24 +99,24 @@ func (self *Packet) isMethod(name string) bool {
 }
 
 func (self *Packet) IsNotifyRequest() bool {
-	return self.isMethod(NOTIFY)
+	return self.isMethod(Notify)
 }
 
 func (self *Packet) IsSearchRequest() bool {
-	return self.isMethod(M_SEARCH)
+	return self.isMethod(MSearch)
 }
 
 func (self *Packet) SetMethod(method string) error {
 	self.FirstLines = make([]string, 3)
 	self.FirstLines[0] = method
-	self.FirstLines[1] = HTTP_PATH
-	self.FirstLines[2] = fmt.Sprintf("HTTP/%s", HTTP_VERSION)
+	self.FirstLines[1] = HTTPPath
+	self.FirstLines[2] = fmt.Sprintf("HTTP/%s", HTTPVersion)
 	return nil
 }
 
 func (self *Packet) SetStatusCode(code int) error {
 	self.FirstLines = make([]string, 3)
-	self.FirstLines[0] = fmt.Sprintf("HTTP/%s", HTTP_VERSION)
+	self.FirstLines[0] = fmt.Sprintf("HTTP/%s", HTTPVersion)
 	self.FirstLines[1] = fmt.Sprintf("%d", code)
 	self.FirstLines[2] = http.StatusCodeToString(code)
 	return nil
@@ -172,35 +172,35 @@ func (self *Packet) GetHeaderInt(name string) (int, error) {
 }
 
 func (self *Packet) SetHost(value string) error {
-	return self.SetHeaderString(HOST, value)
+	return self.SetHeaderString(Host, value)
 }
 
 func (self *Packet) GetHost() (string, error) {
-	return self.GetHeaderString(HOST)
+	return self.GetHeaderString(Host)
 }
 
 func (self *Packet) SetDate(value string) error {
-	return self.SetHeaderString(DATE, value)
+	return self.SetHeaderString(Date, value)
 }
 
 func (self *Packet) GetDate() (string, error) {
-	return self.GetHeaderString(DATE)
+	return self.GetHeaderString(Date)
 }
 
 func (self *Packet) SetLocation(value string) error {
-	return self.SetHeaderString(LOCATION, value)
+	return self.SetHeaderString(Location, value)
 }
 
 func (self *Packet) GetLocation() (string, error) {
-	return self.GetHeaderString(LOCATION)
+	return self.GetHeaderString(Location)
 }
 
 func (self *Packet) SetCacheControl(value string) error {
-	return self.SetHeaderString(CACHE_CONTROL, value)
+	return self.SetHeaderString(CacheControl, value)
 }
 
 func (self *Packet) GetCacheControl() (string, error) {
-	return self.GetHeaderString(CACHE_CONTROL)
+	return self.GetHeaderString(CacheControl)
 }
 
 func (self *Packet) SetST(value string) error {
@@ -276,35 +276,35 @@ func (self *Packet) GetSEQ() (string, error) {
 }
 
 func (self *Packet) SetCallback(value string) error {
-	return self.SetHeaderString(CALLBACK, value)
+	return self.SetHeaderString(Callback, value)
 }
 
 func (self *Packet) GetCallback() (string, error) {
-	return self.GetHeaderString(CALLBACK)
+	return self.GetHeaderString(Callback)
 }
 
-func (self *Packet) SetTimeout(value string) error {
-	return self.SetHeaderString(TIMEOUT, value)
+func (self *Packet) SetDefaultTimeout(value string) error {
+	return self.SetHeaderString(DefaultTimeout, value)
 }
 
-func (self *Packet) GetTimeout() (string, error) {
-	return self.GetHeaderString(TIMEOUT)
+func (self *Packet) GetDefaultTimeout() (string, error) {
+	return self.GetHeaderString(DefaultTimeout)
 }
 
 func (self *Packet) SetServer(value string) error {
-	return self.SetHeaderString(SERVER, value)
+	return self.SetHeaderString(Server, value)
 }
 
 func (self *Packet) GetServer() (string, error) {
-	return self.GetHeaderString(SERVER)
+	return self.GetHeaderString(Server)
 }
 
 func (self *Packet) SetBOOTID_UPNP_ORG(value string) error {
-	return self.SetHeaderString(BOOTID_UPNP_ORG, value)
+	return self.SetHeaderString(BOOTIDUPnPOrg, value)
 }
 
 func (self *Packet) GetBOOTID_UPNP_ORG() (string, error) {
-	return self.GetHeaderString(BOOTID_UPNP_ORG)
+	return self.GetHeaderString(BOOTIDUPnPOrg)
 }
 
 func (self *Packet) String() string {
