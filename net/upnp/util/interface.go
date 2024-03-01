@@ -16,11 +16,7 @@ const (
 )
 
 func IsIPv6Address(addr string) bool {
-	if 0 < strings.Index(addr, ":") {
-		return true
-	}
-
-	return false
+	return 0 < strings.Index(addr, ":")
 }
 
 func GetInterfaceAddress(ifi net.Interface) (string, error) {
