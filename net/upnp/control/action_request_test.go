@@ -99,6 +99,8 @@ func TestNewActionRequestForArguments(t *testing.T) {
 }
 
 func checkActionRequestParams(t *testing.T, req *ActionRequest, actionName string, argCnt int, argNames []string, argValues []string) {
+	t.Helper()
+
 	action, err := req.GetAction()
 	if err != nil {
 		t.Error(err)

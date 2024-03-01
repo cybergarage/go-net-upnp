@@ -10,6 +10,8 @@ import (
 )
 
 func checkTestServiceDescription(t *testing.T, srv *Service) {
+	t.Helper()
+
 	// Check actionList
 
 	for n, action := range srv.ActionList.Actions {
