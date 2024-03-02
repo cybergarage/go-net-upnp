@@ -283,12 +283,12 @@ func (pkt *Packet) GetCallback() (string, error) {
 	return pkt.GetHeaderString(Callback)
 }
 
-func (pkt *Packet) SetDefaultTimeout(value string) error {
-	return pkt.SetHeaderString(DefaultTimeout, value)
+func (pkt *Packet) SetTimeout(value string) error {
+	return pkt.SetHeaderString(Timeout, value)
 }
 
-func (pkt *Packet) GetDefaultTimeout() (string, error) {
-	return pkt.GetHeaderString(DefaultTimeout)
+func (pkt *Packet) GetTimeout() (string, error) {
+	return pkt.GetHeaderString(Timeout)
 }
 
 func (pkt *Packet) SetServer(value string) error {
@@ -300,11 +300,11 @@ func (pkt *Packet) GetServer() (string, error) {
 }
 
 func (pkt *Packet) SetBootIDUPnPOrg(value string) error {
-	return pkt.SetHeaderString(BOOTIDUPnPOrg, value)
+	return pkt.SetHeaderString(BootIDUPnPOrg, value)
 }
 
 func (pkt *Packet) GetBootIDUPnPOrg() (string, error) {
-	return pkt.GetHeaderString(BOOTIDUPnPOrg)
+	return pkt.GetHeaderString(BootIDUPnPOrg)
 }
 
 func (pkt *Packet) String() string {
