@@ -49,7 +49,7 @@ const (
 	Callback       = "CALLBACK"
 	CacheControl   = "CACHE-CONTROL"
 	Timeout        = "TIMEOUT"
-	BOOTIDUPnPOrg  = "BOOTID.UPNP.ORG"
+	BootIDUPnPOrg  = "BOOTID.UPNP.ORG"
 
 	RootDevice = "upnp:rootdevice"
 	All        = "ssdp:all"

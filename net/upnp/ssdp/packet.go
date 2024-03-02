@@ -300,11 +300,11 @@ func (pkt *Packet) GetServer() (string, error) {
 }
 
 func (pkt *Packet) SetBootIDUPnPOrg(value string) error {
-	return pkt.SetHeaderString(BOOTIDUPnPOrg, value)
+	return pkt.SetHeaderString(BootIDUPnPOrg, value)
 }
 
 func (pkt *Packet) GetBootIDUPnPOrg() (string, error) {
-	return pkt.GetHeaderString(BOOTIDUPnPOrg)
+	return pkt.GetHeaderString(BootIDUPnPOrg)
 }
 
 func (pkt *Packet) String() string {
