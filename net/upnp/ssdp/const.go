@@ -48,7 +48,7 @@ const (
 	SEQ            = "SEQ"
 	Callback       = "CALLBACK"
 	CacheControl   = "CACHE-CONTROL"
-	DefaultTimeout = "DefaultTimeout"
+	Timeout        = "TIMEOUT"
 	BOOTIDUPnPOrg  = "BOOTID.UPNP.ORG"
 
 	RootDevice = "upnp:rootdevice"
