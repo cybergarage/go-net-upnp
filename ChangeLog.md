@@ -9,7 +9,7 @@
 	* Update .golangci.yaml
 
 * 2024-03-02 v0.8.3
-    * Update UUID generation using github.com/google/uuid package
+	* Update UUID generation using github.com/google/uuid package
 	* Fix lint warnings
 
 * 2024-02-29 v0.8.2
