@@ -4,6 +4,9 @@
 * 20xx-xx-xx v0.9.0
 	* Support the event subscription function of UPnP and deprecated functions from UPnP v1.1 such as query function
 
+* 2024-03-XX v0.8.5
+	* Fix errorlint warnings
+
 * 2024-03-05 v0.8.4
 	* Update Go version to 1.22
 	* Update .golangci.yaml
