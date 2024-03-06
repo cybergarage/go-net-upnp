@@ -161,8 +161,8 @@ func TestControlPointSearchDevice(t *testing.T) {
 		t.Errorf(errorPostActionSuccess, foundOptAction.Name)
 	}
 
-	upnpErr, ok := err.(Error)
-	if !ok {
+	var upnpErr Error
+	if errors.As(err, &upnpErr) == false {
 		t.Errorf(errorPostActionInvalidErrorType, err)
 	}
 

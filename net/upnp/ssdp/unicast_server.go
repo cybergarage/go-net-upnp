@@ -5,6 +5,7 @@
 package ssdp
 
 import (
+	"errors"
 	"net"
 
 	"github.com/cybergarage/go-logger/log"
@@ -66,7 +67,7 @@ func handleSSDPUnicastConnection(server *UnicastServer) {
 	for {
 		ssdpPkt, err := server.Socket.Read()
 		if err != nil {
-			if _, ok := err.(*net.OpError); !ok {
+			if !errors.Is(err, net.ErrClosed) {
 				log.Error(err)
 			}
 			break
