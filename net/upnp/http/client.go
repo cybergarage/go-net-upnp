@@ -6,6 +6,8 @@ package http
 
 import (
 	gohttp "net/http"
+
+	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A Client represents a Client.
@@ -21,6 +23,9 @@ func NewClient() (*Client, error) {
 }
 
 func (client *Client) Do(req *Request) (*Response, error) {
+	if ua := req.Header.Get(UserAgent); ua == "" {
+		req.Header.Set(UserAgent, util.GetUserAgent())
+	}
 	res, err := client.Client.Do(req.Request)
 	if err != nil {
 		return nil, err

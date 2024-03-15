@@ -9,8 +9,6 @@ import (
 	gohttp "net/http"
 	"net/url"
 	"strings"
-
-	"github.com/cybergarage/go-net-upnp/net/upnp/util"
 )
 
 // A Request represents a Request.
@@ -20,9 +18,7 @@ type Request struct {
 
 // NewRequest returns a new Request.
 func NewRequestFromRequest(req *gohttp.Request) *Request {
-	httpReq := &Request{Request: req}
-	httpReq.Header.Add(UserAgent, util.GetUserAgent())
-	return httpReq
+	return &Request{Request: req}
 }
 
 // NewRequest returns a new Request.
