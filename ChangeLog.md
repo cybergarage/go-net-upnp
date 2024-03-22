@@ -5,7 +5,10 @@
 	* Support the event subscription function of UPnP and deprecated functions from UPnP v1.1 such as query function
 
 * 2024-03-XX v0.8.5
-	* Fix errorlint warnings
+	* Thanks for Tom Chapman (@chappy84)
+	* Ensure User-Agent isn't set on all Requests, just outgoing ones
+	Struct is used for Http Requests coming in too, and can be confusing to the local server
+	* Add in classic flag to ensure golangci-lint can run PR build checks
 
 * 2024-03-05 v0.8.4
 	* Update Go version to 1.22
