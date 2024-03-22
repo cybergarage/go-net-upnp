@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"io"
 	gohttp "net/http"
-
 	"testing"
 )
 
