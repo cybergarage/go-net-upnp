@@ -15,7 +15,7 @@ func GetUserAgent() string {
 		runtime.GOARCH,
 		"1.1",
 		"go-net-upnp",
-		"0.8")
+		"v0.8.5")
 }
 
 func GetServer() string {
