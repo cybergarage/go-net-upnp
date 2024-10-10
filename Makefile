@@ -22,6 +22,9 @@ PKG_ID=${MODULE_ROOT}/${PKG_NAME}
 PKG_SRC_DIR=${PKG_NAME}
 PKG=${MODULE_ROOT}/${PKG_SRC_DIR}
 	
+.PHONY: clean test version
+.IGNORE: lint
+
 all: test
 
 ${VERSION_GO}: ./net/upnp/version.gen
@@ -50,8 +53,10 @@ BINS=\
 GOLANGCILINT_PARAMS=-D perfsprint -D exhaustruct -D gosec -D noctx -D forcetypeassert -D bodyclose
 
 version: ${VERSION_GO} ${USRAGNT_GO}
+	-git commit ${VERSION_GO} -m "Update version"
+	-git commit ${USRAGNT_GO} -m "Update version"
 
-format:
+format: version
 	gofmt -s -w ${PKG_NAME} ${BIN_ROOT}
 
 vet: format
