@@ -132,7 +132,7 @@ func (ctrl *ControlPoint) addDevice(dev *Device) (bool, error) {
 	defer ctrl.Unlock()
 
 	if ctrl.rootDeviceMap.HasDevice(dev) {
-		log.Tracef(fmt.Sprintf("device (%s, %s) is already added", dev.DeviceType, dev.UDN))
+		log.Tracef("device (%s, %s) is already added", dev.DeviceType, dev.UDN)
 		return false, nil
 	}
 
@@ -144,7 +144,7 @@ func (ctrl *ControlPoint) addDevice(dev *Device) (bool, error) {
 	ok := ctrl.rootDeviceMap.AddDevice(dev)
 
 	if ok {
-		log.Tracef(fmt.Sprintf("device (%s, %s) is added", dev.DeviceType, dev.UDN))
+		log.Tracef("device (%s, %s) is added", dev.DeviceType, dev.UDN)
 	}
 
 	return ok, nil
@@ -163,7 +163,7 @@ func getFromToMessageFromSSDPPacket(req *ssdp.Packet) string {
 
 func (ctrl *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 	usn, _ := ssdpReq.GetUSN()
-	log.Tracef(fmt.Sprintf("notiry req : %s %s", usn, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
+	log.Tracef("notiry req : %s %s", usn, getFromToMessageFromSSDPPacket(ssdpReq.Packet))
 
 	if ssdpReq.IsRootDevice() {
 		newDev, err := NewDeviceFromSSDPRequest(ssdpReq)
@@ -182,7 +182,7 @@ func (ctrl *ControlPoint) DeviceNotifyReceived(ssdpReq *ssdp.Request) {
 
 func (ctrl *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 	st, _ := ssdpReq.GetST()
-	log.Tracef(fmt.Sprintf("search req : %s %s", st, getFromToMessageFromSSDPPacket(ssdpReq.Packet)))
+	log.Tracef("search req : %s %s", st, getFromToMessageFromSSDPPacket(ssdpReq.Packet))
 
 	if ctrl.Listener != nil {
 		ctrl.Listener.DeviceSearchReceived(ssdpReq)
@@ -191,7 +191,7 @@ func (ctrl *ControlPoint) DeviceSearchReceived(ssdpReq *ssdp.Request) {
 
 func (ctrl *ControlPoint) DeviceResponseReceived(ssdpRes *ssdp.Response) {
 	url, _ := ssdpRes.GetLocation()
-	log.Tracef(fmt.Sprintf("search res : %s %s", url, getFromToMessageFromSSDPPacket(ssdpRes.Packet)))
+	log.Tracef("search res : %s %s", url, getFromToMessageFromSSDPPacket(ssdpRes.Packet))
 
 	newDev, err := NewDeviceFromSSDPResponse(ssdpRes)
 	if err == nil {

@@ -12,6 +12,6 @@ func NewFileContent() *FileContent {
 	return file
 }
 
-func (self *FileContent) IsDirectory() bool {
+func (f *FileContent) IsDirectory() bool {
 	return false
 }

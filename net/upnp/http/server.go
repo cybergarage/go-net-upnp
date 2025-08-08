@@ -30,6 +30,7 @@ type RequestListener interface {
 // A Server represents a Server.
 type Server struct {
 	*gohttp.Server
+
 	Conn     net.Listener
 	Listener RequestListener
 }

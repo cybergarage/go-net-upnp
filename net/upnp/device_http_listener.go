@@ -5,7 +5,6 @@
 package upnp
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/cybergarage/go-logger/log"
@@ -97,7 +96,7 @@ func (dev *Device) httpGetRequestReceived(httpReq *http.Request, httpRes http.Re
 	}
 
 	// Service Description ?
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		if service.isDescriptionURL(path) {
 			err := dev.responseServiceDescription(httpRes, service)
@@ -129,7 +128,7 @@ func (dev *Device) httpActionRequestReceived(httpReq *http.Request, httpRes http
 		return responseUPnPError(httpRes, upnpErr)
 	}
 
-	log.Tracef(fmt.Sprintf("action req = \n%s", string(soapReqBytes)))
+	log.Tracef("action req = \n%s", string(soapReqBytes))
 
 	// parse request
 
@@ -190,7 +189,7 @@ func (dev *Device) httpPostRequestReceived(httpReq *http.Request, httpRes http.R
 }
 
 func (dev *Device) HTTPRequestReceived(httpReq *http.Request, httpRes http.ResponseWriter) {
-	log.Infof(fmt.Sprintf("%s %s", httpReq.Method, httpReq.URL.Path))
+	log.Infof("%s %s", httpReq.Method, httpReq.URL.Path)
 
 	switch httpReq.Method {
 	case http.GET:

@@ -47,7 +47,7 @@ func NewMediaServer() (*MediaServer, error) {
 	return mediaServer, nil
 }
 
-func (self *MediaServer) ActionRequestReceived(action *upnp.Action) upnp.Error {
+func (server *MediaServer) ActionRequestReceived(action *upnp.Action) upnp.Error {
 	switch action.Name {
 	}
 

@@ -28,7 +28,7 @@ func (action *Action) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	}
 
 	e.EncodeToken(start)
-	for n := 0; n < len(action.Arguments); n++ {
+	for n := range len(action.Arguments) {
 		arg := action.Arguments[n]
 		argElem := xml.StartElement{Name: xml.Name{Local: arg.Name}}
 		e.EncodeElement(arg.Value, argElem)

@@ -11,7 +11,7 @@ import (
 const (
 	InternetGatewayDeviceType = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
 
-	// WANDevice
+	// WANDevice.
 
 	WANDevice = "urn:schemas-upnp-org:device:WANDevice:1"
 
@@ -23,7 +23,7 @@ const (
 	GetTotalBytesSentAction = "GetTotalBytesSent"
 	NewTotalBytesSent       = "NewTotalBytesSent"
 
-	// WANConnectionDevice
+	// WANConnectionDevice.
 
 	WANConnectionDevice        = "urn:schemas-upnp-org:device:WANConnectionDevice:1"
 	WANIPConnectionServiceType = "urn:schemas-upnp-org:service:WANIPConnection:1"
@@ -46,8 +46,8 @@ func NewGatewayDevice(dev *upnp.Device) *GatewayDevice {
 	return gwDev
 }
 
-func (self *GatewayDevice) GetWANServiceAction(name string) (*upnp.Action, error) {
-	wanDev, err := self.GetEmbeddedDeviceByType(WANDevice)
+func (def *GatewayDevice) GetWANServiceAction(name string) (*upnp.Action, error) {
+	wanDev, err := def.GetEmbeddedDeviceByType(WANDevice)
 	if err != nil {
 		return nil, err
 	}
@@ -60,8 +60,8 @@ func (self *GatewayDevice) GetWANServiceAction(name string) (*upnp.Action, error
 	return service.GetActionByName(name)
 }
 
-func (self *GatewayDevice) GetWANIPConnectionServiceAction(name string) (*upnp.Action, error) {
-	wanDev, err := self.GetEmbeddedDeviceByType(WANDevice)
+func (def *GatewayDevice) GetWANIPConnectionServiceAction(name string) (*upnp.Action, error) {
+	wanDev, err := def.GetEmbeddedDeviceByType(WANDevice)
 	if err != nil {
 		return nil, err
 	}
@@ -79,8 +79,8 @@ func (self *GatewayDevice) GetWANIPConnectionServiceAction(name string) (*upnp.A
 	return service.GetActionByName(name)
 }
 
-func (self *GatewayDevice) GetExternalIPAddress() (string, error) {
-	action, err := self.GetWANIPConnectionServiceAction(GetExternalIPAddressAction)
+func (def *GatewayDevice) GetExternalIPAddress() (string, error) {
+	action, err := def.GetWANIPConnectionServiceAction(GetExternalIPAddressAction)
 	if err != nil {
 		return "", err
 	}
@@ -93,8 +93,8 @@ func (self *GatewayDevice) GetExternalIPAddress() (string, error) {
 	return action.GetArgumentString(NewExternalIPAddress)
 }
 
-func (self *GatewayDevice) GetTotalBytesReceived() (string, error) {
-	action, err := self.GetWANServiceAction(GetTotalBytesReceivedAction)
+func (def *GatewayDevice) GetTotalBytesReceived() (string, error) {
+	action, err := def.GetWANServiceAction(GetTotalBytesReceivedAction)
 	if err != nil {
 		return "", err
 	}
@@ -107,8 +107,8 @@ func (self *GatewayDevice) GetTotalBytesReceived() (string, error) {
 	return action.GetArgumentString(NewTotalBytesReceived)
 }
 
-func (self *GatewayDevice) GetTotalBytesSent() (string, error) {
-	action, err := self.GetWANServiceAction(GetTotalBytesSentAction)
+func (def *GatewayDevice) GetTotalBytesSent() (string, error) {
+	action, err := def.GetWANServiceAction(GetTotalBytesSentAction)
 	if err != nil {
 		return "", err
 	}

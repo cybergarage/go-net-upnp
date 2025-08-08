@@ -36,15 +36,15 @@ const (
 )
 
 func printMsg(msg string) {
-	os.Stdout.WriteString(fmt.Sprintf("%s\n", msg))
+	fmt.Fprintf(os.Stdout, "%s\n", msg)
 }
 
 func printError(msg string) {
-	os.Stderr.WriteString(fmt.Sprintf("%s\n", msg))
+	fmt.Fprintf(os.Stderr, "%s\n", msg)
 }
 
 func inputMsg(msg string) string {
-	os.Stdout.WriteString(fmt.Sprintf("%s : ", msg))
+	fmt.Fprintf(os.Stdout, "%s : ", msg)
 	os.Stdout.Sync()
 	input, err := ReadKeyboardLine()
 	if err != nil {

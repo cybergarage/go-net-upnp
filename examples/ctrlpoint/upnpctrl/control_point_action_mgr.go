@@ -16,28 +16,28 @@ func NewControlPointActionManager() *ControlPointActionManager {
 	return actionMgr
 }
 
-func (self *ControlPointActionManager) initDefaultActions() error {
-	self.Commands = make(map[int]*ControlPointAction)
+func (cp *ControlPointActionManager) initDefaultActions() error {
+	cp.Commands = make(map[int]*ControlPointAction)
 
-	self.AddAction(Q_KEY, Q_DESC, QuitAction)
-	self.AddAction(H_KEY, H_DESC, HelpAction)
-	self.AddAction(S_KEY, S_DESC, SearchAction)
-	self.AddAction(P_KEY, P_DESC, PrintAction)
-	self.AddAction(A_KEY, A_DESC, PostAction)
+	cp.AddAction(Q_KEY, Q_DESC, QuitAction)
+	cp.AddAction(H_KEY, H_DESC, HelpAction)
+	cp.AddAction(S_KEY, S_DESC, SearchAction)
+	cp.AddAction(P_KEY, P_DESC, PrintAction)
+	cp.AddAction(A_KEY, A_DESC, PostAction)
 
 	return nil
 }
 
-func (self *ControlPointActionManager) AddAction(key int, desc string, actionFunc ContolPointActionFunc) error {
+func (cp *ControlPointActionManager) AddAction(key int, desc string, actionFunc ContolPointActionFunc) error {
 	action := NewControlPointAction(key, desc, actionFunc)
-	self.Commands[key] = action
+	cp.Commands[key] = action
 	return nil
 }
 
-func (self *ControlPointActionManager) DoAction(ctrlPoint *ControlPoint, key int) bool {
+func (cp *ControlPointActionManager) DoAction(ctrlPoint *ControlPoint, key int) bool {
 	action, ok := ctrlPoint.Commands[key]
 	if !ok {
-		action, _ = ctrlPoint.Commands[H_KEY]
+		action = ctrlPoint.Commands[H_KEY]
 	}
 
 	return action.Func(ctrlPoint)

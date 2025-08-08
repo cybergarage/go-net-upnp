@@ -140,7 +140,7 @@ func (service *Service) getShortServiceType() string {
 
 func (service *Service) reviseParentObject() error {
 	if service.ActionList != nil {
-		for n := 0; n < len(service.ActionList.Actions); n++ {
+		for n := range len(service.ActionList.Actions) {
 			action := &service.ActionList.Actions[n]
 			action.ParentService = service
 			action.reviseParentObject()
@@ -148,7 +148,7 @@ func (service *Service) reviseParentObject() error {
 	}
 
 	if service.ServiceStateTable != nil {
-		for n := 0; n < len(service.ServiceStateTable.StateVariables); n++ {
+		for n := range len(service.ServiceStateTable.StateVariables) {
 			statVar := &service.ServiceStateTable.StateVariables[n]
 			statVar.ParentService = service
 		}
@@ -212,7 +212,7 @@ func (service *Service) GetAbsoluteEventSubURL() (*url.URL, error) {
 func (service *Service) GetActions() []*Action {
 	actionCnt := len(service.ActionList.Actions)
 	actions := make([]*Action, actionCnt)
-	for n := 0; n < actionCnt; n++ {
+	for n := range actionCnt {
 		actions[n] = &service.ActionList.Actions[n]
 	}
 	return actions
@@ -228,7 +228,7 @@ func (service *Service) GetActionByName(name string) (*Action, error) {
 		return nil, fmt.Errorf(errorServiceHasNoActions, service.XMLName.Local)
 	}
 
-	for n := 0; n < len(service.ActionList.Actions); n++ {
+	for n := range len(service.ActionList.Actions) {
 		action := &service.ActionList.Actions[n]
 		if action.Name == name {
 			return action, nil

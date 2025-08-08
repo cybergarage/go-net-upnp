@@ -41,6 +41,7 @@ type DeviceListener interface {
 // A Device represents a UPnP device.
 type Device struct {
 	*DeviceDescription
+
 	SpecVersion SpecVersion `xml:"-"`
 	URLBase     string      `xml:"-"`
 
@@ -161,7 +162,7 @@ func (dev *Device) HasDeviceType(deviceType string) bool {
 		return true
 	}
 
-	for n := 0; n < len(dev.DeviceList.Devices); n++ {
+	for n := range len(dev.DeviceList.Devices) {
 		dev := &dev.DeviceList.Devices[n]
 		if dev.HasDeviceType(deviceType) {
 			return true
@@ -173,14 +174,14 @@ func (dev *Device) HasDeviceType(deviceType string) bool {
 
 // HasServiceType returns true if the device or the embedded device has the specified service type, otherwise false.
 func (dev *Device) HasServiceType(serviceType string) bool {
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		if service.ServiceType == serviceType {
 			return true
 		}
 	}
 
-	for n := 0; n < len(dev.DeviceList.Devices); n++ {
+	for n := range len(dev.DeviceList.Devices) {
 		dev := &dev.DeviceList.Devices[n]
 		if dev.HasServiceType(serviceType) {
 			return true
@@ -227,14 +228,14 @@ func (dev *Device) DescriptionString() (string, error) {
 func (dev *Device) LoadServiceDescriptions() error {
 	var lastErr error
 
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		lastErr = service.LoadDescriptionFromSCPDURL()
 	}
 
 	// Embedded devices
 
-	for n := 0; n < len(dev.DeviceList.Devices); n++ {
+	for n := range len(dev.DeviceList.Devices) {
 		dev := &dev.DeviceList.Devices[n]
 		lastErr = dev.LoadServiceDescriptions()
 	}
@@ -252,7 +253,7 @@ func (dev *Device) SetUDN(uuid string) error {
 func (dev *Device) GetEmbeddedDevices() []*Device {
 	devCnt := len(dev.DeviceList.Devices)
 	devs := make([]*Device, devCnt)
-	for n := 0; n < devCnt; n++ {
+	for n := range devCnt {
 		devs[n] = &dev.DeviceList.Devices[n]
 	}
 	return devs
@@ -261,7 +262,7 @@ func (dev *Device) GetEmbeddedDevices() []*Device {
 // GetEmbeddedDeviceByType returns a embedded device by the specified deviceType.
 func (dev *Device) GetEmbeddedDeviceByType(deviceType string) (*Device, error) {
 	devCnt := len(dev.DeviceList.Devices)
-	for n := 0; n < devCnt; n++ {
+	for n := range devCnt {
 		dev := &dev.DeviceList.Devices[n]
 		if dev.DeviceType == deviceType {
 			return dev, nil
@@ -274,7 +275,7 @@ func (dev *Device) GetEmbeddedDeviceByType(deviceType string) (*Device, error) {
 func (dev *Device) GetServices() []*Service {
 	servicCnt := len(dev.ServiceList.Services)
 	services := make([]*Service, servicCnt)
-	for n := 0; n < servicCnt; n++ {
+	for n := range servicCnt {
 		services[n] = &dev.ServiceList.Services[n]
 	}
 	return services
@@ -282,7 +283,7 @@ func (dev *Device) GetServices() []*Service {
 
 // GetServiceByType returns a service by the specified serviceType.
 func (dev *Device) GetServiceByType(serviceType string) (*Service, error) {
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		if service.ServiceType == serviceType {
 			return service, nil
@@ -293,7 +294,7 @@ func (dev *Device) GetServiceByType(serviceType string) (*Service, error) {
 
 // GetServiceByID returns a service by the specified serviceId.
 func (dev *Device) GetServiceByID(serviceID string) (*Service, error) {
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		if service.ServiceID == serviceID {
 			return service, nil
@@ -304,7 +305,7 @@ func (dev *Device) GetServiceByID(serviceID string) (*Service, error) {
 
 // GetServiceByControlURL returns a service by the specified control URL.
 func (dev *Device) GetServiceByControlURL(ctrlURL string) (*Service, error) {
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		if service.ControlURL == ctrlURL {
 			return service, nil
@@ -315,7 +316,7 @@ func (dev *Device) GetServiceByControlURL(ctrlURL string) (*Service, error) {
 
 // GetServiceByEventSubURL returns a service by the specified event subscription URL.
 func (dev *Device) GetServiceByEventSubURL(eventURL string) (*Service, error) {
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		if service.EventSubURL == eventURL {
 			return service, nil
@@ -325,19 +326,19 @@ func (dev *Device) GetServiceByEventSubURL(eventURL string) (*Service, error) {
 }
 
 func (dev *Device) reviseParentObject() error {
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		service.ParentDevice = dev
 	}
 
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		service.reviseParentObject()
 	}
 
 	// Embedded devices
 
-	for n := 0; n < len(dev.DeviceList.Devices); n++ {
+	for n := range len(dev.DeviceList.Devices) {
 		dev := &dev.DeviceList.Devices[n]
 		dev.ParentDevice = dev
 		dev.reviseParentObject()
@@ -359,7 +360,7 @@ func (dev *Device) reviseDescription() error {
 	}
 
 	// check description URLs in the service
-	for n := 0; n < len(dev.ServiceList.Services); n++ {
+	for n := range len(dev.ServiceList.Services) {
 		service := &dev.ServiceList.Services[n]
 		service.reviseDescription()
 	}

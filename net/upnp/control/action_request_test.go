@@ -119,7 +119,7 @@ func checkActionRequestParams(t *testing.T, req *ActionRequest, actionName strin
 	expactedArgNames := argNames
 	expactedArgValues := argValues
 
-	for n := 0; n < len(expactedArgNames); n++ {
+	for n := range expactedArgNames {
 		arg := action.Arguments[n]
 		if arg.Name != expactedArgNames[n] {
 			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])

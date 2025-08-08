@@ -12,6 +12,6 @@ func NewDirectory() *Directory {
 	return dir
 }
 
-func (self *Directory) IsDirectory() bool {
+func (dir *Directory) IsDirectory() bool {
 	return true
 }

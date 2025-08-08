@@ -119,7 +119,7 @@ func checkActionResponseParams(t *testing.T, res *ActionResponse, actionName str
 	expactedArgNames := argNames
 	expactedArgValues := argValues
 
-	for n := 0; n < len(expactedArgNames); n++ {
+	for n := range expactedArgNames {
 		arg := action.Arguments[n]
 		if arg.Name != expactedArgNames[n] {
 			t.Errorf(errorActionResponseInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])

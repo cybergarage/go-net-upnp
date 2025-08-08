@@ -30,13 +30,13 @@ func TestDeviceMapCount(t *testing.T) {
 
 	typeCnt := (rand.Int() % 10) + 10
 	types := make([]string, typeCnt)
-	for n := 0; n < typeCnt; n++ {
+	for n := range typeCnt {
 		types[n] = fmt.Sprintf("type%d", n)
 	}
 
 	udnCnt := (rand.Int() % 10) + 10
 	udns := make([]string, udnCnt)
-	for n := 0; n < udnCnt; n++ {
+	for n := range udnCnt {
 		udns[n] = fmt.Sprintf("udn%d", n)
 	}
 

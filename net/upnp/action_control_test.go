@@ -30,7 +30,7 @@ func TestMarshalActionRequestFromAction(t *testing.T) {
 	action.ArgumentList.Arguments = make([]Argument, nArgs)
 	argNames := make([]string, nArgs)
 	argValues := make([]string, nArgs)
-	for n := 0; n < nArgs; n++ {
+	for n := range nArgs {
 		arg := NewArgument()
 
 		argNames[n] = fmt.Sprintf("Name%d", n)
@@ -87,7 +87,7 @@ func checkActionRequestParams(t *testing.T, req *control.ActionRequest, actionNa
 	expactedArgNames := argNames
 	expactedArgValues := argValues
 
-	for n := 0; n < len(expactedArgNames); n++ {
+	for n := range expactedArgNames {
 		arg := action.Arguments[n]
 		if arg.Name != expactedArgNames[n] {
 			t.Errorf(errorActionRequestInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])
@@ -108,7 +108,7 @@ func TestMarshalActionResponseFromAction(t *testing.T) {
 	action.ArgumentList.Arguments = make([]Argument, nArgs)
 	argNames := make([]string, nArgs)
 	argValues := make([]string, nArgs)
-	for n := 0; n < nArgs; n++ {
+	for n := range nArgs {
 		arg := NewArgument()
 
 		argNames[n] = fmt.Sprintf("Name%d", n)
@@ -165,7 +165,7 @@ func checkActionResponseParams(t *testing.T, res *control.ActionResponse, action
 	expactedArgNames := argNames
 	expactedArgValues := argValues
 
-	for n := 0; n < len(expactedArgNames); n++ {
+	for n := range expactedArgNames {
 		arg := action.Arguments[n]
 		if arg.Name != expactedArgNames[n] {
 			t.Errorf(errorActionResponseInvalidArg, arg.Name, arg.Value, expactedArgNames[n], expactedArgValues[n])

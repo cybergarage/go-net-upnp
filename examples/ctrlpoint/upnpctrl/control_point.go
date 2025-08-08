@@ -45,24 +45,24 @@ func GetFromToMessageFromSSDPPacket(req *ssdp.Packet) string {
 	return fmt.Sprintf("(%s -> %s)", fromAddr, toAddr)
 }
 
-func (self *ControlPoint) DeviceNotifyReceived(req *ssdp.Request) {
+func (cp *ControlPoint) DeviceNotifyReceived(req *ssdp.Request) {
 	usn, _ := req.GetUSN()
 	printMessage(fmt.Sprintf("notiry req : %s %s", usn, GetFromToMessageFromSSDPPacket(req.Packet)))
-	//os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
+	// os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
 }
 
-func (self *ControlPoint) DeviceSearchReceived(req *ssdp.Request) {
+func (cp *ControlPoint) DeviceSearchReceived(req *ssdp.Request) {
 	st, _ := req.GetST()
 	printMessage(fmt.Sprintf("search req : %s %s", st, GetFromToMessageFromSSDPPacket(req.Packet)))
-	//os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
+	// os.Stdout.WriteString(fmt.Sprintf("%s\n", req.String()))
 }
 
-func (self *ControlPoint) DeviceResponseReceived(res *ssdp.Response) {
+func (cp *ControlPoint) DeviceResponseReceived(res *ssdp.Response) {
 	url, _ := res.GetLocation()
 	printMessage(fmt.Sprintf("search res : %s %s", url, GetFromToMessageFromSSDPPacket(res.Packet)))
-	//os.Stdout.WriteString(fmt.Sprintf("%s\n", res.String()))
+	// os.Stdout.WriteString(fmt.Sprintf("%s\n", res.String()))
 }
 
-func (self *ControlPoint) DoAction(key int) bool {
-	return self.ControlPointActionManager.DoAction(self, key)
+func (cp *ControlPoint) DoAction(key int) bool {
+	return cp.ControlPointActionManager.DoAction(cp, key)
 }

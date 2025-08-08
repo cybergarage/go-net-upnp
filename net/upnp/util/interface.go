@@ -86,7 +86,7 @@ func getMatchAddressBlockCount(ifAddr string, targetAddr string) int {
 	}
 
 	addrSize := len(targetAddrs)
-	for n := 0; n < len(targetAddrs); n++ {
+	for n := range targetAddrs {
 		if targetAddrs[n] != ifAddrs[n] {
 			return n
 		}
@@ -115,7 +115,7 @@ func GetAvailableInterfaceForAddr(fromAddr string) (net.Interface, error) {
 
 	selIf := ifis[0]
 	selIfMatchBlocks := getMatchAddressBlockCount(fromAddr, ifAddrs[0])
-	for n := 0; n < len(ifAddrs); n++ {
+	for n := range ifAddrs {
 		matchBlocks := getMatchAddressBlockCount(fromAddr, ifAddrs[n])
 		if matchBlocks < selIfMatchBlocks {
 			continue

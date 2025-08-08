@@ -32,6 +32,7 @@ const (
 
 type TestDevice struct {
 	*Device
+
 	Target string
 }
 

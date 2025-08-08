@@ -22,6 +22,7 @@ const (
 
 type LightDevice struct {
 	*upnp.Device
+
 	Target string
 	Status bool
 }
@@ -52,24 +53,24 @@ func NewLightDevice() (*LightDevice, error) {
 	return lightDev, nil
 }
 
-func (self *LightDevice) ActionRequestReceived(action *upnp.Action) upnp.Error {
+func (def *LightDevice) ActionRequestReceived(action *upnp.Action) upnp.Error {
 	switch action.Name {
 	case SetTarget:
 		target, err := action.GetArgumentString(NewTargetValue)
 		if err == nil {
-			self.Target = target
+			def.Target = target
 		} else {
 			return upnp.NewErrorFromCode(upnp.ErrorInvalidArgs)
 		}
 		return nil
 	case GetTarget:
-		err := action.SetArgumentString(RetTargetValue, self.Target)
+		err := action.SetArgumentString(RetTargetValue, def.Target)
 		if err != nil {
 			return upnp.NewErrorFromCode(upnp.ErrorInvalidArgs)
 		}
 		return nil
 	case GetStatus:
-		err := action.SetArgumentBool(ResultStatus, self.Status)
+		err := action.SetArgumentBool(ResultStatus, def.Status)
 		if err != nil {
 			return upnp.NewErrorFromCode(upnp.ErrorInvalidArgs)
 		}

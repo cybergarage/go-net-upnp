@@ -42,7 +42,7 @@ func NewAction() *Action {
 }
 
 func (action *Action) reviseParentObject() error {
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+	for n := range len(action.ArgumentList.Arguments) {
 		arg := &action.ArgumentList.Arguments[n]
 		arg.ParentAction = action
 	}
@@ -54,7 +54,7 @@ func (action *Action) reviseParentObject() error {
 func (action *Action) GetArguments() []*Argument {
 	argCnt := len(action.ArgumentList.Arguments)
 	args := make([]*Argument, argCnt)
-	for n := 0; n < argCnt; n++ {
+	for n := range argCnt {
 		args[n] = &action.ArgumentList.Arguments[n]
 	}
 	return args
@@ -63,7 +63,7 @@ func (action *Action) GetArguments() []*Argument {
 // GetInputArguments returns all input arguments.
 func (action *Action) GetInputArguments() []*Argument {
 	args := make([]*Argument, 0)
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+	for n := range len(action.ArgumentList.Arguments) {
 		arg := &action.ArgumentList.Arguments[n]
 		if !arg.IsInDirection() {
 			continue
@@ -76,7 +76,7 @@ func (action *Action) GetInputArguments() []*Argument {
 // GetOutputArguments returns all output arguments.
 func (action *Action) GetOutputArguments() []*Argument {
 	args := make([]*Argument, 0)
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+	for n := range len(action.ArgumentList.Arguments) {
 		arg := &action.ArgumentList.Arguments[n]
 		if !arg.IsOutDirection() {
 			continue
@@ -88,7 +88,7 @@ func (action *Action) GetOutputArguments() []*Argument {
 
 // GetArgumentByName returns an argument by the specified name.
 func (action *Action) GetArgumentByName(name string) (*Argument, error) {
-	for n := 0; n < len(action.ArgumentList.Arguments); n++ {
+	for n := range len(action.ArgumentList.Arguments) {
 		arg := &action.ArgumentList.Arguments[n]
 		if arg.Name == name {
 			return arg, nil
@@ -180,7 +180,7 @@ func (action *Action) setArgumentsByActionControl(actionCtrl *control.ActionCont
 		return fmt.Errorf(errorActionNameIsInvalid, ctrlAction.Name, action.Name)
 	}
 
-	for n := 0; n < len(ctrlAction.Arguments); n++ {
+	for n := range len(ctrlAction.Arguments) {
 		ctrlArg := ctrlAction.Arguments[n]
 		actionArg, err := action.GetArgumentByName(ctrlArg.Name)
 		if err != nil {
@@ -232,7 +232,7 @@ func (action *Action) Post() error {
 		return err
 	}
 
-	log.Tracef(fmt.Sprintf("action req = \n%s", soapReqStr))
+	log.Tracef("action req = \n%s", soapReqStr)
 
 	httpClient, err := http.NewClient()
 	if err != nil {
@@ -253,7 +253,7 @@ func (action *Action) Post() error {
 		return err
 	}
 
-	log.Tracef(fmt.Sprintf("action res [%d] = \n%s", statusCode, string(soapResBytes)))
+	log.Tracef("action res [%d] = \n%s", statusCode, string(soapResBytes))
 
 	// parse response
 
