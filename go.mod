@@ -1,10 +1,6 @@
 module github.com/cybergarage/go-net-upnp
 
-<<<<<<< HEAD
-go 1.22
-=======
-go 1.22
->>>>>>> dc950f2 (Update go.mod)
+go 1.24
 
 require (
 	github.com/cybergarage/go-logger v1.3.11
