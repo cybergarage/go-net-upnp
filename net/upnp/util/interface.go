@@ -109,7 +109,7 @@ func GetAvailableInterfaceForAddr(fromAddr string) (net.Interface, error) {
 	}
 
 	ifAddrs := make([]string, len(ifis))
-	for n := 0; n < len(ifAddrs); n++ {
+	for n := range ifAddrs {
 		ifAddrs[n], _ = GetInterfaceAddress(ifis[n])
 	}
 

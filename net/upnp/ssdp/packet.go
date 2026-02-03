@@ -78,7 +78,7 @@ func (pkt *Packet) parse(pktBytes []byte) error {
 	}
 
 	pktHeaderStrings := string(pktBytes[pktBeginIdx:pktEndIdx])
-	for _, headerLine := range strings.Split(pktHeaderStrings, CRLF) {
+	for headerLine := range strings.SplitSeq(pktHeaderStrings, CRLF) {
 		headerStrings := strings.Split(headerLine, ": ")
 		if len(headerStrings) < 2 {
 			continue
