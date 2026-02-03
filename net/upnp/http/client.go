@@ -15,7 +15,7 @@ type Client struct {
 	*gohttp.Client
 }
 
-// NewRequest returns a new Request.
+// NewClient returns a new Client.
 func NewClient() (*Client, error) {
 	client := &Client{}
 	client.Client = &gohttp.Client{}

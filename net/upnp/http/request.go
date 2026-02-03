@@ -16,7 +16,7 @@ type Request struct {
 	*gohttp.Request
 }
 
-// NewRequest returns a new Request.
+// NewRequestFromRequest wraps a standard net/http Request.
 func NewRequestFromRequest(req *gohttp.Request) *Request {
 	return &Request{Request: req}
 }

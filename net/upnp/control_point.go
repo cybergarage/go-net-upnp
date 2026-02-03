@@ -47,7 +47,7 @@ func NewControlPoint() *ControlPoint {
 	return cp
 }
 
-// Start starts this control point.
+// StartWithPort starts this control point using the specified port.
 func (ctrl *ControlPoint) StartWithPort(port int) error {
 	ctrl.ssdpMcastServerList.Listener = ctrl
 	err := ctrl.ssdpMcastServerList.Start()

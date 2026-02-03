@@ -53,7 +53,7 @@ func NewActionResponseFromAction(action *Action) (*control.ActionResponse, error
 	return res, nil
 }
 
-// NewArgument returns a new argument.
+// NewArgumentFromArgument creates a SOAP control.Argument from an upnp.Argument.
 func NewArgumentFromArgument(arg *Argument) *control.Argument {
 	newArg := control.NewArgument()
 

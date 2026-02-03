@@ -13,7 +13,7 @@ type Response struct {
 	*gohttp.Response
 }
 
-// NewResponse returns a new Response.
+// NewResponseFromResponse wraps a standard net/http Response.
 func NewResponseFromResponse(req *gohttp.Response) *Response {
 	httpReq := &Response{Response: req}
 	return httpReq

@@ -16,7 +16,7 @@ func NewActionRequest() *ActionRequest {
 	return req
 }
 
-// NewActionRequestFromSOAPString returns a new Request.
+// NewActionRequestFromSOAPBytes parses an action request from SOAP bytes.
 func NewActionRequestFromSOAPBytes(soapReq []byte) (*ActionRequest, error) {
 	req := NewActionRequest()
 	err := req.decodeEnvelopeXMLBytes(soapReq)

@@ -8,7 +8,7 @@ type Request struct {
 	*Packet
 }
 
-// NewPacket returns a new Request.
+// NewRequest returns a new Request.
 func NewRequest() *Request {
 	ssdpReq := &Request{}
 	ssdpReq.Packet = NewPacket()

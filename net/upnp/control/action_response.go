@@ -24,7 +24,7 @@ func NewActionResponse() *ActionResponse {
 	return res
 }
 
-// NewActionResponseFromSOAPString returns a new response.
+// NewActionResponseFromSOAPBytes parses an action response from SOAP bytes.
 func NewActionResponseFromSOAPBytes(soapRes []byte) (*ActionResponse, error) {
 	res := NewActionResponse()
 	err := res.decodeEnvelopeXMLBytes(soapRes)

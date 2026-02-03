@@ -22,7 +22,7 @@ func GetServerName() string {
 	return util.GetUserAgent()
 }
 
-// A SSDPListener represents a listener for Server.
+// RequestListener represents a listener for Server.
 type RequestListener interface {
 	HTTPRequestReceived(*Request, ResponseWriter)
 }

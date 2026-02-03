@@ -3,9 +3,9 @@
 // license that can be found in the LICENSE file.
 
 /*
-Package go-net-upnp provides UPnP control point and device frameworks to implement the control point and any devices.
+Package upnp provides UPnP control point and device frameworks to implement the control point and any devices.
 
-go-net-upnp supports UPnP control functions. The control point can search UPnP devices in the local network, get the device and service descriptions. and post actions in the service:
+The package supports UPnP control functions. The control point can search UPnP devices in the local network, get the device and service descriptions, and post actions in the service:
 
 	cp := upnp.NewControlPoint()
 	err := cp.Start()
@@ -29,7 +29,7 @@ The control point can post actions in the service, and get the action response:
 	...
 	resArg = action.GetArgumentString("xxxx")
 
-In addition to the control point functions, go-net-upnp supports UPnP device functions to implement any UPnP devices using Go.
+In addition to the control point functions, the package supports UPnP device functions to implement any UPnP devices using Go.
 
 To implement UPnP devices, prepare the UPnP device and service descriptions as the following:
 

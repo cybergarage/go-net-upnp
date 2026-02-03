@@ -21,7 +21,7 @@ type StateVariable struct {
 	ParentService     *Service          `xml:"-"`
 }
 
-// A StateVariable represents a UPnP state variable.
+// ServiceStateTable represents a UPnP service state table.
 type ServiceStateTable struct {
 	XMLName        xml.Name        `xml:"serviceStateTable"`
 	StateVariables []StateVariable `xml:"stateVariable"`

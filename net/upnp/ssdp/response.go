@@ -14,7 +14,7 @@ type Response struct {
 	*Packet
 }
 
-// NewPacket returns a new Packet.
+// NewResponse returns a new Response.
 func NewResponse() *Response {
 	ssdpRes := &Response{}
 	ssdpRes.Packet = NewPacket()
@@ -38,7 +38,7 @@ func NewResponseFromBytes(bytes []byte) (*Response, error) {
 	return ssdpRes, nil
 }
 
-// NewSSDPRequestFromString returns a new Packet from the specified string.
+// NewResponseFromString returns a Response from the specified string.
 func NewResponseFromString(packet string) (*Response, error) {
 	return NewResponseFromBytes([]byte(packet))
 }

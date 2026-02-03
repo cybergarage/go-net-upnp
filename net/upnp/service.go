@@ -54,7 +54,7 @@ func NewService() *Service {
 	return service
 }
 
-// NewServiceFromDescription returns a service from the specified descrition string.
+// NewServiceFromDescriptionBytes returns a Service loaded from the specified SCPD bytes.
 func NewServiceFromDescriptionBytes(descBytes []byte) (*Service, error) {
 	service := NewService()
 
@@ -86,7 +86,7 @@ func (service *Service) LoadDescriptionBytes(descBytes []byte) error {
 	return nil
 }
 
-// LoadDescriptinString loads a device description string.
+// LoadDescriptionFromSCPDURL loads and parses the SCPD from the service's SCPDURL.
 func (service *Service) LoadDescriptionFromSCPDURL() error {
 	// Some services has no SCPDURL such as Panasonic AiSEG001
 	if len(service.SCPDURL) == 0 {

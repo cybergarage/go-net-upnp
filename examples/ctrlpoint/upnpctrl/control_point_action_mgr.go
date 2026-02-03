@@ -4,12 +4,12 @@
 
 package main
 
-// A ControlPoint represents a ControlPoint.
+// ControlPointActionManager manages available ControlPointAction commands.
 type ControlPointActionManager struct {
 	Commands map[int]*ControlPointAction
 }
 
-// NewControlPoint returns a new Client.
+// NewControlPointActionManager returns a new ControlPointActionManager.
 func NewControlPointActionManager() *ControlPointActionManager {
 	actionMgr := &ControlPointActionManager{}
 	actionMgr.initDefaultActions()

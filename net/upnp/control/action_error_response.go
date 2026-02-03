@@ -23,7 +23,7 @@ func NewErrorResponse() *ErrorResponse {
 	return res
 }
 
-// NewErrorResponseFromSOAPString returns a  new error response.
+// NewErrorResponseFromSOAPBytes parses a SOAP fault response from raw bytes.
 func NewErrorResponseFromSOAPBytes(soapStr []byte) (*ErrorResponse, error) {
 	res := NewErrorResponse()
 
@@ -47,7 +47,7 @@ func (res *ErrorResponse) GetUPnPError() (*UPnPError, error) {
 	return &res.Envelope.Body.Fault.Detail.UPnPError, nil
 }
 
-// SOAPContent returns a SOAP content string.
+// SOAPContentString returns the SOAP fault envelope as an XML string.
 func (res *ErrorResponse) SOAPContentString() (string, error) {
 	buf, err := xml.MarshalIndent(&res.Envelope, "", xmlMarshallIndent)
 	if err != nil {

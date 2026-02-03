@@ -19,7 +19,7 @@ type ActionControl struct {
 	Envelope Envelope `xml:"Envelope"`
 }
 
-// A Action represents arguments in as SOAP action.
+// ActionInnerXML represents inner XML for a SOAP action body.
 type ActionInnerXML struct {
 	Innerxml string `xml:",innerxml"`
 }
@@ -100,7 +100,7 @@ func (action *ActionControl) GetAction() (*Action, error) {
 	return &action.Envelope.Body.Action, nil
 }
 
-// SOAPContent returns a SOAP content string.
+// SOAPContentString returns the SOAP envelope as an XML string.
 func (action *ActionControl) SOAPContentString() (string, error) {
 	buf, err := xml.MarshalIndent(&action.Envelope, "", xmlMarshallIndent)
 	if err != nil {

@@ -35,7 +35,7 @@ func NewPacket() *Packet {
 	return ssdpPkt
 }
 
-// NewPacket returns a new Packet.
+// NewPacketFromBytes parses a Packet from raw SSDP bytes.
 func NewPacketFromBytes(bytes []byte) (*Packet, error) {
 	ssdpPkt := NewPacket()
 	err := ssdpPkt.parse(bytes)

@@ -6,14 +6,14 @@ package main
 
 type ContolPointActionFunc func(*ControlPoint) bool
 
-// A ControlPoint represents a ControlPoint.
+// ControlPointAction represents an executable command for a control point.
 type ControlPointAction struct {
 	Key  int
 	Desc string
 	Func ContolPointActionFunc
 }
 
-// NewControlPoint returns a new Client.
+// NewControlPointAction returns a new ControlPointAction.
 func NewControlPointAction(key int, desc string, actionFunc ContolPointActionFunc) *ControlPointAction {
 	cpAction := &ControlPointAction{key, desc, actionFunc}
 	return cpAction

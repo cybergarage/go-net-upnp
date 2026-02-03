@@ -7,7 +7,7 @@ package upnp
 // DeviceMap manages devices by UDN.
 type DeviceMap map[string]map[string]*Device
 
-// DeviceMap returns a new device map.
+// NewDeviceMap returns a new device map.
 func NewDeviceMap() *DeviceMap {
 	devMap := make(DeviceMap)
 	return &devMap

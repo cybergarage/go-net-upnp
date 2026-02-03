@@ -90,7 +90,7 @@ func NewDeviceFromSSDPRequest(ssdpReq *ssdp.Request) (*Device, error) {
 	return dev, err
 }
 
-// NewDeviceFromSSDPRequest returns a device from the specified SSDP packet.
+// NewDeviceFromSSDPResponse returns a device from the specified SSDP packet.
 func NewDeviceFromSSDPResponse(ssdpRes *ssdp.Response) (*Device, error) {
 	descURL, err := ssdpRes.GetLocation()
 	if err != nil {
@@ -414,7 +414,7 @@ func (dev *Device) GetAbsoluteURL(path string) (*url.URL, error) {
 	return url, nil
 }
 
-// Start starts this control point.
+// StartWithPort starts this device using the specified port.
 func (dev *Device) StartWithPort(port int) error {
 	err := dev.reviseParentObject()
 	if err != nil {
