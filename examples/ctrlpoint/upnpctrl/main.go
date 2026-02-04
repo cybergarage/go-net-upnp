@@ -95,7 +95,7 @@ func main() {
 	flag.Parse()
 
 	if 0 < *verbose {
-		log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
+		log.SetDefault(log.NewStdoutLogger(log.LevelTrace))
 	}
 
 	ctrlPoint := NewControlPoint()

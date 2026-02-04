@@ -12,6 +12,6 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
+	log.SetDefault(log.NewStdoutLogger(log.LevelTrace))
 	os.Exit(m.Run())
 }

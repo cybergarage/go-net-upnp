@@ -43,7 +43,7 @@ func handleInput() {
 }
 
 func main() {
-	log.SetSharedLogger(log.NewStdoutLogger(log.LevelTrace))
+	log.SetDefault(log.NewStdoutLogger(log.LevelTrace))
 
 	dev, err := NewMediaServer()
 	if err != nil {
